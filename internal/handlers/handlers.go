@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"github.com/pPrecel/BeerKongServer/internal/auth"
+	"github.com/pPrecel/BeerKongServer/internal/programerrors"
 	"github.com/pPrecel/BeerKongServer/internal/servererrors"
 	"net/http"
 )
@@ -21,6 +22,11 @@ func New(auth auth.Auth) Handler {
 
 func (s handler) GraphQlHandler(writer http.ResponseWriter, request *http.Request) {
 	token := request.Header.Get("Authorization")
+
+	if token == "" {
+		servererrors.SendErrorResponse(programerrors.AuthenticationFailed("Unauthorized connection"), writer)
+		return
+	}
 
 	res, err := s.auth.GetAccount(token)
 	if err != nil {

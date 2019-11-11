@@ -5,16 +5,16 @@ import (
 	"github.com/pPrecel/BeerKongServer/internal/auth"
 	"github.com/pPrecel/BeerKongServer/internal/handlers"
 	log "github.com/sirupsen/logrus"
-	"net/http"
 	"github.com/vrischmann/envconfig"
+	"net/http"
 )
 
 type Config struct {
-	Port string `envconfig:"PORT"`
+	Port string `envconfig:"PORT,default=80"`
 }
 
 func main() {
-	log.Infof("Start server with envs")
+	log.Infof("Start server")
 
 	log.Infof("Read envconfigs")
 	var conf Config
