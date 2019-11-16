@@ -6,15 +6,14 @@ import (
 
 	"github.com/99designs/gqlgen/handler"
 	"github.com/pPrecel/BeerKongServer/internal/auth"
-	"github.com/pPrecel/BeerKongServer/internal/database"
 	"github.com/pPrecel/BeerKongServer/internal/handlers"
 	log "github.com/sirupsen/logrus"
 	"github.com/vrischmann/envconfig"
 )
 
 type Config struct {
-	Port       string `envconfig:"default=80"`
-	DataConfig database.DataConfig
+	Port string `envconfig:"default=80"`
+	//DataConfig database.DataConfig
 }
 
 func main() {
@@ -46,6 +45,6 @@ func main() {
 
 func readFlags(prefix string) (Config, error) {
 	cfg := Config{}
-	err := envconfig.InitWithPrefix(&cfg, prefix)
+	err := envconfig.Init(&cfg)
 	return cfg, err
 }
