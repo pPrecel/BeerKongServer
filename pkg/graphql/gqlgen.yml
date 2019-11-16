@@ -13,3 +13,7 @@ resolver:
   filename: resolver.go
   type: Resolver
 autobind: []
+
+models:
+  Todo:
+    model: github.com/pPrecel/BeerKongServer/internal/model.Todo

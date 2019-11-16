@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/pPrecel/BeerKongServer/internal/database"
+	"github.com/pPrecel/BeerKongServer/pkg/graphql"
 	"net/http"
 
 	"github.com/99designs/gqlgen/handler"
@@ -13,14 +15,14 @@ import (
 
 type Config struct {
 	Port string `envconfig:"default=80"`
-	//DataConfig database.DataConfig
+	DataConfig database.DataConfig
 }
 
 func main() {
 	log.Infof("Start server")
 
 	log.Infof("Read all envs")
-	conf, err := readFlags("APP")
+	conf, err := readFlags()
 	if err != nil {
 		log.Fatalf("Env error: %s", err.Error())
 	}
@@ -31,8 +33,11 @@ func main() {
 	log.Infof("Create auth communicator")
 	authClient := auth.New(&http.Client{})
 
+	log.Infof("Create resolver")
+	resolver := &graphql.Resolver{}
+
 	log.Infof("Create handlers")
-	handlers := handlers.New(authClient)
+	handlers := handlers.New(authClient, resolver)
 
 	log.Infof("Set handlers")
 	http.Handle("/", handler.Playground("GraphQL playground", "/q-tmp"))
@@ -43,7 +48,7 @@ func main() {
 	http.ListenAndServe(fmt.Sprintf(":%s", conf.Port), nil)
 }
 
-func readFlags(prefix string) (Config, error) {
+func readFlags() (Config, error) {
 	cfg := Config{}
 	err := envconfig.Init(&cfg)
 	return cfg, err

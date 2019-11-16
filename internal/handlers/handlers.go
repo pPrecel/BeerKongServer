@@ -18,15 +18,16 @@ type Handler interface {
 
 type handler struct {
 	auth auth.Auth
+	resolver *graphql.Resolver
 }
 
-func New(auth auth.Auth) Handler {
-	return handler{auth: auth}
+func New(auth auth.Auth, resolver *graphql.Resolver) Handler {
+	return handler{auth: auth, resolver: resolver}
 }
 
 func (s handler) GraphQlHandler(writer http.ResponseWriter, request *http.Request) {
 	log.Infof("Handle request without authorization")
-	h.GraphQL(graphql.NewExecutableSchema(graphql.Config{Resolvers: &graphql.Resolver{}})).ServeHTTP(writer, request)
+	h.GraphQL(graphql.NewExecutableSchema(graphql.Config{Resolvers: s.resolver})).ServeHTTP(writer, request)
 }
 
 func (s handler) GraphQlAuthHandler(writer http.ResponseWriter, request *http.Request) {
@@ -39,7 +40,7 @@ func (s handler) GraphQlAuthHandler(writer http.ResponseWriter, request *http.Re
 		return
 	}
 
-	log.Infof(" For token: \"%s...\"", token[0:10])
+	if len(token) > 10 { log.Infof(" For token: \"%s...\"", token[0:10]) } else { log.Infof(" For token: \"%s\"", token) }
 	res, err := s.auth.GetAccount(token)
 	if err != nil {
 		log.Warnf("ERROR: \"%s\"", err.Error())
@@ -47,7 +48,7 @@ func (s handler) GraphQlAuthHandler(writer http.ResponseWriter, request *http.Re
 		return
 	}
 
-	fmt.Printf("User email: %s for token: \"%s...\"", res.Email, token[0:10])
-	h.GraphQL(graphql.NewExecutableSchema(graphql.Config{Resolvers: &graphql.Resolver{}})).ServeHTTP(writer, request)
+	if len(token) > 10 { fmt.Printf("User email: %s for token: \"%s...\"", res.Email, token[0:10]) } else { fmt.Printf("User email: %s for token: \"%s\"", res.Email, token) }
+	h.GraphQL(graphql.NewExecutableSchema(graphql.Config{Resolvers: s.resolver})).ServeHTTP(writer, request)
 }
 
