@@ -44,7 +44,7 @@ func main() {
 	router.Use(cors.New(cors.Options{
 		AllowedOrigins: 		[]string{"https://beer-kong.herokuapp.com", "http://localhost:3000"},
 		AllowedMethods:         []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders:         []string{"Authorization"},
+		AllowedHeaders:         []string{"Authorization", "Content-Type"},
 		AllowCredentials:       true,
 		Debug:                  true,
 		MaxAge:					300,
