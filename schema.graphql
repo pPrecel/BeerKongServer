@@ -1,0 +1,29 @@
+type League {
+    id: ID!
+    name: String!
+    rules: ????? // to jakiś url? albo sam plik do regulaminu, ktory byłby linkowany albo wyświetlany w opisie regulaminu
+    owners: [User!]! (nie wiem, czy nie lepiej, żeby to użytkownik miał to pole, albo coś pośredniego)
+    //Tutaj można też pododawa jakieś customy, jak max user in team czy min user in team, czy coś jak zakłądanie eventu min 3 dni przed eventem itp itd
+    // żeby League to był niejako template dla tworzenia timw i lig
+}
+
+type Team {
+    id: ID!
+    name: String!
+    owners: [User!]!
+    users: [User!]!
+}
+
+type Event {
+    id: ID!
+    league: League!
+    date: ???!
+    registeredTeams: [Team!]!
+}
+
+type User {
+    id: ID!
+    name: String!
+    Sub: String!
+    //tutaj można też pododawa jakieś dodatkowe pola, ktre były by overridowane przez usera w drodze edycji, jak avatar, imie, czy mail albo coś takiego
+}
