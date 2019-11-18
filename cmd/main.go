@@ -42,7 +42,7 @@ func main() {
 	router := chi.NewRouter()
 
 	router.Use(cors.New(cors.Options{
-		AllowedOrigins: 		[]string{"https://beer-kong.herokuapp.com"},
+		AllowedOrigins: 		[]string{"https://beer-kong.herokuapp.com", "http://localhost:3000"},
 		AllowedMethods:         []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:         []string{"Authorization"},
 		AllowCredentials:       true,
