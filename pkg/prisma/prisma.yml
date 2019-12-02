@@ -1,0 +1,10 @@
+endpoint: https://beer-kong-prisma-cee5f23284.herokuapp.com/
+datamodel: datamodel.prisma
+
+secret: ${env:PRISMA_SECRET}
+
+generate:
+  - generator: go-client
+    output: ./generated/prisma-client
+  - generator: graphql-schema
+    output: ./generated/prisma.graphql
