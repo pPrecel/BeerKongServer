@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/go-chi/chi"
-	"github.com/pPrecel/BeerKongServer/internal/database"
-	"github.com/pPrecel/BeerKongServer/pkg/graphql"
+	"github.com/pPrecel/BeerKongServer/internal/graphqlcomposer"
+	"github.com/pPrecel/BeerKongServer/pkg/prisma/generated/prisma-client"
 	"github.com/rs/cors"
 	"net/http"
 
@@ -16,42 +16,43 @@ import (
 )
 
 type Config struct {
-	Port string `envconfig:"default=81"`
-	DataConfig database.DataConfig
+	Port           string `envconfig:"default=80"`
+	PrismaEndpoint string `envconfig:"default=http://localhost"`
+	PrismaSecret   string `envconfig:"default=password"`
 }
 
 func main() {
 	log.Infof("Start server")
 
-	log.Infof("Read all envs")
+	log.Infof("Read all flags")
 	conf, err := readFlags()
 	if err != nil {
-		log.Fatalf("Env error: %s", err.Error())
+		log.Fatalf("Flag error: %s", err.Error())
 	}
 
-	//db := database.New(conf.DataConfig)
-	//db.Open()
+	log.Info("Set prisma connection")
+	prismaClient := prisma.New(&prisma.Options{
+		Endpoint: conf.PrismaEndpoint,
+		Secret:   conf.PrismaSecret,
+	})
 
 	log.Infof("Create auth communicator")
 	authClient := auth.New(&http.Client{})
-
-	log.Infof("Create resolver")
-	resolver := &graphql.Resolver{}
 
 	log.Infof("Setup chi router")
 	router := chi.NewRouter()
 
 	router.Use(cors.New(cors.Options{
-		AllowedOrigins: 		[]string{"https://beer-kong.herokuapp.com", "http://localhost:3000"},
-		AllowedMethods:         []string{"POST", "OPTIONS"},
-		AllowedHeaders:         []string{"Authorization", "Content-Type"},
-		AllowCredentials:       true,
-		Debug:                  true,
-		MaxAge:					300,
+		AllowedOrigins:   []string{"https://beer-kong.herokuapp.com", "http://localhost"},
+		AllowedMethods:   []string{"POST", "OPTIONS"},
+		AllowedHeaders:   []string{"Authorization", "Content-Type"},
+		AllowCredentials: true,
+		Debug:            true,
+		MaxAge:           300,
 	}).Handler)
 
 	log.Infof("Create handlers")
-	handlers := handlers.New(authClient, resolver)
+	handlers := handlers.New(authClient, graphqlcomposer.New(prismaClient))
 
 	log.Infof("Set handlers")
 	router.Handle("/", handler.Playground("GraphQL playground", "/q-tmp"))
@@ -59,8 +60,7 @@ func main() {
 	router.HandleFunc("/query", handlers.GraphQlAuthHandler)
 
 	log.Infof("Start listening on port \":%s\"", conf.Port)
-	err = http.ListenAndServe(fmt.Sprintf(":%s", conf.Port), router)
-	if err != nil {
+	if err != http.ListenAndServe(fmt.Sprintf(":%s", conf.Port), router) {
 		log.Errorf("Can't listen and serve: \"%s\"", err.Error())
 	}
 }

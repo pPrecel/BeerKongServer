@@ -61,8 +61,204 @@ func (client *Client) GraphQL(ctx context.Context, query string, variables map[s
 	return client.Client.GraphQL(ctx, query, variables)
 }
 
-var DefaultEndpoint = "https://beer-kong-prisma-cee5f23284.herokuapp.com/"
+var DefaultEndpoint = "https://beer-kong-prisma-cee5f23284.herokuapp.com/beer-kong-prisma/beer-kong"
 var Secret = os.Getenv("PRISMA_SECRET")
+
+func (client *Client) League(params LeagueWhereUniqueInput) *LeagueExec {
+	ret := client.Client.GetOne(
+		nil,
+		params,
+		[2]string{"LeagueWhereUniqueInput!", "League"},
+		"league",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &LeagueExec{ret}
+}
+
+type LeaguesParams struct {
+	Where   *LeagueWhereInput   `json:"where,omitempty"`
+	OrderBy *LeagueOrderByInput `json:"orderBy,omitempty"`
+	Skip    *int32              `json:"skip,omitempty"`
+	After   *string             `json:"after,omitempty"`
+	Before  *string             `json:"before,omitempty"`
+	First   *int32              `json:"first,omitempty"`
+	Last    *int32              `json:"last,omitempty"`
+}
+
+func (client *Client) Leagues(params *LeaguesParams) *LeagueExecArray {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := client.Client.GetMany(
+		nil,
+		wparams,
+		[3]string{"LeagueWhereInput", "LeagueOrderByInput", "League"},
+		"leagues",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &LeagueExecArray{ret}
+}
+
+type LeaguesConnectionParams struct {
+	Where   *LeagueWhereInput   `json:"where,omitempty"`
+	OrderBy *LeagueOrderByInput `json:"orderBy,omitempty"`
+	Skip    *int32              `json:"skip,omitempty"`
+	After   *string             `json:"after,omitempty"`
+	Before  *string             `json:"before,omitempty"`
+	First   *int32              `json:"first,omitempty"`
+	Last    *int32              `json:"last,omitempty"`
+}
+
+// Nodes return just nodes without cursors. It uses the already fetched edges.
+func (s *LeagueConnection) Nodes() []League {
+	var nodes []League
+	for _, edge := range s.Edges {
+		nodes = append(nodes, edge.Node)
+	}
+	return nodes
+}
+
+// Nodes return just nodes without cursors, but as a slice of pointers. It uses the already fetched edges.
+func (s *LeagueConnection) NodesPtr() []*League {
+	var nodes []*League
+	for _, edge := range s.Edges {
+		item := edge
+		nodes = append(nodes, &item.Node)
+	}
+	return nodes
+}
+
+func (client *Client) LeaguesConnection(params *LeaguesConnectionParams) *LeagueConnectionExec {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := client.Client.GetMany(
+		nil,
+		wparams,
+		[3]string{"LeagueWhereInput", "LeagueOrderByInput", "League"},
+		"leaguesConnection",
+		[]string{"edges", "pageInfo"})
+
+	return &LeagueConnectionExec{ret}
+}
+
+func (client *Client) Team(params TeamWhereUniqueInput) *TeamExec {
+	ret := client.Client.GetOne(
+		nil,
+		params,
+		[2]string{"TeamWhereUniqueInput!", "Team"},
+		"team",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &TeamExec{ret}
+}
+
+type TeamsParams struct {
+	Where   *TeamWhereInput   `json:"where,omitempty"`
+	OrderBy *TeamOrderByInput `json:"orderBy,omitempty"`
+	Skip    *int32            `json:"skip,omitempty"`
+	After   *string           `json:"after,omitempty"`
+	Before  *string           `json:"before,omitempty"`
+	First   *int32            `json:"first,omitempty"`
+	Last    *int32            `json:"last,omitempty"`
+}
+
+func (client *Client) Teams(params *TeamsParams) *TeamExecArray {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := client.Client.GetMany(
+		nil,
+		wparams,
+		[3]string{"TeamWhereInput", "TeamOrderByInput", "Team"},
+		"teams",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &TeamExecArray{ret}
+}
+
+type TeamsConnectionParams struct {
+	Where   *TeamWhereInput   `json:"where,omitempty"`
+	OrderBy *TeamOrderByInput `json:"orderBy,omitempty"`
+	Skip    *int32            `json:"skip,omitempty"`
+	After   *string           `json:"after,omitempty"`
+	Before  *string           `json:"before,omitempty"`
+	First   *int32            `json:"first,omitempty"`
+	Last    *int32            `json:"last,omitempty"`
+}
+
+// Nodes return just nodes without cursors. It uses the already fetched edges.
+func (s *TeamConnection) Nodes() []Team {
+	var nodes []Team
+	for _, edge := range s.Edges {
+		nodes = append(nodes, edge.Node)
+	}
+	return nodes
+}
+
+// Nodes return just nodes without cursors, but as a slice of pointers. It uses the already fetched edges.
+func (s *TeamConnection) NodesPtr() []*Team {
+	var nodes []*Team
+	for _, edge := range s.Edges {
+		item := edge
+		nodes = append(nodes, &item.Node)
+	}
+	return nodes
+}
+
+func (client *Client) TeamsConnection(params *TeamsConnectionParams) *TeamConnectionExec {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := client.Client.GetMany(
+		nil,
+		wparams,
+		[3]string{"TeamWhereInput", "TeamOrderByInput", "Team"},
+		"teamsConnection",
+		[]string{"edges", "pageInfo"})
+
+	return &TeamConnectionExec{ret}
+}
 
 func (client *Client) User(params UserWhereUniqueInput) *UserExec {
 	ret := client.Client.GetOne(
@@ -70,7 +266,7 @@ func (client *Client) User(params UserWhereUniqueInput) *UserExec {
 		params,
 		[2]string{"UserWhereUniqueInput!", "User"},
 		"user",
-		[]string{"id", "name"})
+		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserExec{ret}
 }
@@ -104,7 +300,7 @@ func (client *Client) Users(params *UsersParams) *UserExecArray {
 		wparams,
 		[3]string{"UserWhereInput", "UserOrderByInput", "User"},
 		"users",
-		[]string{"id", "name"})
+		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserExecArray{ret}
 }
@@ -119,8 +315,207 @@ type UsersConnectionParams struct {
 	Last    *int32            `json:"last,omitempty"`
 }
 
-func (client *Client) UsersConnection(params *UsersConnectionParams) UserConnectionExec {
-	panic("not implemented")
+// Nodes return just nodes without cursors. It uses the already fetched edges.
+func (s *UserConnection) Nodes() []User {
+	var nodes []User
+	for _, edge := range s.Edges {
+		nodes = append(nodes, edge.Node)
+	}
+	return nodes
+}
+
+// Nodes return just nodes without cursors, but as a slice of pointers. It uses the already fetched edges.
+func (s *UserConnection) NodesPtr() []*User {
+	var nodes []*User
+	for _, edge := range s.Edges {
+		item := edge
+		nodes = append(nodes, &item.Node)
+	}
+	return nodes
+}
+
+func (client *Client) UsersConnection(params *UsersConnectionParams) *UserConnectionExec {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := client.Client.GetMany(
+		nil,
+		wparams,
+		[3]string{"UserWhereInput", "UserOrderByInput", "User"},
+		"usersConnection",
+		[]string{"edges", "pageInfo"})
+
+	return &UserConnectionExec{ret}
+}
+
+func (client *Client) CreateLeague(params LeagueCreateInput) *LeagueExec {
+	ret := client.Client.Create(
+		params,
+		[2]string{"LeagueCreateInput!", "League"},
+		"createLeague",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &LeagueExec{ret}
+}
+
+type LeagueUpdateParams struct {
+	Data  LeagueUpdateInput      `json:"data"`
+	Where LeagueWhereUniqueInput `json:"where"`
+}
+
+func (client *Client) UpdateLeague(params LeagueUpdateParams) *LeagueExec {
+	ret := client.Client.Update(
+		prisma.UpdateParams{
+			Data:  params.Data,
+			Where: params.Where,
+		},
+		[3]string{"LeagueUpdateInput!", "LeagueWhereUniqueInput!", "League"},
+		"updateLeague",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &LeagueExec{ret}
+}
+
+type LeagueUpdateManyParams struct {
+	Data  LeagueUpdateManyMutationInput `json:"data"`
+	Where *LeagueWhereInput             `json:"where,omitempty"`
+}
+
+func (client *Client) UpdateManyLeagues(params LeagueUpdateManyParams) *BatchPayloadExec {
+	exec := client.Client.UpdateMany(
+		prisma.UpdateParams{
+			Data:  params.Data,
+			Where: params.Where,
+		},
+		[2]string{"LeagueUpdateManyMutationInput!", "LeagueWhereInput"},
+		"updateManyLeagues")
+	return &BatchPayloadExec{exec}
+}
+
+type LeagueUpsertParams struct {
+	Where  LeagueWhereUniqueInput `json:"where"`
+	Create LeagueCreateInput      `json:"create"`
+	Update LeagueUpdateInput      `json:"update"`
+}
+
+func (client *Client) UpsertLeague(params LeagueUpsertParams) *LeagueExec {
+	uparams := &prisma.UpsertParams{
+		Where:  params.Where,
+		Create: params.Create,
+		Update: params.Update,
+	}
+	ret := client.Client.Upsert(
+		uparams,
+		[4]string{"LeagueWhereUniqueInput!", "LeagueCreateInput!", "LeagueUpdateInput!", "League"},
+		"upsertLeague",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &LeagueExec{ret}
+}
+
+func (client *Client) DeleteLeague(params LeagueWhereUniqueInput) *LeagueExec {
+	ret := client.Client.Delete(
+		params,
+		[2]string{"LeagueWhereUniqueInput!", "League"},
+		"deleteLeague",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &LeagueExec{ret}
+}
+
+func (client *Client) DeleteManyLeagues(params *LeagueWhereInput) *BatchPayloadExec {
+	exec := client.Client.DeleteMany(params, "LeagueWhereInput", "deleteManyLeagues")
+	return &BatchPayloadExec{exec}
+}
+
+func (client *Client) CreateTeam(params TeamCreateInput) *TeamExec {
+	ret := client.Client.Create(
+		params,
+		[2]string{"TeamCreateInput!", "Team"},
+		"createTeam",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &TeamExec{ret}
+}
+
+type TeamUpdateParams struct {
+	Data  TeamUpdateInput      `json:"data"`
+	Where TeamWhereUniqueInput `json:"where"`
+}
+
+func (client *Client) UpdateTeam(params TeamUpdateParams) *TeamExec {
+	ret := client.Client.Update(
+		prisma.UpdateParams{
+			Data:  params.Data,
+			Where: params.Where,
+		},
+		[3]string{"TeamUpdateInput!", "TeamWhereUniqueInput!", "Team"},
+		"updateTeam",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &TeamExec{ret}
+}
+
+type TeamUpdateManyParams struct {
+	Data  TeamUpdateManyMutationInput `json:"data"`
+	Where *TeamWhereInput             `json:"where,omitempty"`
+}
+
+func (client *Client) UpdateManyTeams(params TeamUpdateManyParams) *BatchPayloadExec {
+	exec := client.Client.UpdateMany(
+		prisma.UpdateParams{
+			Data:  params.Data,
+			Where: params.Where,
+		},
+		[2]string{"TeamUpdateManyMutationInput!", "TeamWhereInput"},
+		"updateManyTeams")
+	return &BatchPayloadExec{exec}
+}
+
+type TeamUpsertParams struct {
+	Where  TeamWhereUniqueInput `json:"where"`
+	Create TeamCreateInput      `json:"create"`
+	Update TeamUpdateInput      `json:"update"`
+}
+
+func (client *Client) UpsertTeam(params TeamUpsertParams) *TeamExec {
+	uparams := &prisma.UpsertParams{
+		Where:  params.Where,
+		Create: params.Create,
+		Update: params.Update,
+	}
+	ret := client.Client.Upsert(
+		uparams,
+		[4]string{"TeamWhereUniqueInput!", "TeamCreateInput!", "TeamUpdateInput!", "Team"},
+		"upsertTeam",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &TeamExec{ret}
+}
+
+func (client *Client) DeleteTeam(params TeamWhereUniqueInput) *TeamExec {
+	ret := client.Client.Delete(
+		params,
+		[2]string{"TeamWhereUniqueInput!", "Team"},
+		"deleteTeam",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &TeamExec{ret}
+}
+
+func (client *Client) DeleteManyTeams(params *TeamWhereInput) *BatchPayloadExec {
+	exec := client.Client.DeleteMany(params, "TeamWhereInput", "deleteManyTeams")
+	return &BatchPayloadExec{exec}
 }
 
 func (client *Client) CreateUser(params UserCreateInput) *UserExec {
@@ -128,7 +523,7 @@ func (client *Client) CreateUser(params UserCreateInput) *UserExec {
 		params,
 		[2]string{"UserCreateInput!", "User"},
 		"createUser",
-		[]string{"id", "name"})
+		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserExec{ret}
 }
@@ -146,7 +541,7 @@ func (client *Client) UpdateUser(params UserUpdateParams) *UserExec {
 		},
 		[3]string{"UserUpdateInput!", "UserWhereUniqueInput!", "User"},
 		"updateUser",
-		[]string{"id", "name"})
+		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserExec{ret}
 }
@@ -183,7 +578,7 @@ func (client *Client) UpsertUser(params UserUpsertParams) *UserExec {
 		uparams,
 		[4]string{"UserWhereUniqueInput!", "UserCreateInput!", "UserUpdateInput!", "User"},
 		"upsertUser",
-		[]string{"id", "name"})
+		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserExec{ret}
 }
@@ -193,7 +588,7 @@ func (client *Client) DeleteUser(params UserWhereUniqueInput) *UserExec {
 		params,
 		[2]string{"UserWhereUniqueInput!", "User"},
 		"deleteUser",
-		[]string{"id", "name"})
+		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserExec{ret}
 }
@@ -203,13 +598,45 @@ func (client *Client) DeleteManyUsers(params *UserWhereInput) *BatchPayloadExec 
 	return &BatchPayloadExec{exec}
 }
 
+type TeamOrderByInput string
+
+const (
+	TeamOrderByInputIDAsc           TeamOrderByInput = "id_ASC"
+	TeamOrderByInputIDDesc          TeamOrderByInput = "id_DESC"
+	TeamOrderByInputCreatedAtAsc    TeamOrderByInput = "createdAt_ASC"
+	TeamOrderByInputCreatedAtDesc   TeamOrderByInput = "createdAt_DESC"
+	TeamOrderByInputDescriptionAsc  TeamOrderByInput = "description_ASC"
+	TeamOrderByInputDescriptionDesc TeamOrderByInput = "description_DESC"
+	TeamOrderByInputNameAsc         TeamOrderByInput = "name_ASC"
+	TeamOrderByInputNameDesc        TeamOrderByInput = "name_DESC"
+)
+
 type UserOrderByInput string
 
 const (
-	UserOrderByInputIDAsc    UserOrderByInput = "id_ASC"
-	UserOrderByInputIDDesc   UserOrderByInput = "id_DESC"
-	UserOrderByInputNameAsc  UserOrderByInput = "name_ASC"
-	UserOrderByInputNameDesc UserOrderByInput = "name_DESC"
+	UserOrderByInputIDAsc         UserOrderByInput = "id_ASC"
+	UserOrderByInputIDDesc        UserOrderByInput = "id_DESC"
+	UserOrderByInputCreatedAtAsc  UserOrderByInput = "createdAt_ASC"
+	UserOrderByInputCreatedAtDesc UserOrderByInput = "createdAt_DESC"
+	UserOrderByInputNameAsc       UserOrderByInput = "name_ASC"
+	UserOrderByInputNameDesc      UserOrderByInput = "name_DESC"
+	UserOrderByInputSubAsc        UserOrderByInput = "sub_ASC"
+	UserOrderByInputSubDesc       UserOrderByInput = "sub_DESC"
+	UserOrderByInputPictureAsc    UserOrderByInput = "picture_ASC"
+	UserOrderByInputPictureDesc   UserOrderByInput = "picture_DESC"
+)
+
+type LeagueOrderByInput string
+
+const (
+	LeagueOrderByInputIDAsc           LeagueOrderByInput = "id_ASC"
+	LeagueOrderByInputIDDesc          LeagueOrderByInput = "id_DESC"
+	LeagueOrderByInputCreatedAtAsc    LeagueOrderByInput = "createdAt_ASC"
+	LeagueOrderByInputCreatedAtDesc   LeagueOrderByInput = "createdAt_DESC"
+	LeagueOrderByInputDescriptionAsc  LeagueOrderByInput = "description_ASC"
+	LeagueOrderByInputDescriptionDesc LeagueOrderByInput = "description_DESC"
+	LeagueOrderByInputNameAsc         LeagueOrderByInput = "name_ASC"
+	LeagueOrderByInputNameDesc        LeagueOrderByInput = "name_DESC"
 )
 
 type MutationType string
@@ -220,51 +647,945 @@ const (
 	MutationTypeDeleted MutationType = "DELETED"
 )
 
-type UserCreateInput struct {
+type LeagueWhereUniqueInput struct {
 	ID   *string `json:"id,omitempty"`
-	Name string  `json:"name"`
-}
-
-type UserUpdateInput struct {
 	Name *string `json:"name,omitempty"`
 }
 
-type UserUpdateManyMutationInput struct {
-	Name *string `json:"name,omitempty"`
+type TeamWhereInput struct {
+	ID                       *string           `json:"id,omitempty"`
+	IDNot                    *string           `json:"id_not,omitempty"`
+	IDIn                     []string          `json:"id_in,omitempty"`
+	IDNotIn                  []string          `json:"id_not_in,omitempty"`
+	IDLt                     *string           `json:"id_lt,omitempty"`
+	IDLte                    *string           `json:"id_lte,omitempty"`
+	IDGt                     *string           `json:"id_gt,omitempty"`
+	IDGte                    *string           `json:"id_gte,omitempty"`
+	IDContains               *string           `json:"id_contains,omitempty"`
+	IDNotContains            *string           `json:"id_not_contains,omitempty"`
+	IDStartsWith             *string           `json:"id_starts_with,omitempty"`
+	IDNotStartsWith          *string           `json:"id_not_starts_with,omitempty"`
+	IDEndsWith               *string           `json:"id_ends_with,omitempty"`
+	IDNotEndsWith            *string           `json:"id_not_ends_with,omitempty"`
+	CreatedAt                *string           `json:"createdAt,omitempty"`
+	CreatedAtNot             *string           `json:"createdAt_not,omitempty"`
+	CreatedAtIn              []string          `json:"createdAt_in,omitempty"`
+	CreatedAtNotIn           []string          `json:"createdAt_not_in,omitempty"`
+	CreatedAtLt              *string           `json:"createdAt_lt,omitempty"`
+	CreatedAtLte             *string           `json:"createdAt_lte,omitempty"`
+	CreatedAtGt              *string           `json:"createdAt_gt,omitempty"`
+	CreatedAtGte             *string           `json:"createdAt_gte,omitempty"`
+	Description              *string           `json:"description,omitempty"`
+	DescriptionNot           *string           `json:"description_not,omitempty"`
+	DescriptionIn            []string          `json:"description_in,omitempty"`
+	DescriptionNotIn         []string          `json:"description_not_in,omitempty"`
+	DescriptionLt            *string           `json:"description_lt,omitempty"`
+	DescriptionLte           *string           `json:"description_lte,omitempty"`
+	DescriptionGt            *string           `json:"description_gt,omitempty"`
+	DescriptionGte           *string           `json:"description_gte,omitempty"`
+	DescriptionContains      *string           `json:"description_contains,omitempty"`
+	DescriptionNotContains   *string           `json:"description_not_contains,omitempty"`
+	DescriptionStartsWith    *string           `json:"description_starts_with,omitempty"`
+	DescriptionNotStartsWith *string           `json:"description_not_starts_with,omitempty"`
+	DescriptionEndsWith      *string           `json:"description_ends_with,omitempty"`
+	DescriptionNotEndsWith   *string           `json:"description_not_ends_with,omitempty"`
+	Name                     *string           `json:"name,omitempty"`
+	NameNot                  *string           `json:"name_not,omitempty"`
+	NameIn                   []string          `json:"name_in,omitempty"`
+	NameNotIn                []string          `json:"name_not_in,omitempty"`
+	NameLt                   *string           `json:"name_lt,omitempty"`
+	NameLte                  *string           `json:"name_lte,omitempty"`
+	NameGt                   *string           `json:"name_gt,omitempty"`
+	NameGte                  *string           `json:"name_gte,omitempty"`
+	NameContains             *string           `json:"name_contains,omitempty"`
+	NameNotContains          *string           `json:"name_not_contains,omitempty"`
+	NameStartsWith           *string           `json:"name_starts_with,omitempty"`
+	NameNotStartsWith        *string           `json:"name_not_starts_with,omitempty"`
+	NameEndsWith             *string           `json:"name_ends_with,omitempty"`
+	NameNotEndsWith          *string           `json:"name_not_ends_with,omitempty"`
+	League                   *LeagueWhereInput `json:"league,omitempty"`
+	UsersEvery               *UserWhereInput   `json:"users_every,omitempty"`
+	UsersSome                *UserWhereInput   `json:"users_some,omitempty"`
+	UsersNone                *UserWhereInput   `json:"users_none,omitempty"`
+	Owner                    *UserWhereInput   `json:"owner,omitempty"`
+	And                      []TeamWhereInput  `json:"AND,omitempty"`
+	Or                       []TeamWhereInput  `json:"OR,omitempty"`
+	Not                      []TeamWhereInput  `json:"NOT,omitempty"`
+}
+
+type LeagueWhereInput struct {
+	ID                       *string            `json:"id,omitempty"`
+	IDNot                    *string            `json:"id_not,omitempty"`
+	IDIn                     []string           `json:"id_in,omitempty"`
+	IDNotIn                  []string           `json:"id_not_in,omitempty"`
+	IDLt                     *string            `json:"id_lt,omitempty"`
+	IDLte                    *string            `json:"id_lte,omitempty"`
+	IDGt                     *string            `json:"id_gt,omitempty"`
+	IDGte                    *string            `json:"id_gte,omitempty"`
+	IDContains               *string            `json:"id_contains,omitempty"`
+	IDNotContains            *string            `json:"id_not_contains,omitempty"`
+	IDStartsWith             *string            `json:"id_starts_with,omitempty"`
+	IDNotStartsWith          *string            `json:"id_not_starts_with,omitempty"`
+	IDEndsWith               *string            `json:"id_ends_with,omitempty"`
+	IDNotEndsWith            *string            `json:"id_not_ends_with,omitempty"`
+	CreatedAt                *string            `json:"createdAt,omitempty"`
+	CreatedAtNot             *string            `json:"createdAt_not,omitempty"`
+	CreatedAtIn              []string           `json:"createdAt_in,omitempty"`
+	CreatedAtNotIn           []string           `json:"createdAt_not_in,omitempty"`
+	CreatedAtLt              *string            `json:"createdAt_lt,omitempty"`
+	CreatedAtLte             *string            `json:"createdAt_lte,omitempty"`
+	CreatedAtGt              *string            `json:"createdAt_gt,omitempty"`
+	CreatedAtGte             *string            `json:"createdAt_gte,omitempty"`
+	Description              *string            `json:"description,omitempty"`
+	DescriptionNot           *string            `json:"description_not,omitempty"`
+	DescriptionIn            []string           `json:"description_in,omitempty"`
+	DescriptionNotIn         []string           `json:"description_not_in,omitempty"`
+	DescriptionLt            *string            `json:"description_lt,omitempty"`
+	DescriptionLte           *string            `json:"description_lte,omitempty"`
+	DescriptionGt            *string            `json:"description_gt,omitempty"`
+	DescriptionGte           *string            `json:"description_gte,omitempty"`
+	DescriptionContains      *string            `json:"description_contains,omitempty"`
+	DescriptionNotContains   *string            `json:"description_not_contains,omitempty"`
+	DescriptionStartsWith    *string            `json:"description_starts_with,omitempty"`
+	DescriptionNotStartsWith *string            `json:"description_not_starts_with,omitempty"`
+	DescriptionEndsWith      *string            `json:"description_ends_with,omitempty"`
+	DescriptionNotEndsWith   *string            `json:"description_not_ends_with,omitempty"`
+	Name                     *string            `json:"name,omitempty"`
+	NameNot                  *string            `json:"name_not,omitempty"`
+	NameIn                   []string           `json:"name_in,omitempty"`
+	NameNotIn                []string           `json:"name_not_in,omitempty"`
+	NameLt                   *string            `json:"name_lt,omitempty"`
+	NameLte                  *string            `json:"name_lte,omitempty"`
+	NameGt                   *string            `json:"name_gt,omitempty"`
+	NameGte                  *string            `json:"name_gte,omitempty"`
+	NameContains             *string            `json:"name_contains,omitempty"`
+	NameNotContains          *string            `json:"name_not_contains,omitempty"`
+	NameStartsWith           *string            `json:"name_starts_with,omitempty"`
+	NameNotStartsWith        *string            `json:"name_not_starts_with,omitempty"`
+	NameEndsWith             *string            `json:"name_ends_with,omitempty"`
+	NameNotEndsWith          *string            `json:"name_not_ends_with,omitempty"`
+	TeamsEvery               *TeamWhereInput    `json:"teams_every,omitempty"`
+	TeamsSome                *TeamWhereInput    `json:"teams_some,omitempty"`
+	TeamsNone                *TeamWhereInput    `json:"teams_none,omitempty"`
+	UsersEvery               *UserWhereInput    `json:"users_every,omitempty"`
+	UsersSome                *UserWhereInput    `json:"users_some,omitempty"`
+	UsersNone                *UserWhereInput    `json:"users_none,omitempty"`
+	Owner                    *UserWhereInput    `json:"owner,omitempty"`
+	And                      []LeagueWhereInput `json:"AND,omitempty"`
+	Or                       []LeagueWhereInput `json:"OR,omitempty"`
+	Not                      []LeagueWhereInput `json:"NOT,omitempty"`
 }
 
 type UserWhereInput struct {
-	ID                *string          `json:"id,omitempty"`
-	IDNot             *string          `json:"id_not,omitempty"`
-	IDIn              []string         `json:"id_in,omitempty"`
-	IDNotIn           []string         `json:"id_not_in,omitempty"`
-	IDLt              *string          `json:"id_lt,omitempty"`
-	IDLte             *string          `json:"id_lte,omitempty"`
-	IDGt              *string          `json:"id_gt,omitempty"`
-	IDGte             *string          `json:"id_gte,omitempty"`
-	IDContains        *string          `json:"id_contains,omitempty"`
-	IDNotContains     *string          `json:"id_not_contains,omitempty"`
-	IDStartsWith      *string          `json:"id_starts_with,omitempty"`
-	IDNotStartsWith   *string          `json:"id_not_starts_with,omitempty"`
-	IDEndsWith        *string          `json:"id_ends_with,omitempty"`
-	IDNotEndsWith     *string          `json:"id_not_ends_with,omitempty"`
-	Name              *string          `json:"name,omitempty"`
-	NameNot           *string          `json:"name_not,omitempty"`
-	NameIn            []string         `json:"name_in,omitempty"`
-	NameNotIn         []string         `json:"name_not_in,omitempty"`
-	NameLt            *string          `json:"name_lt,omitempty"`
-	NameLte           *string          `json:"name_lte,omitempty"`
-	NameGt            *string          `json:"name_gt,omitempty"`
-	NameGte           *string          `json:"name_gte,omitempty"`
-	NameContains      *string          `json:"name_contains,omitempty"`
-	NameNotContains   *string          `json:"name_not_contains,omitempty"`
-	NameStartsWith    *string          `json:"name_starts_with,omitempty"`
-	NameNotStartsWith *string          `json:"name_not_starts_with,omitempty"`
-	NameEndsWith      *string          `json:"name_ends_with,omitempty"`
-	NameNotEndsWith   *string          `json:"name_not_ends_with,omitempty"`
-	And               []UserWhereInput `json:"AND,omitempty"`
-	Or                []UserWhereInput `json:"OR,omitempty"`
-	Not               []UserWhereInput `json:"NOT,omitempty"`
+	ID                   *string           `json:"id,omitempty"`
+	IDNot                *string           `json:"id_not,omitempty"`
+	IDIn                 []string          `json:"id_in,omitempty"`
+	IDNotIn              []string          `json:"id_not_in,omitempty"`
+	IDLt                 *string           `json:"id_lt,omitempty"`
+	IDLte                *string           `json:"id_lte,omitempty"`
+	IDGt                 *string           `json:"id_gt,omitempty"`
+	IDGte                *string           `json:"id_gte,omitempty"`
+	IDContains           *string           `json:"id_contains,omitempty"`
+	IDNotContains        *string           `json:"id_not_contains,omitempty"`
+	IDStartsWith         *string           `json:"id_starts_with,omitempty"`
+	IDNotStartsWith      *string           `json:"id_not_starts_with,omitempty"`
+	IDEndsWith           *string           `json:"id_ends_with,omitempty"`
+	IDNotEndsWith        *string           `json:"id_not_ends_with,omitempty"`
+	CreatedAt            *string           `json:"createdAt,omitempty"`
+	CreatedAtNot         *string           `json:"createdAt_not,omitempty"`
+	CreatedAtIn          []string          `json:"createdAt_in,omitempty"`
+	CreatedAtNotIn       []string          `json:"createdAt_not_in,omitempty"`
+	CreatedAtLt          *string           `json:"createdAt_lt,omitempty"`
+	CreatedAtLte         *string           `json:"createdAt_lte,omitempty"`
+	CreatedAtGt          *string           `json:"createdAt_gt,omitempty"`
+	CreatedAtGte         *string           `json:"createdAt_gte,omitempty"`
+	Name                 *string           `json:"name,omitempty"`
+	NameNot              *string           `json:"name_not,omitempty"`
+	NameIn               []string          `json:"name_in,omitempty"`
+	NameNotIn            []string          `json:"name_not_in,omitempty"`
+	NameLt               *string           `json:"name_lt,omitempty"`
+	NameLte              *string           `json:"name_lte,omitempty"`
+	NameGt               *string           `json:"name_gt,omitempty"`
+	NameGte              *string           `json:"name_gte,omitempty"`
+	NameContains         *string           `json:"name_contains,omitempty"`
+	NameNotContains      *string           `json:"name_not_contains,omitempty"`
+	NameStartsWith       *string           `json:"name_starts_with,omitempty"`
+	NameNotStartsWith    *string           `json:"name_not_starts_with,omitempty"`
+	NameEndsWith         *string           `json:"name_ends_with,omitempty"`
+	NameNotEndsWith      *string           `json:"name_not_ends_with,omitempty"`
+	Sub                  *string           `json:"sub,omitempty"`
+	SubNot               *string           `json:"sub_not,omitempty"`
+	SubIn                []string          `json:"sub_in,omitempty"`
+	SubNotIn             []string          `json:"sub_not_in,omitempty"`
+	SubLt                *string           `json:"sub_lt,omitempty"`
+	SubLte               *string           `json:"sub_lte,omitempty"`
+	SubGt                *string           `json:"sub_gt,omitempty"`
+	SubGte               *string           `json:"sub_gte,omitempty"`
+	SubContains          *string           `json:"sub_contains,omitempty"`
+	SubNotContains       *string           `json:"sub_not_contains,omitempty"`
+	SubStartsWith        *string           `json:"sub_starts_with,omitempty"`
+	SubNotStartsWith     *string           `json:"sub_not_starts_with,omitempty"`
+	SubEndsWith          *string           `json:"sub_ends_with,omitempty"`
+	SubNotEndsWith       *string           `json:"sub_not_ends_with,omitempty"`
+	Picture              *string           `json:"picture,omitempty"`
+	PictureNot           *string           `json:"picture_not,omitempty"`
+	PictureIn            []string          `json:"picture_in,omitempty"`
+	PictureNotIn         []string          `json:"picture_not_in,omitempty"`
+	PictureLt            *string           `json:"picture_lt,omitempty"`
+	PictureLte           *string           `json:"picture_lte,omitempty"`
+	PictureGt            *string           `json:"picture_gt,omitempty"`
+	PictureGte           *string           `json:"picture_gte,omitempty"`
+	PictureContains      *string           `json:"picture_contains,omitempty"`
+	PictureNotContains   *string           `json:"picture_not_contains,omitempty"`
+	PictureStartsWith    *string           `json:"picture_starts_with,omitempty"`
+	PictureNotStartsWith *string           `json:"picture_not_starts_with,omitempty"`
+	PictureEndsWith      *string           `json:"picture_ends_with,omitempty"`
+	PictureNotEndsWith   *string           `json:"picture_not_ends_with,omitempty"`
+	TeamsEvery           *TeamWhereInput   `json:"teams_every,omitempty"`
+	TeamsSome            *TeamWhereInput   `json:"teams_some,omitempty"`
+	TeamsNone            *TeamWhereInput   `json:"teams_none,omitempty"`
+	LeaguesEvery         *LeagueWhereInput `json:"leagues_every,omitempty"`
+	LeaguesSome          *LeagueWhereInput `json:"leagues_some,omitempty"`
+	LeaguesNone          *LeagueWhereInput `json:"leagues_none,omitempty"`
+	OwnedTeamsEvery      *TeamWhereInput   `json:"ownedTeams_every,omitempty"`
+	OwnedTeamsSome       *TeamWhereInput   `json:"ownedTeams_some,omitempty"`
+	OwnedTeamsNone       *TeamWhereInput   `json:"ownedTeams_none,omitempty"`
+	OwnedLeaguesEvery    *LeagueWhereInput `json:"ownedLeagues_every,omitempty"`
+	OwnedLeaguesSome     *LeagueWhereInput `json:"ownedLeagues_some,omitempty"`
+	OwnedLeaguesNone     *LeagueWhereInput `json:"ownedLeagues_none,omitempty"`
+	And                  []UserWhereInput  `json:"AND,omitempty"`
+	Or                   []UserWhereInput  `json:"OR,omitempty"`
+	Not                  []UserWhereInput  `json:"NOT,omitempty"`
+}
+
+type TeamWhereUniqueInput struct {
+	ID   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
+type UserWhereUniqueInput struct {
+	ID   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+	Sub  *string `json:"sub,omitempty"`
+}
+
+type LeagueCreateInput struct {
+	ID          *string                               `json:"id,omitempty"`
+	Description string                                `json:"description"`
+	Name        string                                `json:"name"`
+	Teams       *TeamCreateManyWithoutLeagueInput     `json:"teams,omitempty"`
+	Users       *UserCreateManyWithoutLeaguesInput    `json:"users,omitempty"`
+	Owner       UserCreateOneWithoutOwnedLeaguesInput `json:"owner"`
+}
+
+type TeamCreateManyWithoutLeagueInput struct {
+	Create  []TeamCreateWithoutLeagueInput `json:"create,omitempty"`
+	Connect []TeamWhereUniqueInput         `json:"connect,omitempty"`
+}
+
+type TeamCreateWithoutLeagueInput struct {
+	ID          *string                             `json:"id,omitempty"`
+	Description string                              `json:"description"`
+	Name        string                              `json:"name"`
+	Users       *UserCreateManyWithoutTeamsInput    `json:"users,omitempty"`
+	Owner       UserCreateOneWithoutOwnedTeamsInput `json:"owner"`
+}
+
+type UserCreateManyWithoutTeamsInput struct {
+	Create  []UserCreateWithoutTeamsInput `json:"create,omitempty"`
+	Connect []UserWhereUniqueInput        `json:"connect,omitempty"`
+}
+
+type UserCreateWithoutTeamsInput struct {
+	ID           *string                            `json:"id,omitempty"`
+	Name         string                             `json:"name"`
+	Sub          string                             `json:"sub"`
+	Picture      string                             `json:"picture"`
+	Leagues      *LeagueCreateManyWithoutUsersInput `json:"leagues,omitempty"`
+	OwnedTeams   *TeamCreateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
+	OwnedLeagues *LeagueCreateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
+}
+
+type LeagueCreateManyWithoutUsersInput struct {
+	Create  []LeagueCreateWithoutUsersInput `json:"create,omitempty"`
+	Connect []LeagueWhereUniqueInput        `json:"connect,omitempty"`
+}
+
+type LeagueCreateWithoutUsersInput struct {
+	ID          *string                               `json:"id,omitempty"`
+	Description string                                `json:"description"`
+	Name        string                                `json:"name"`
+	Teams       *TeamCreateManyWithoutLeagueInput     `json:"teams,omitempty"`
+	Owner       UserCreateOneWithoutOwnedLeaguesInput `json:"owner"`
+}
+
+type UserCreateOneWithoutOwnedLeaguesInput struct {
+	Create  *UserCreateWithoutOwnedLeaguesInput `json:"create,omitempty"`
+	Connect *UserWhereUniqueInput               `json:"connect,omitempty"`
+}
+
+type UserCreateWithoutOwnedLeaguesInput struct {
+	ID         *string                            `json:"id,omitempty"`
+	Name       string                             `json:"name"`
+	Sub        string                             `json:"sub"`
+	Picture    string                             `json:"picture"`
+	Teams      *TeamCreateManyWithoutUsersInput   `json:"teams,omitempty"`
+	Leagues    *LeagueCreateManyWithoutUsersInput `json:"leagues,omitempty"`
+	OwnedTeams *TeamCreateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
+}
+
+type TeamCreateManyWithoutUsersInput struct {
+	Create  []TeamCreateWithoutUsersInput `json:"create,omitempty"`
+	Connect []TeamWhereUniqueInput        `json:"connect,omitempty"`
+}
+
+type TeamCreateWithoutUsersInput struct {
+	ID          *string                             `json:"id,omitempty"`
+	Description string                              `json:"description"`
+	Name        string                              `json:"name"`
+	League      LeagueCreateOneWithoutTeamsInput    `json:"league"`
+	Owner       UserCreateOneWithoutOwnedTeamsInput `json:"owner"`
+}
+
+type LeagueCreateOneWithoutTeamsInput struct {
+	Create  *LeagueCreateWithoutTeamsInput `json:"create,omitempty"`
+	Connect *LeagueWhereUniqueInput        `json:"connect,omitempty"`
+}
+
+type LeagueCreateWithoutTeamsInput struct {
+	ID          *string                               `json:"id,omitempty"`
+	Description string                                `json:"description"`
+	Name        string                                `json:"name"`
+	Users       *UserCreateManyWithoutLeaguesInput    `json:"users,omitempty"`
+	Owner       UserCreateOneWithoutOwnedLeaguesInput `json:"owner"`
+}
+
+type UserCreateManyWithoutLeaguesInput struct {
+	Create  []UserCreateWithoutLeaguesInput `json:"create,omitempty"`
+	Connect []UserWhereUniqueInput          `json:"connect,omitempty"`
+}
+
+type UserCreateWithoutLeaguesInput struct {
+	ID           *string                            `json:"id,omitempty"`
+	Name         string                             `json:"name"`
+	Sub          string                             `json:"sub"`
+	Picture      string                             `json:"picture"`
+	Teams        *TeamCreateManyWithoutUsersInput   `json:"teams,omitempty"`
+	OwnedTeams   *TeamCreateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
+	OwnedLeagues *LeagueCreateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
+}
+
+type TeamCreateManyWithoutOwnerInput struct {
+	Create  []TeamCreateWithoutOwnerInput `json:"create,omitempty"`
+	Connect []TeamWhereUniqueInput        `json:"connect,omitempty"`
+}
+
+type TeamCreateWithoutOwnerInput struct {
+	ID          *string                          `json:"id,omitempty"`
+	Description string                           `json:"description"`
+	Name        string                           `json:"name"`
+	League      LeagueCreateOneWithoutTeamsInput `json:"league"`
+	Users       *UserCreateManyWithoutTeamsInput `json:"users,omitempty"`
+}
+
+type LeagueCreateManyWithoutOwnerInput struct {
+	Create  []LeagueCreateWithoutOwnerInput `json:"create,omitempty"`
+	Connect []LeagueWhereUniqueInput        `json:"connect,omitempty"`
+}
+
+type LeagueCreateWithoutOwnerInput struct {
+	ID          *string                            `json:"id,omitempty"`
+	Description string                             `json:"description"`
+	Name        string                             `json:"name"`
+	Teams       *TeamCreateManyWithoutLeagueInput  `json:"teams,omitempty"`
+	Users       *UserCreateManyWithoutLeaguesInput `json:"users,omitempty"`
+}
+
+type UserCreateOneWithoutOwnedTeamsInput struct {
+	Create  *UserCreateWithoutOwnedTeamsInput `json:"create,omitempty"`
+	Connect *UserWhereUniqueInput             `json:"connect,omitempty"`
+}
+
+type UserCreateWithoutOwnedTeamsInput struct {
+	ID           *string                            `json:"id,omitempty"`
+	Name         string                             `json:"name"`
+	Sub          string                             `json:"sub"`
+	Picture      string                             `json:"picture"`
+	Teams        *TeamCreateManyWithoutUsersInput   `json:"teams,omitempty"`
+	Leagues      *LeagueCreateManyWithoutUsersInput `json:"leagues,omitempty"`
+	OwnedLeagues *LeagueCreateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
+}
+
+type LeagueUpdateInput struct {
+	Description *string                                        `json:"description,omitempty"`
+	Name        *string                                        `json:"name,omitempty"`
+	Teams       *TeamUpdateManyWithoutLeagueInput              `json:"teams,omitempty"`
+	Users       *UserUpdateManyWithoutLeaguesInput             `json:"users,omitempty"`
+	Owner       *UserUpdateOneRequiredWithoutOwnedLeaguesInput `json:"owner,omitempty"`
+}
+
+type TeamUpdateManyWithoutLeagueInput struct {
+	Create     []TeamCreateWithoutLeagueInput                `json:"create,omitempty"`
+	Delete     []TeamWhereUniqueInput                        `json:"delete,omitempty"`
+	Connect    []TeamWhereUniqueInput                        `json:"connect,omitempty"`
+	Set        []TeamWhereUniqueInput                        `json:"set,omitempty"`
+	Disconnect []TeamWhereUniqueInput                        `json:"disconnect,omitempty"`
+	Update     []TeamUpdateWithWhereUniqueWithoutLeagueInput `json:"update,omitempty"`
+	Upsert     []TeamUpsertWithWhereUniqueWithoutLeagueInput `json:"upsert,omitempty"`
+	DeleteMany []TeamScalarWhereInput                        `json:"deleteMany,omitempty"`
+	UpdateMany []TeamUpdateManyWithWhereNestedInput          `json:"updateMany,omitempty"`
+}
+
+type TeamUpdateWithWhereUniqueWithoutLeagueInput struct {
+	Where TeamWhereUniqueInput             `json:"where"`
+	Data  TeamUpdateWithoutLeagueDataInput `json:"data"`
+}
+
+type TeamUpdateWithoutLeagueDataInput struct {
+	Description *string                                      `json:"description,omitempty"`
+	Name        *string                                      `json:"name,omitempty"`
+	Users       *UserUpdateManyWithoutTeamsInput             `json:"users,omitempty"`
+	Owner       *UserUpdateOneRequiredWithoutOwnedTeamsInput `json:"owner,omitempty"`
+}
+
+type UserUpdateManyWithoutTeamsInput struct {
+	Create     []UserCreateWithoutTeamsInput                `json:"create,omitempty"`
+	Delete     []UserWhereUniqueInput                       `json:"delete,omitempty"`
+	Connect    []UserWhereUniqueInput                       `json:"connect,omitempty"`
+	Set        []UserWhereUniqueInput                       `json:"set,omitempty"`
+	Disconnect []UserWhereUniqueInput                       `json:"disconnect,omitempty"`
+	Update     []UserUpdateWithWhereUniqueWithoutTeamsInput `json:"update,omitempty"`
+	Upsert     []UserUpsertWithWhereUniqueWithoutTeamsInput `json:"upsert,omitempty"`
+	DeleteMany []UserScalarWhereInput                       `json:"deleteMany,omitempty"`
+	UpdateMany []UserUpdateManyWithWhereNestedInput         `json:"updateMany,omitempty"`
+}
+
+type UserUpdateWithWhereUniqueWithoutTeamsInput struct {
+	Where UserWhereUniqueInput            `json:"where"`
+	Data  UserUpdateWithoutTeamsDataInput `json:"data"`
+}
+
+type UserUpdateWithoutTeamsDataInput struct {
+	Name         *string                            `json:"name,omitempty"`
+	Sub          *string                            `json:"sub,omitempty"`
+	Picture      *string                            `json:"picture,omitempty"`
+	Leagues      *LeagueUpdateManyWithoutUsersInput `json:"leagues,omitempty"`
+	OwnedTeams   *TeamUpdateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
+	OwnedLeagues *LeagueUpdateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
+}
+
+type LeagueUpdateManyWithoutUsersInput struct {
+	Create     []LeagueCreateWithoutUsersInput                `json:"create,omitempty"`
+	Delete     []LeagueWhereUniqueInput                       `json:"delete,omitempty"`
+	Connect    []LeagueWhereUniqueInput                       `json:"connect,omitempty"`
+	Set        []LeagueWhereUniqueInput                       `json:"set,omitempty"`
+	Disconnect []LeagueWhereUniqueInput                       `json:"disconnect,omitempty"`
+	Update     []LeagueUpdateWithWhereUniqueWithoutUsersInput `json:"update,omitempty"`
+	Upsert     []LeagueUpsertWithWhereUniqueWithoutUsersInput `json:"upsert,omitempty"`
+	DeleteMany []LeagueScalarWhereInput                       `json:"deleteMany,omitempty"`
+	UpdateMany []LeagueUpdateManyWithWhereNestedInput         `json:"updateMany,omitempty"`
+}
+
+type LeagueUpdateWithWhereUniqueWithoutUsersInput struct {
+	Where LeagueWhereUniqueInput            `json:"where"`
+	Data  LeagueUpdateWithoutUsersDataInput `json:"data"`
+}
+
+type LeagueUpdateWithoutUsersDataInput struct {
+	Description *string                                        `json:"description,omitempty"`
+	Name        *string                                        `json:"name,omitempty"`
+	Teams       *TeamUpdateManyWithoutLeagueInput              `json:"teams,omitempty"`
+	Owner       *UserUpdateOneRequiredWithoutOwnedLeaguesInput `json:"owner,omitempty"`
+}
+
+type UserUpdateOneRequiredWithoutOwnedLeaguesInput struct {
+	Create  *UserCreateWithoutOwnedLeaguesInput     `json:"create,omitempty"`
+	Update  *UserUpdateWithoutOwnedLeaguesDataInput `json:"update,omitempty"`
+	Upsert  *UserUpsertWithoutOwnedLeaguesInput     `json:"upsert,omitempty"`
+	Connect *UserWhereUniqueInput                   `json:"connect,omitempty"`
+}
+
+type UserUpdateWithoutOwnedLeaguesDataInput struct {
+	Name       *string                            `json:"name,omitempty"`
+	Sub        *string                            `json:"sub,omitempty"`
+	Picture    *string                            `json:"picture,omitempty"`
+	Teams      *TeamUpdateManyWithoutUsersInput   `json:"teams,omitempty"`
+	Leagues    *LeagueUpdateManyWithoutUsersInput `json:"leagues,omitempty"`
+	OwnedTeams *TeamUpdateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
+}
+
+type TeamUpdateManyWithoutUsersInput struct {
+	Create     []TeamCreateWithoutUsersInput                `json:"create,omitempty"`
+	Delete     []TeamWhereUniqueInput                       `json:"delete,omitempty"`
+	Connect    []TeamWhereUniqueInput                       `json:"connect,omitempty"`
+	Set        []TeamWhereUniqueInput                       `json:"set,omitempty"`
+	Disconnect []TeamWhereUniqueInput                       `json:"disconnect,omitempty"`
+	Update     []TeamUpdateWithWhereUniqueWithoutUsersInput `json:"update,omitempty"`
+	Upsert     []TeamUpsertWithWhereUniqueWithoutUsersInput `json:"upsert,omitempty"`
+	DeleteMany []TeamScalarWhereInput                       `json:"deleteMany,omitempty"`
+	UpdateMany []TeamUpdateManyWithWhereNestedInput         `json:"updateMany,omitempty"`
+}
+
+type TeamUpdateWithWhereUniqueWithoutUsersInput struct {
+	Where TeamWhereUniqueInput            `json:"where"`
+	Data  TeamUpdateWithoutUsersDataInput `json:"data"`
+}
+
+type TeamUpdateWithoutUsersDataInput struct {
+	Description *string                                      `json:"description,omitempty"`
+	Name        *string                                      `json:"name,omitempty"`
+	League      *LeagueUpdateOneRequiredWithoutTeamsInput    `json:"league,omitempty"`
+	Owner       *UserUpdateOneRequiredWithoutOwnedTeamsInput `json:"owner,omitempty"`
+}
+
+type LeagueUpdateOneRequiredWithoutTeamsInput struct {
+	Create  *LeagueCreateWithoutTeamsInput     `json:"create,omitempty"`
+	Update  *LeagueUpdateWithoutTeamsDataInput `json:"update,omitempty"`
+	Upsert  *LeagueUpsertWithoutTeamsInput     `json:"upsert,omitempty"`
+	Connect *LeagueWhereUniqueInput            `json:"connect,omitempty"`
+}
+
+type LeagueUpdateWithoutTeamsDataInput struct {
+	Description *string                                        `json:"description,omitempty"`
+	Name        *string                                        `json:"name,omitempty"`
+	Users       *UserUpdateManyWithoutLeaguesInput             `json:"users,omitempty"`
+	Owner       *UserUpdateOneRequiredWithoutOwnedLeaguesInput `json:"owner,omitempty"`
+}
+
+type UserUpdateManyWithoutLeaguesInput struct {
+	Create     []UserCreateWithoutLeaguesInput                `json:"create,omitempty"`
+	Delete     []UserWhereUniqueInput                         `json:"delete,omitempty"`
+	Connect    []UserWhereUniqueInput                         `json:"connect,omitempty"`
+	Set        []UserWhereUniqueInput                         `json:"set,omitempty"`
+	Disconnect []UserWhereUniqueInput                         `json:"disconnect,omitempty"`
+	Update     []UserUpdateWithWhereUniqueWithoutLeaguesInput `json:"update,omitempty"`
+	Upsert     []UserUpsertWithWhereUniqueWithoutLeaguesInput `json:"upsert,omitempty"`
+	DeleteMany []UserScalarWhereInput                         `json:"deleteMany,omitempty"`
+	UpdateMany []UserUpdateManyWithWhereNestedInput           `json:"updateMany,omitempty"`
+}
+
+type UserUpdateWithWhereUniqueWithoutLeaguesInput struct {
+	Where UserWhereUniqueInput              `json:"where"`
+	Data  UserUpdateWithoutLeaguesDataInput `json:"data"`
+}
+
+type UserUpdateWithoutLeaguesDataInput struct {
+	Name         *string                            `json:"name,omitempty"`
+	Sub          *string                            `json:"sub,omitempty"`
+	Picture      *string                            `json:"picture,omitempty"`
+	Teams        *TeamUpdateManyWithoutUsersInput   `json:"teams,omitempty"`
+	OwnedTeams   *TeamUpdateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
+	OwnedLeagues *LeagueUpdateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
+}
+
+type TeamUpdateManyWithoutOwnerInput struct {
+	Create     []TeamCreateWithoutOwnerInput                `json:"create,omitempty"`
+	Delete     []TeamWhereUniqueInput                       `json:"delete,omitempty"`
+	Connect    []TeamWhereUniqueInput                       `json:"connect,omitempty"`
+	Set        []TeamWhereUniqueInput                       `json:"set,omitempty"`
+	Disconnect []TeamWhereUniqueInput                       `json:"disconnect,omitempty"`
+	Update     []TeamUpdateWithWhereUniqueWithoutOwnerInput `json:"update,omitempty"`
+	Upsert     []TeamUpsertWithWhereUniqueWithoutOwnerInput `json:"upsert,omitempty"`
+	DeleteMany []TeamScalarWhereInput                       `json:"deleteMany,omitempty"`
+	UpdateMany []TeamUpdateManyWithWhereNestedInput         `json:"updateMany,omitempty"`
+}
+
+type TeamUpdateWithWhereUniqueWithoutOwnerInput struct {
+	Where TeamWhereUniqueInput            `json:"where"`
+	Data  TeamUpdateWithoutOwnerDataInput `json:"data"`
+}
+
+type TeamUpdateWithoutOwnerDataInput struct {
+	Description *string                                   `json:"description,omitempty"`
+	Name        *string                                   `json:"name,omitempty"`
+	League      *LeagueUpdateOneRequiredWithoutTeamsInput `json:"league,omitempty"`
+	Users       *UserUpdateManyWithoutTeamsInput          `json:"users,omitempty"`
+}
+
+type TeamUpsertWithWhereUniqueWithoutOwnerInput struct {
+	Where  TeamWhereUniqueInput            `json:"where"`
+	Update TeamUpdateWithoutOwnerDataInput `json:"update"`
+	Create TeamCreateWithoutOwnerInput     `json:"create"`
+}
+
+type TeamScalarWhereInput struct {
+	ID                       *string                `json:"id,omitempty"`
+	IDNot                    *string                `json:"id_not,omitempty"`
+	IDIn                     []string               `json:"id_in,omitempty"`
+	IDNotIn                  []string               `json:"id_not_in,omitempty"`
+	IDLt                     *string                `json:"id_lt,omitempty"`
+	IDLte                    *string                `json:"id_lte,omitempty"`
+	IDGt                     *string                `json:"id_gt,omitempty"`
+	IDGte                    *string                `json:"id_gte,omitempty"`
+	IDContains               *string                `json:"id_contains,omitempty"`
+	IDNotContains            *string                `json:"id_not_contains,omitempty"`
+	IDStartsWith             *string                `json:"id_starts_with,omitempty"`
+	IDNotStartsWith          *string                `json:"id_not_starts_with,omitempty"`
+	IDEndsWith               *string                `json:"id_ends_with,omitempty"`
+	IDNotEndsWith            *string                `json:"id_not_ends_with,omitempty"`
+	CreatedAt                *string                `json:"createdAt,omitempty"`
+	CreatedAtNot             *string                `json:"createdAt_not,omitempty"`
+	CreatedAtIn              []string               `json:"createdAt_in,omitempty"`
+	CreatedAtNotIn           []string               `json:"createdAt_not_in,omitempty"`
+	CreatedAtLt              *string                `json:"createdAt_lt,omitempty"`
+	CreatedAtLte             *string                `json:"createdAt_lte,omitempty"`
+	CreatedAtGt              *string                `json:"createdAt_gt,omitempty"`
+	CreatedAtGte             *string                `json:"createdAt_gte,omitempty"`
+	Description              *string                `json:"description,omitempty"`
+	DescriptionNot           *string                `json:"description_not,omitempty"`
+	DescriptionIn            []string               `json:"description_in,omitempty"`
+	DescriptionNotIn         []string               `json:"description_not_in,omitempty"`
+	DescriptionLt            *string                `json:"description_lt,omitempty"`
+	DescriptionLte           *string                `json:"description_lte,omitempty"`
+	DescriptionGt            *string                `json:"description_gt,omitempty"`
+	DescriptionGte           *string                `json:"description_gte,omitempty"`
+	DescriptionContains      *string                `json:"description_contains,omitempty"`
+	DescriptionNotContains   *string                `json:"description_not_contains,omitempty"`
+	DescriptionStartsWith    *string                `json:"description_starts_with,omitempty"`
+	DescriptionNotStartsWith *string                `json:"description_not_starts_with,omitempty"`
+	DescriptionEndsWith      *string                `json:"description_ends_with,omitempty"`
+	DescriptionNotEndsWith   *string                `json:"description_not_ends_with,omitempty"`
+	Name                     *string                `json:"name,omitempty"`
+	NameNot                  *string                `json:"name_not,omitempty"`
+	NameIn                   []string               `json:"name_in,omitempty"`
+	NameNotIn                []string               `json:"name_not_in,omitempty"`
+	NameLt                   *string                `json:"name_lt,omitempty"`
+	NameLte                  *string                `json:"name_lte,omitempty"`
+	NameGt                   *string                `json:"name_gt,omitempty"`
+	NameGte                  *string                `json:"name_gte,omitempty"`
+	NameContains             *string                `json:"name_contains,omitempty"`
+	NameNotContains          *string                `json:"name_not_contains,omitempty"`
+	NameStartsWith           *string                `json:"name_starts_with,omitempty"`
+	NameNotStartsWith        *string                `json:"name_not_starts_with,omitempty"`
+	NameEndsWith             *string                `json:"name_ends_with,omitempty"`
+	NameNotEndsWith          *string                `json:"name_not_ends_with,omitempty"`
+	And                      []TeamScalarWhereInput `json:"AND,omitempty"`
+	Or                       []TeamScalarWhereInput `json:"OR,omitempty"`
+	Not                      []TeamScalarWhereInput `json:"NOT,omitempty"`
+}
+
+type TeamUpdateManyWithWhereNestedInput struct {
+	Where TeamScalarWhereInput    `json:"where"`
+	Data  TeamUpdateManyDataInput `json:"data"`
+}
+
+type TeamUpdateManyDataInput struct {
+	Description *string `json:"description,omitempty"`
+	Name        *string `json:"name,omitempty"`
+}
+
+type LeagueUpdateManyWithoutOwnerInput struct {
+	Create     []LeagueCreateWithoutOwnerInput                `json:"create,omitempty"`
+	Delete     []LeagueWhereUniqueInput                       `json:"delete,omitempty"`
+	Connect    []LeagueWhereUniqueInput                       `json:"connect,omitempty"`
+	Set        []LeagueWhereUniqueInput                       `json:"set,omitempty"`
+	Disconnect []LeagueWhereUniqueInput                       `json:"disconnect,omitempty"`
+	Update     []LeagueUpdateWithWhereUniqueWithoutOwnerInput `json:"update,omitempty"`
+	Upsert     []LeagueUpsertWithWhereUniqueWithoutOwnerInput `json:"upsert,omitempty"`
+	DeleteMany []LeagueScalarWhereInput                       `json:"deleteMany,omitempty"`
+	UpdateMany []LeagueUpdateManyWithWhereNestedInput         `json:"updateMany,omitempty"`
+}
+
+type LeagueUpdateWithWhereUniqueWithoutOwnerInput struct {
+	Where LeagueWhereUniqueInput            `json:"where"`
+	Data  LeagueUpdateWithoutOwnerDataInput `json:"data"`
+}
+
+type LeagueUpdateWithoutOwnerDataInput struct {
+	Description *string                            `json:"description,omitempty"`
+	Name        *string                            `json:"name,omitempty"`
+	Teams       *TeamUpdateManyWithoutLeagueInput  `json:"teams,omitempty"`
+	Users       *UserUpdateManyWithoutLeaguesInput `json:"users,omitempty"`
+}
+
+type LeagueUpsertWithWhereUniqueWithoutOwnerInput struct {
+	Where  LeagueWhereUniqueInput            `json:"where"`
+	Update LeagueUpdateWithoutOwnerDataInput `json:"update"`
+	Create LeagueCreateWithoutOwnerInput     `json:"create"`
+}
+
+type LeagueScalarWhereInput struct {
+	ID                       *string                  `json:"id,omitempty"`
+	IDNot                    *string                  `json:"id_not,omitempty"`
+	IDIn                     []string                 `json:"id_in,omitempty"`
+	IDNotIn                  []string                 `json:"id_not_in,omitempty"`
+	IDLt                     *string                  `json:"id_lt,omitempty"`
+	IDLte                    *string                  `json:"id_lte,omitempty"`
+	IDGt                     *string                  `json:"id_gt,omitempty"`
+	IDGte                    *string                  `json:"id_gte,omitempty"`
+	IDContains               *string                  `json:"id_contains,omitempty"`
+	IDNotContains            *string                  `json:"id_not_contains,omitempty"`
+	IDStartsWith             *string                  `json:"id_starts_with,omitempty"`
+	IDNotStartsWith          *string                  `json:"id_not_starts_with,omitempty"`
+	IDEndsWith               *string                  `json:"id_ends_with,omitempty"`
+	IDNotEndsWith            *string                  `json:"id_not_ends_with,omitempty"`
+	CreatedAt                *string                  `json:"createdAt,omitempty"`
+	CreatedAtNot             *string                  `json:"createdAt_not,omitempty"`
+	CreatedAtIn              []string                 `json:"createdAt_in,omitempty"`
+	CreatedAtNotIn           []string                 `json:"createdAt_not_in,omitempty"`
+	CreatedAtLt              *string                  `json:"createdAt_lt,omitempty"`
+	CreatedAtLte             *string                  `json:"createdAt_lte,omitempty"`
+	CreatedAtGt              *string                  `json:"createdAt_gt,omitempty"`
+	CreatedAtGte             *string                  `json:"createdAt_gte,omitempty"`
+	Description              *string                  `json:"description,omitempty"`
+	DescriptionNot           *string                  `json:"description_not,omitempty"`
+	DescriptionIn            []string                 `json:"description_in,omitempty"`
+	DescriptionNotIn         []string                 `json:"description_not_in,omitempty"`
+	DescriptionLt            *string                  `json:"description_lt,omitempty"`
+	DescriptionLte           *string                  `json:"description_lte,omitempty"`
+	DescriptionGt            *string                  `json:"description_gt,omitempty"`
+	DescriptionGte           *string                  `json:"description_gte,omitempty"`
+	DescriptionContains      *string                  `json:"description_contains,omitempty"`
+	DescriptionNotContains   *string                  `json:"description_not_contains,omitempty"`
+	DescriptionStartsWith    *string                  `json:"description_starts_with,omitempty"`
+	DescriptionNotStartsWith *string                  `json:"description_not_starts_with,omitempty"`
+	DescriptionEndsWith      *string                  `json:"description_ends_with,omitempty"`
+	DescriptionNotEndsWith   *string                  `json:"description_not_ends_with,omitempty"`
+	Name                     *string                  `json:"name,omitempty"`
+	NameNot                  *string                  `json:"name_not,omitempty"`
+	NameIn                   []string                 `json:"name_in,omitempty"`
+	NameNotIn                []string                 `json:"name_not_in,omitempty"`
+	NameLt                   *string                  `json:"name_lt,omitempty"`
+	NameLte                  *string                  `json:"name_lte,omitempty"`
+	NameGt                   *string                  `json:"name_gt,omitempty"`
+	NameGte                  *string                  `json:"name_gte,omitempty"`
+	NameContains             *string                  `json:"name_contains,omitempty"`
+	NameNotContains          *string                  `json:"name_not_contains,omitempty"`
+	NameStartsWith           *string                  `json:"name_starts_with,omitempty"`
+	NameNotStartsWith        *string                  `json:"name_not_starts_with,omitempty"`
+	NameEndsWith             *string                  `json:"name_ends_with,omitempty"`
+	NameNotEndsWith          *string                  `json:"name_not_ends_with,omitempty"`
+	And                      []LeagueScalarWhereInput `json:"AND,omitempty"`
+	Or                       []LeagueScalarWhereInput `json:"OR,omitempty"`
+	Not                      []LeagueScalarWhereInput `json:"NOT,omitempty"`
+}
+
+type LeagueUpdateManyWithWhereNestedInput struct {
+	Where LeagueScalarWhereInput    `json:"where"`
+	Data  LeagueUpdateManyDataInput `json:"data"`
+}
+
+type LeagueUpdateManyDataInput struct {
+	Description *string `json:"description,omitempty"`
+	Name        *string `json:"name,omitempty"`
+}
+
+type UserUpsertWithWhereUniqueWithoutLeaguesInput struct {
+	Where  UserWhereUniqueInput              `json:"where"`
+	Update UserUpdateWithoutLeaguesDataInput `json:"update"`
+	Create UserCreateWithoutLeaguesInput     `json:"create"`
+}
+
+type UserScalarWhereInput struct {
+	ID                   *string                `json:"id,omitempty"`
+	IDNot                *string                `json:"id_not,omitempty"`
+	IDIn                 []string               `json:"id_in,omitempty"`
+	IDNotIn              []string               `json:"id_not_in,omitempty"`
+	IDLt                 *string                `json:"id_lt,omitempty"`
+	IDLte                *string                `json:"id_lte,omitempty"`
+	IDGt                 *string                `json:"id_gt,omitempty"`
+	IDGte                *string                `json:"id_gte,omitempty"`
+	IDContains           *string                `json:"id_contains,omitempty"`
+	IDNotContains        *string                `json:"id_not_contains,omitempty"`
+	IDStartsWith         *string                `json:"id_starts_with,omitempty"`
+	IDNotStartsWith      *string                `json:"id_not_starts_with,omitempty"`
+	IDEndsWith           *string                `json:"id_ends_with,omitempty"`
+	IDNotEndsWith        *string                `json:"id_not_ends_with,omitempty"`
+	CreatedAt            *string                `json:"createdAt,omitempty"`
+	CreatedAtNot         *string                `json:"createdAt_not,omitempty"`
+	CreatedAtIn          []string               `json:"createdAt_in,omitempty"`
+	CreatedAtNotIn       []string               `json:"createdAt_not_in,omitempty"`
+	CreatedAtLt          *string                `json:"createdAt_lt,omitempty"`
+	CreatedAtLte         *string                `json:"createdAt_lte,omitempty"`
+	CreatedAtGt          *string                `json:"createdAt_gt,omitempty"`
+	CreatedAtGte         *string                `json:"createdAt_gte,omitempty"`
+	Name                 *string                `json:"name,omitempty"`
+	NameNot              *string                `json:"name_not,omitempty"`
+	NameIn               []string               `json:"name_in,omitempty"`
+	NameNotIn            []string               `json:"name_not_in,omitempty"`
+	NameLt               *string                `json:"name_lt,omitempty"`
+	NameLte              *string                `json:"name_lte,omitempty"`
+	NameGt               *string                `json:"name_gt,omitempty"`
+	NameGte              *string                `json:"name_gte,omitempty"`
+	NameContains         *string                `json:"name_contains,omitempty"`
+	NameNotContains      *string                `json:"name_not_contains,omitempty"`
+	NameStartsWith       *string                `json:"name_starts_with,omitempty"`
+	NameNotStartsWith    *string                `json:"name_not_starts_with,omitempty"`
+	NameEndsWith         *string                `json:"name_ends_with,omitempty"`
+	NameNotEndsWith      *string                `json:"name_not_ends_with,omitempty"`
+	Sub                  *string                `json:"sub,omitempty"`
+	SubNot               *string                `json:"sub_not,omitempty"`
+	SubIn                []string               `json:"sub_in,omitempty"`
+	SubNotIn             []string               `json:"sub_not_in,omitempty"`
+	SubLt                *string                `json:"sub_lt,omitempty"`
+	SubLte               *string                `json:"sub_lte,omitempty"`
+	SubGt                *string                `json:"sub_gt,omitempty"`
+	SubGte               *string                `json:"sub_gte,omitempty"`
+	SubContains          *string                `json:"sub_contains,omitempty"`
+	SubNotContains       *string                `json:"sub_not_contains,omitempty"`
+	SubStartsWith        *string                `json:"sub_starts_with,omitempty"`
+	SubNotStartsWith     *string                `json:"sub_not_starts_with,omitempty"`
+	SubEndsWith          *string                `json:"sub_ends_with,omitempty"`
+	SubNotEndsWith       *string                `json:"sub_not_ends_with,omitempty"`
+	Picture              *string                `json:"picture,omitempty"`
+	PictureNot           *string                `json:"picture_not,omitempty"`
+	PictureIn            []string               `json:"picture_in,omitempty"`
+	PictureNotIn         []string               `json:"picture_not_in,omitempty"`
+	PictureLt            *string                `json:"picture_lt,omitempty"`
+	PictureLte           *string                `json:"picture_lte,omitempty"`
+	PictureGt            *string                `json:"picture_gt,omitempty"`
+	PictureGte           *string                `json:"picture_gte,omitempty"`
+	PictureContains      *string                `json:"picture_contains,omitempty"`
+	PictureNotContains   *string                `json:"picture_not_contains,omitempty"`
+	PictureStartsWith    *string                `json:"picture_starts_with,omitempty"`
+	PictureNotStartsWith *string                `json:"picture_not_starts_with,omitempty"`
+	PictureEndsWith      *string                `json:"picture_ends_with,omitempty"`
+	PictureNotEndsWith   *string                `json:"picture_not_ends_with,omitempty"`
+	And                  []UserScalarWhereInput `json:"AND,omitempty"`
+	Or                   []UserScalarWhereInput `json:"OR,omitempty"`
+	Not                  []UserScalarWhereInput `json:"NOT,omitempty"`
+}
+
+type UserUpdateManyWithWhereNestedInput struct {
+	Where UserScalarWhereInput    `json:"where"`
+	Data  UserUpdateManyDataInput `json:"data"`
+}
+
+type UserUpdateManyDataInput struct {
+	Name    *string `json:"name,omitempty"`
+	Sub     *string `json:"sub,omitempty"`
+	Picture *string `json:"picture,omitempty"`
+}
+
+type LeagueUpsertWithoutTeamsInput struct {
+	Update LeagueUpdateWithoutTeamsDataInput `json:"update"`
+	Create LeagueCreateWithoutTeamsInput     `json:"create"`
+}
+
+type UserUpdateOneRequiredWithoutOwnedTeamsInput struct {
+	Create  *UserCreateWithoutOwnedTeamsInput     `json:"create,omitempty"`
+	Update  *UserUpdateWithoutOwnedTeamsDataInput `json:"update,omitempty"`
+	Upsert  *UserUpsertWithoutOwnedTeamsInput     `json:"upsert,omitempty"`
+	Connect *UserWhereUniqueInput                 `json:"connect,omitempty"`
+}
+
+type UserUpdateWithoutOwnedTeamsDataInput struct {
+	Name         *string                            `json:"name,omitempty"`
+	Sub          *string                            `json:"sub,omitempty"`
+	Picture      *string                            `json:"picture,omitempty"`
+	Teams        *TeamUpdateManyWithoutUsersInput   `json:"teams,omitempty"`
+	Leagues      *LeagueUpdateManyWithoutUsersInput `json:"leagues,omitempty"`
+	OwnedLeagues *LeagueUpdateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
+}
+
+type UserUpsertWithoutOwnedTeamsInput struct {
+	Update UserUpdateWithoutOwnedTeamsDataInput `json:"update"`
+	Create UserCreateWithoutOwnedTeamsInput     `json:"create"`
+}
+
+type TeamUpsertWithWhereUniqueWithoutUsersInput struct {
+	Where  TeamWhereUniqueInput            `json:"where"`
+	Update TeamUpdateWithoutUsersDataInput `json:"update"`
+	Create TeamCreateWithoutUsersInput     `json:"create"`
+}
+
+type UserUpsertWithoutOwnedLeaguesInput struct {
+	Update UserUpdateWithoutOwnedLeaguesDataInput `json:"update"`
+	Create UserCreateWithoutOwnedLeaguesInput     `json:"create"`
+}
+
+type LeagueUpsertWithWhereUniqueWithoutUsersInput struct {
+	Where  LeagueWhereUniqueInput            `json:"where"`
+	Update LeagueUpdateWithoutUsersDataInput `json:"update"`
+	Create LeagueCreateWithoutUsersInput     `json:"create"`
+}
+
+type UserUpsertWithWhereUniqueWithoutTeamsInput struct {
+	Where  UserWhereUniqueInput            `json:"where"`
+	Update UserUpdateWithoutTeamsDataInput `json:"update"`
+	Create UserCreateWithoutTeamsInput     `json:"create"`
+}
+
+type TeamUpsertWithWhereUniqueWithoutLeagueInput struct {
+	Where  TeamWhereUniqueInput             `json:"where"`
+	Update TeamUpdateWithoutLeagueDataInput `json:"update"`
+	Create TeamCreateWithoutLeagueInput     `json:"create"`
+}
+
+type LeagueUpdateManyMutationInput struct {
+	Description *string `json:"description,omitempty"`
+	Name        *string `json:"name,omitempty"`
+}
+
+type TeamCreateInput struct {
+	ID          *string                             `json:"id,omitempty"`
+	Description string                              `json:"description"`
+	Name        string                              `json:"name"`
+	League      LeagueCreateOneWithoutTeamsInput    `json:"league"`
+	Users       *UserCreateManyWithoutTeamsInput    `json:"users,omitempty"`
+	Owner       UserCreateOneWithoutOwnedTeamsInput `json:"owner"`
+}
+
+type TeamUpdateInput struct {
+	Description *string                                      `json:"description,omitempty"`
+	Name        *string                                      `json:"name,omitempty"`
+	League      *LeagueUpdateOneRequiredWithoutTeamsInput    `json:"league,omitempty"`
+	Users       *UserUpdateManyWithoutTeamsInput             `json:"users,omitempty"`
+	Owner       *UserUpdateOneRequiredWithoutOwnedTeamsInput `json:"owner,omitempty"`
+}
+
+type TeamUpdateManyMutationInput struct {
+	Description *string `json:"description,omitempty"`
+	Name        *string `json:"name,omitempty"`
+}
+
+type UserCreateInput struct {
+	ID           *string                            `json:"id,omitempty"`
+	Name         string                             `json:"name"`
+	Sub          string                             `json:"sub"`
+	Picture      string                             `json:"picture"`
+	Teams        *TeamCreateManyWithoutUsersInput   `json:"teams,omitempty"`
+	Leagues      *LeagueCreateManyWithoutUsersInput `json:"leagues,omitempty"`
+	OwnedTeams   *TeamCreateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
+	OwnedLeagues *LeagueCreateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
+}
+
+type UserUpdateInput struct {
+	Name         *string                            `json:"name,omitempty"`
+	Sub          *string                            `json:"sub,omitempty"`
+	Picture      *string                            `json:"picture,omitempty"`
+	Teams        *TeamUpdateManyWithoutUsersInput   `json:"teams,omitempty"`
+	Leagues      *LeagueUpdateManyWithoutUsersInput `json:"leagues,omitempty"`
+	OwnedTeams   *TeamUpdateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
+	OwnedLeagues *LeagueUpdateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
+}
+
+type UserUpdateManyMutationInput struct {
+	Name    *string `json:"name,omitempty"`
+	Sub     *string `json:"sub,omitempty"`
+	Picture *string `json:"picture,omitempty"`
+}
+
+type LeagueSubscriptionWhereInput struct {
+	MutationIn                 []MutationType                 `json:"mutation_in,omitempty"`
+	UpdatedFieldsContains      *string                        `json:"updatedFields_contains,omitempty"`
+	UpdatedFieldsContainsEvery []string                       `json:"updatedFields_contains_every,omitempty"`
+	UpdatedFieldsContainsSome  []string                       `json:"updatedFields_contains_some,omitempty"`
+	Node                       *LeagueWhereInput              `json:"node,omitempty"`
+	And                        []LeagueSubscriptionWhereInput `json:"AND,omitempty"`
+	Or                         []LeagueSubscriptionWhereInput `json:"OR,omitempty"`
+	Not                        []LeagueSubscriptionWhereInput `json:"NOT,omitempty"`
+}
+
+type TeamSubscriptionWhereInput struct {
+	MutationIn                 []MutationType               `json:"mutation_in,omitempty"`
+	UpdatedFieldsContains      *string                      `json:"updatedFields_contains,omitempty"`
+	UpdatedFieldsContainsEvery []string                     `json:"updatedFields_contains_every,omitempty"`
+	UpdatedFieldsContainsSome  []string                     `json:"updatedFields_contains_some,omitempty"`
+	Node                       *TeamWhereInput              `json:"node,omitempty"`
+	And                        []TeamSubscriptionWhereInput `json:"AND,omitempty"`
+	Or                         []TeamSubscriptionWhereInput `json:"OR,omitempty"`
+	Not                        []TeamSubscriptionWhereInput `json:"NOT,omitempty"`
 }
 
 type UserSubscriptionWhereInput struct {
@@ -278,62 +1599,91 @@ type UserSubscriptionWhereInput struct {
 	Not                        []UserSubscriptionWhereInput `json:"NOT,omitempty"`
 }
 
-type UserWhereUniqueInput struct {
-	ID *string `json:"id,omitempty"`
-}
-
-type UserPreviousValuesExec struct {
+type LeagueExec struct {
 	exec *prisma.Exec
 }
 
-func (instance UserPreviousValuesExec) Exec(ctx context.Context) (*UserPreviousValues, error) {
-	var v UserPreviousValues
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
+type TeamsParamsExec struct {
+	Where   *TeamWhereInput
+	OrderBy *TeamOrderByInput
+	Skip    *int32
+	After   *string
+	Before  *string
+	First   *int32
+	Last    *int32
+}
+
+func (instance *LeagueExec) Teams(params *TeamsParamsExec) *TeamExecArray {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
 	}
-	if !ok {
-		return nil, ErrNoResult
+
+	ret := instance.exec.Client.GetMany(
+		instance.exec,
+		wparams,
+		[3]string{"TeamWhereInput", "TeamOrderByInput", "Team"},
+		"teams",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &TeamExecArray{ret}
+}
+
+type UsersParamsExec struct {
+	Where   *UserWhereInput
+	OrderBy *UserOrderByInput
+	Skip    *int32
+	After   *string
+	Before  *string
+	First   *int32
+	Last    *int32
+}
+
+func (instance *LeagueExec) Users(params *UsersParamsExec) *UserExecArray {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
 	}
-	return &v, nil
+
+	ret := instance.exec.Client.GetMany(
+		instance.exec,
+		wparams,
+		[3]string{"UserWhereInput", "UserOrderByInput", "User"},
+		"users",
+		[]string{"id", "createdAt", "name", "sub", "picture"})
+
+	return &UserExecArray{ret}
 }
 
-func (instance UserPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type UserPreviousValuesExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance UserPreviousValuesExecArray) Exec(ctx context.Context) ([]UserPreviousValues, error) {
-	var v []UserPreviousValues
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-type UserPreviousValues struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-}
-
-type UserEdgeExec struct {
-	exec *prisma.Exec
-}
-
-func (instance *UserEdgeExec) Node() *UserExec {
+func (instance *LeagueExec) Owner() *UserExec {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
 		[2]string{"", "User"},
-		"node",
-		[]string{"id", "name"})
+		"owner",
+		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserExec{ret}
 }
 
-func (instance UserEdgeExec) Exec(ctx context.Context) (*UserEdge, error) {
-	var v UserEdge
+func (instance LeagueExec) Exec(ctx context.Context) (*League, error) {
+	var v League
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -344,52 +1694,81 @@ func (instance UserEdgeExec) Exec(ctx context.Context) (*UserEdge, error) {
 	return &v, nil
 }
 
-func (instance UserEdgeExec) Exists(ctx context.Context) (bool, error) {
+func (instance LeagueExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type UserEdgeExecArray struct {
+type LeagueExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance UserEdgeExecArray) Exec(ctx context.Context) ([]UserEdge, error) {
-	var v []UserEdge
+func (instance LeagueExecArray) Exec(ctx context.Context) ([]League, error) {
+	var v []League
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-type UserEdge struct {
-	Cursor string `json:"cursor"`
+var LeagueFields = []string{"id", "createdAt", "description", "name"}
+
+type League struct {
+	ID          string `json:"id"`
+	CreatedAt   string `json:"createdAt"`
+	Description string `json:"description"`
+	Name        string `json:"name"`
 }
 
-type UserSubscriptionPayloadExec struct {
+type TeamExec struct {
 	exec *prisma.Exec
 }
 
-func (instance *UserSubscriptionPayloadExec) Node() *UserExec {
+func (instance *TeamExec) League() *LeagueExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "League"},
+		"league",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &LeagueExec{ret}
+}
+
+func (instance *TeamExec) Users(params *UsersParamsExec) *UserExecArray {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := instance.exec.Client.GetMany(
+		instance.exec,
+		wparams,
+		[3]string{"UserWhereInput", "UserOrderByInput", "User"},
+		"users",
+		[]string{"id", "createdAt", "name", "sub", "picture"})
+
+	return &UserExecArray{ret}
+}
+
+func (instance *TeamExec) Owner() *UserExec {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
 		[2]string{"", "User"},
-		"node",
-		[]string{"id", "name"})
+		"owner",
+		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserExec{ret}
 }
 
-func (instance *UserSubscriptionPayloadExec) PreviousValues() *UserPreviousValuesExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "UserPreviousValues"},
-		"previousValues",
-		[]string{"id", "name"})
-
-	return &UserPreviousValuesExec{ret}
-}
-
-func (instance UserSubscriptionPayloadExec) Exec(ctx context.Context) (*UserSubscriptionPayload, error) {
-	var v UserSubscriptionPayload
+func (instance TeamExec) Exec(ctx context.Context) (*Team, error) {
+	var v Team
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -400,27 +1779,157 @@ func (instance UserSubscriptionPayloadExec) Exec(ctx context.Context) (*UserSubs
 	return &v, nil
 }
 
-func (instance UserSubscriptionPayloadExec) Exists(ctx context.Context) (bool, error) {
+func (instance TeamExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type UserSubscriptionPayloadExecArray struct {
+type TeamExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance UserSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]UserSubscriptionPayload, error) {
-	var v []UserSubscriptionPayload
+func (instance TeamExecArray) Exec(ctx context.Context) ([]Team, error) {
+	var v []Team
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-type UserSubscriptionPayload struct {
-	Mutation      MutationType `json:"mutation"`
-	UpdatedFields []string     `json:"updatedFields,omitempty"`
+var TeamFields = []string{"id", "createdAt", "description", "name"}
+
+type Team struct {
+	ID          string `json:"id"`
+	CreatedAt   string `json:"createdAt"`
+	Description string `json:"description"`
+	Name        string `json:"name"`
 }
 
 type UserExec struct {
 	exec *prisma.Exec
+}
+
+func (instance *UserExec) Teams(params *TeamsParamsExec) *TeamExecArray {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := instance.exec.Client.GetMany(
+		instance.exec,
+		wparams,
+		[3]string{"TeamWhereInput", "TeamOrderByInput", "Team"},
+		"teams",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &TeamExecArray{ret}
+}
+
+type LeaguesParamsExec struct {
+	Where   *LeagueWhereInput
+	OrderBy *LeagueOrderByInput
+	Skip    *int32
+	After   *string
+	Before  *string
+	First   *int32
+	Last    *int32
+}
+
+func (instance *UserExec) Leagues(params *LeaguesParamsExec) *LeagueExecArray {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := instance.exec.Client.GetMany(
+		instance.exec,
+		wparams,
+		[3]string{"LeagueWhereInput", "LeagueOrderByInput", "League"},
+		"leagues",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &LeagueExecArray{ret}
+}
+
+type OwnedTeamsParamsExec struct {
+	Where   *TeamWhereInput
+	OrderBy *TeamOrderByInput
+	Skip    *int32
+	After   *string
+	Before  *string
+	First   *int32
+	Last    *int32
+}
+
+func (instance *UserExec) OwnedTeams(params *OwnedTeamsParamsExec) *TeamExecArray {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := instance.exec.Client.GetMany(
+		instance.exec,
+		wparams,
+		[3]string{"TeamWhereInput", "TeamOrderByInput", "Team"},
+		"ownedTeams",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &TeamExecArray{ret}
+}
+
+type OwnedLeaguesParamsExec struct {
+	Where   *LeagueWhereInput
+	OrderBy *LeagueOrderByInput
+	Skip    *int32
+	After   *string
+	Before  *string
+	First   *int32
+	Last    *int32
+}
+
+func (instance *UserExec) OwnedLeagues(params *OwnedLeaguesParamsExec) *LeagueExecArray {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := instance.exec.Client.GetMany(
+		instance.exec,
+		wparams,
+		[3]string{"LeagueWhereInput", "LeagueOrderByInput", "League"},
+		"ownedLeagues",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &LeagueExecArray{ret}
 }
 
 func (instance UserExec) Exec(ctx context.Context) (*User, error) {
@@ -449,16 +1958,21 @@ func (instance UserExecArray) Exec(ctx context.Context) ([]User, error) {
 	return v, err
 }
 
+var UserFields = []string{"id", "createdAt", "name", "sub", "picture"}
+
 type User struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID        string `json:"id"`
+	CreatedAt string `json:"createdAt"`
+	Name      string `json:"name"`
+	Sub       string `json:"sub"`
+	Picture   string `json:"picture"`
 }
 
-type UserConnectionExec struct {
+type LeagueConnectionExec struct {
 	exec *prisma.Exec
 }
 
-func (instance *UserConnectionExec) PageInfo() *PageInfoExec {
+func (instance *LeagueConnectionExec) PageInfo() *PageInfoExec {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
@@ -469,57 +1983,73 @@ func (instance *UserConnectionExec) PageInfo() *PageInfoExec {
 	return &PageInfoExec{ret}
 }
 
-func (instance *UserConnectionExec) Edges() *UserEdgeExec {
-	ret := instance.exec.Client.GetOne(
+func (instance *LeagueConnectionExec) Edges() *LeagueEdgeExecArray {
+	edges := instance.exec.Client.GetMany(
 		instance.exec,
 		nil,
-		[2]string{"", "UserEdge"},
+		[3]string{"LeagueWhereInput", "LeagueOrderByInput", "LeagueEdge"},
 		"edges",
 		[]string{"cursor"})
 
-	return &UserEdgeExec{ret}
+	nodes := edges.Client.GetOne(
+		edges,
+		nil,
+		[2]string{"", "League"},
+		"node",
+		LeagueFields)
+
+	return &LeagueEdgeExecArray{nodes}
 }
 
-func (instance *UserConnectionExec) Aggregate(ctx context.Context) (Aggregate, error) {
+func (instance *LeagueConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
-		[2]string{"", "AggregateUser"},
+		[2]string{"", "AggregateLeague"},
 		"aggregate",
 		[]string{"count"})
 
 	var v Aggregate
 	_, err := ret.Exec(ctx, &v)
-	return v, err
+	return &v, err
 }
 
-func (instance UserConnectionExec) Exec(ctx context.Context) (*UserConnection, error) {
-	var v UserConnection
-	ok, err := instance.exec.Exec(ctx, &v)
+func (instance LeagueConnectionExec) Exec(ctx context.Context) (*LeagueConnection, error) {
+	edges, err := instance.Edges().Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
-	if !ok {
-		return nil, ErrNoResult
+
+	pageInfo, err := instance.PageInfo().Exec(ctx)
+	if err != nil {
+		return nil, err
 	}
-	return &v, nil
+
+	return &LeagueConnection{
+		Edges:    edges,
+		PageInfo: *pageInfo,
+	}, nil
 }
 
-func (instance UserConnectionExec) Exists(ctx context.Context) (bool, error) {
+func (instance LeagueConnectionExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type UserConnectionExecArray struct {
+type LeagueConnectionExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance UserConnectionExecArray) Exec(ctx context.Context) ([]UserConnection, error) {
-	var v []UserConnection
+func (instance LeagueConnectionExecArray) Exec(ctx context.Context) ([]LeagueConnection, error) {
+	var v []LeagueConnection
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-type UserConnection struct {
+var LeagueConnectionFields = []string{}
+
+type LeagueConnection struct {
+	PageInfo PageInfo     `json:"pageInfo"`
+	Edges    []LeagueEdge `json:"edges"`
 }
 
 type PageInfoExec struct {
@@ -552,9 +2082,621 @@ func (instance PageInfoExecArray) Exec(ctx context.Context) ([]PageInfo, error) 
 	return v, err
 }
 
+var PageInfoFields = []string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"}
+
 type PageInfo struct {
 	HasNextPage     bool    `json:"hasNextPage"`
 	HasPreviousPage bool    `json:"hasPreviousPage"`
 	StartCursor     *string `json:"startCursor,omitempty"`
 	EndCursor       *string `json:"endCursor,omitempty"`
+}
+
+type LeagueEdgeExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *LeagueEdgeExec) Node() *LeagueExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "League"},
+		"node",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &LeagueExec{ret}
+}
+
+func (instance LeagueEdgeExec) Exec(ctx context.Context) (*LeagueEdge, error) {
+	var v LeagueEdge
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance LeagueEdgeExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type LeagueEdgeExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance LeagueEdgeExecArray) Exec(ctx context.Context) ([]LeagueEdge, error) {
+	var v []LeagueEdge
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var LeagueEdgeFields = []string{"cursor"}
+
+type LeagueEdge struct {
+	Node   League `json:"node"`
+	Cursor string `json:"cursor"`
+}
+
+type TeamConnectionExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *TeamConnectionExec) PageInfo() *PageInfoExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "PageInfo"},
+		"pageInfo",
+		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
+
+	return &PageInfoExec{ret}
+}
+
+func (instance *TeamConnectionExec) Edges() *TeamEdgeExecArray {
+	edges := instance.exec.Client.GetMany(
+		instance.exec,
+		nil,
+		[3]string{"TeamWhereInput", "TeamOrderByInput", "TeamEdge"},
+		"edges",
+		[]string{"cursor"})
+
+	nodes := edges.Client.GetOne(
+		edges,
+		nil,
+		[2]string{"", "Team"},
+		"node",
+		TeamFields)
+
+	return &TeamEdgeExecArray{nodes}
+}
+
+func (instance *TeamConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "AggregateTeam"},
+		"aggregate",
+		[]string{"count"})
+
+	var v Aggregate
+	_, err := ret.Exec(ctx, &v)
+	return &v, err
+}
+
+func (instance TeamConnectionExec) Exec(ctx context.Context) (*TeamConnection, error) {
+	edges, err := instance.Edges().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	pageInfo, err := instance.PageInfo().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &TeamConnection{
+		Edges:    edges,
+		PageInfo: *pageInfo,
+	}, nil
+}
+
+func (instance TeamConnectionExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type TeamConnectionExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance TeamConnectionExecArray) Exec(ctx context.Context) ([]TeamConnection, error) {
+	var v []TeamConnection
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var TeamConnectionFields = []string{}
+
+type TeamConnection struct {
+	PageInfo PageInfo   `json:"pageInfo"`
+	Edges    []TeamEdge `json:"edges"`
+}
+
+type TeamEdgeExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *TeamEdgeExec) Node() *TeamExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "Team"},
+		"node",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &TeamExec{ret}
+}
+
+func (instance TeamEdgeExec) Exec(ctx context.Context) (*TeamEdge, error) {
+	var v TeamEdge
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance TeamEdgeExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type TeamEdgeExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance TeamEdgeExecArray) Exec(ctx context.Context) ([]TeamEdge, error) {
+	var v []TeamEdge
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var TeamEdgeFields = []string{"cursor"}
+
+type TeamEdge struct {
+	Node   Team   `json:"node"`
+	Cursor string `json:"cursor"`
+}
+
+type UserConnectionExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *UserConnectionExec) PageInfo() *PageInfoExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "PageInfo"},
+		"pageInfo",
+		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
+
+	return &PageInfoExec{ret}
+}
+
+func (instance *UserConnectionExec) Edges() *UserEdgeExecArray {
+	edges := instance.exec.Client.GetMany(
+		instance.exec,
+		nil,
+		[3]string{"UserWhereInput", "UserOrderByInput", "UserEdge"},
+		"edges",
+		[]string{"cursor"})
+
+	nodes := edges.Client.GetOne(
+		edges,
+		nil,
+		[2]string{"", "User"},
+		"node",
+		UserFields)
+
+	return &UserEdgeExecArray{nodes}
+}
+
+func (instance *UserConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "AggregateUser"},
+		"aggregate",
+		[]string{"count"})
+
+	var v Aggregate
+	_, err := ret.Exec(ctx, &v)
+	return &v, err
+}
+
+func (instance UserConnectionExec) Exec(ctx context.Context) (*UserConnection, error) {
+	edges, err := instance.Edges().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	pageInfo, err := instance.PageInfo().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &UserConnection{
+		Edges:    edges,
+		PageInfo: *pageInfo,
+	}, nil
+}
+
+func (instance UserConnectionExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type UserConnectionExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance UserConnectionExecArray) Exec(ctx context.Context) ([]UserConnection, error) {
+	var v []UserConnection
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var UserConnectionFields = []string{}
+
+type UserConnection struct {
+	PageInfo PageInfo   `json:"pageInfo"`
+	Edges    []UserEdge `json:"edges"`
+}
+
+type UserEdgeExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *UserEdgeExec) Node() *UserExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "User"},
+		"node",
+		[]string{"id", "createdAt", "name", "sub", "picture"})
+
+	return &UserExec{ret}
+}
+
+func (instance UserEdgeExec) Exec(ctx context.Context) (*UserEdge, error) {
+	var v UserEdge
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance UserEdgeExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type UserEdgeExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance UserEdgeExecArray) Exec(ctx context.Context) ([]UserEdge, error) {
+	var v []UserEdge
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var UserEdgeFields = []string{"cursor"}
+
+type UserEdge struct {
+	Node   User   `json:"node"`
+	Cursor string `json:"cursor"`
+}
+
+type LeagueSubscriptionPayloadExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *LeagueSubscriptionPayloadExec) Node() *LeagueExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "League"},
+		"node",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &LeagueExec{ret}
+}
+
+func (instance *LeagueSubscriptionPayloadExec) PreviousValues() *LeaguePreviousValuesExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "LeaguePreviousValues"},
+		"previousValues",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &LeaguePreviousValuesExec{ret}
+}
+
+func (instance LeagueSubscriptionPayloadExec) Exec(ctx context.Context) (*LeagueSubscriptionPayload, error) {
+	var v LeagueSubscriptionPayload
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance LeagueSubscriptionPayloadExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type LeagueSubscriptionPayloadExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance LeagueSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]LeagueSubscriptionPayload, error) {
+	var v []LeagueSubscriptionPayload
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var LeagueSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
+
+type LeagueSubscriptionPayload struct {
+	Mutation      MutationType `json:"mutation"`
+	Node          *League      `json:"node,omitempty"`
+	UpdatedFields []string     `json:"updatedFields,omitempty"`
+}
+
+type LeaguePreviousValuesExec struct {
+	exec *prisma.Exec
+}
+
+func (instance LeaguePreviousValuesExec) Exec(ctx context.Context) (*LeaguePreviousValues, error) {
+	var v LeaguePreviousValues
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance LeaguePreviousValuesExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type LeaguePreviousValuesExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance LeaguePreviousValuesExecArray) Exec(ctx context.Context) ([]LeaguePreviousValues, error) {
+	var v []LeaguePreviousValues
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var LeaguePreviousValuesFields = []string{"id", "createdAt", "description", "name"}
+
+type LeaguePreviousValues struct {
+	ID          string `json:"id"`
+	CreatedAt   string `json:"createdAt"`
+	Description string `json:"description"`
+	Name        string `json:"name"`
+}
+
+type TeamSubscriptionPayloadExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *TeamSubscriptionPayloadExec) Node() *TeamExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "Team"},
+		"node",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &TeamExec{ret}
+}
+
+func (instance *TeamSubscriptionPayloadExec) PreviousValues() *TeamPreviousValuesExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "TeamPreviousValues"},
+		"previousValues",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &TeamPreviousValuesExec{ret}
+}
+
+func (instance TeamSubscriptionPayloadExec) Exec(ctx context.Context) (*TeamSubscriptionPayload, error) {
+	var v TeamSubscriptionPayload
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance TeamSubscriptionPayloadExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type TeamSubscriptionPayloadExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance TeamSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]TeamSubscriptionPayload, error) {
+	var v []TeamSubscriptionPayload
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var TeamSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
+
+type TeamSubscriptionPayload struct {
+	Mutation      MutationType `json:"mutation"`
+	Node          *Team        `json:"node,omitempty"`
+	UpdatedFields []string     `json:"updatedFields,omitempty"`
+}
+
+type TeamPreviousValuesExec struct {
+	exec *prisma.Exec
+}
+
+func (instance TeamPreviousValuesExec) Exec(ctx context.Context) (*TeamPreviousValues, error) {
+	var v TeamPreviousValues
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance TeamPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type TeamPreviousValuesExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance TeamPreviousValuesExecArray) Exec(ctx context.Context) ([]TeamPreviousValues, error) {
+	var v []TeamPreviousValues
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var TeamPreviousValuesFields = []string{"id", "createdAt", "description", "name"}
+
+type TeamPreviousValues struct {
+	ID          string `json:"id"`
+	CreatedAt   string `json:"createdAt"`
+	Description string `json:"description"`
+	Name        string `json:"name"`
+}
+
+type UserSubscriptionPayloadExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *UserSubscriptionPayloadExec) Node() *UserExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "User"},
+		"node",
+		[]string{"id", "createdAt", "name", "sub", "picture"})
+
+	return &UserExec{ret}
+}
+
+func (instance *UserSubscriptionPayloadExec) PreviousValues() *UserPreviousValuesExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "UserPreviousValues"},
+		"previousValues",
+		[]string{"id", "createdAt", "name", "sub", "picture"})
+
+	return &UserPreviousValuesExec{ret}
+}
+
+func (instance UserSubscriptionPayloadExec) Exec(ctx context.Context) (*UserSubscriptionPayload, error) {
+	var v UserSubscriptionPayload
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance UserSubscriptionPayloadExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type UserSubscriptionPayloadExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance UserSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]UserSubscriptionPayload, error) {
+	var v []UserSubscriptionPayload
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var UserSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
+
+type UserSubscriptionPayload struct {
+	Mutation      MutationType `json:"mutation"`
+	Node          *User        `json:"node,omitempty"`
+	UpdatedFields []string     `json:"updatedFields,omitempty"`
+}
+
+type UserPreviousValuesExec struct {
+	exec *prisma.Exec
+}
+
+func (instance UserPreviousValuesExec) Exec(ctx context.Context) (*UserPreviousValues, error) {
+	var v UserPreviousValues
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance UserPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type UserPreviousValuesExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance UserPreviousValuesExecArray) Exec(ctx context.Context) ([]UserPreviousValues, error) {
+	var v []UserPreviousValues
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var UserPreviousValuesFields = []string{"id", "createdAt", "name", "sub", "picture"}
+
+type UserPreviousValues struct {
+	ID        string `json:"id"`
+	CreatedAt string `json:"createdAt"`
+	Name      string `json:"name"`
+	Sub       string `json:"sub"`
+	Picture   string `json:"picture"`
 }

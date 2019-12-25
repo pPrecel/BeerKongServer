@@ -1,4 +1,5 @@
-endpoint: https://beer-kong-prisma-cee5f23284.herokuapp.com/
+endpoint: https://beer-kong-prisma-cee5f23284.herokuapp.com/beer-kong-prisma/beer-kong
+#endpoint: https://beer-kong-prisma-cee5f23284.herokuapp.com/beer-kong-prisma/test-kong
 datamodel: datamodel.prisma
 
 secret: ${env:PRISMA_SECRET}

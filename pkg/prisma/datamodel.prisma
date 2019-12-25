@@ -1,4 +1,36 @@
 type User {
   id: ID! @id
-  name: String!
+  createdAt: DateTime! @createdAt
+  name: String! @unique
+  sub: String! @unique
+  picture: String!
+  teams: [Team!]! @relation(name: "UserTeam", link: TABLE)
+  leagues: [League!]! @relation(name: "UserLeague")
+  ownedTeams: [Team!]! @relation(name: "OwnedTeam", onDelete: CASCADE)
+  ownedLeagues: [League!]! @relation(name: "OwnedLeague", onDelete: CASCADE)
+}
+
+type Team {
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  description: String!
+  name: String! @unique
+  league: League! @relation(name: "ContainTeam")
+  users: [User!]! @relation(name: "UserTeam")
+  owner: User! @relation(name: "OwnedTeam")
+}
+
+type League {
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  description: String!
+  name: String! @unique
+  teams: [Team!]! @relation(name: "ContainTeam", onDelete: CASCADE)
+  users: [User!]! @relation(name: "UserLeague")
+  owner: User! @relation(name: "OwnedLeague")
+}
+
+type UserTeam @relationTable {
+  user: User!
+  team: Team!
 }

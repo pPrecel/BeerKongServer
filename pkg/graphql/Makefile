@@ -4,7 +4,7 @@
 delete-graphql:
 	@rm -rf server generate.go gqlgen.yml models_gen.go resolver.go
 
-generate-graphql: delete-graphql
+generate-new-graphql: delete-graphql
 	@go run github.com/99designs/gqlgen init -v
 	@rm -rf server
 	@echo "done"

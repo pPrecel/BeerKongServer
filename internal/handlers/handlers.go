@@ -4,30 +4,31 @@ import (
 	"fmt"
 	h "github.com/99designs/gqlgen/handler"
 	"github.com/pPrecel/BeerKongServer/internal/auth"
+	"github.com/pPrecel/BeerKongServer/internal/graphqlcomposer"
 	"github.com/pPrecel/BeerKongServer/internal/programerrors"
 	"github.com/pPrecel/BeerKongServer/internal/servererrors"
-	"github.com/pPrecel/BeerKongServer/pkg/graphql"
+	"github.com/pPrecel/BeerKongServer/pkg/graphql/generated"
 	log "github.com/sirupsen/logrus"
 	"net/http"
 )
 
 type Handler interface {
-	GraphQlAuthHandler(http.ResponseWriter,*http.Request)
+	GraphQlAuthHandler(http.ResponseWriter, *http.Request)
 	GraphQlHandler(http.ResponseWriter, *http.Request)
 }
 
 type handler struct {
-	auth auth.Auth
-	resolver *graphql.Resolver
+	auth     auth.Auth
+	composer graphqlcomposer.Composer
 }
 
-func New(auth auth.Auth, resolver *graphql.Resolver) Handler {
-	return handler{auth: auth, resolver: resolver}
+func New(auth auth.Auth, composer graphqlcomposer.Composer) Handler {
+	return handler{auth: auth, composer: composer}
 }
 
 func (s handler) GraphQlHandler(writer http.ResponseWriter, request *http.Request) {
 	log.Infof("Handle request without authorization")
-	h.GraphQL(graphql.NewExecutableSchema(graphql.Config{Resolvers: s.resolver})).ServeHTTP(writer, request)
+	h.GraphQL(generated.NewExecutableSchema(generated.Config{Resolvers: s.composer.Resolver()})).ServeHTTP(writer, request)
 }
 
 func (s handler) GraphQlAuthHandler(writer http.ResponseWriter, request *http.Request) {
@@ -40,7 +41,11 @@ func (s handler) GraphQlAuthHandler(writer http.ResponseWriter, request *http.Re
 		return
 	}
 
-	if len(token) > 10 { log.Infof(" For token: \"%s...\"", token[0:10]) } else { log.Infof(" For token: \"%s\"", token) }
+	if len(token) > 10 {
+		log.Infof(" For token: \"%s...\"", token[0:10])
+	} else {
+		log.Infof(" For token: \"%s\"", token)
+	}
 	res, err := s.auth.GetAccount(token)
 	if err != nil {
 		log.Warnf("ERROR: \"%s\"", err.Error())
@@ -48,7 +53,10 @@ func (s handler) GraphQlAuthHandler(writer http.ResponseWriter, request *http.Re
 		return
 	}
 
-	if len(token) > 10 { fmt.Printf("User email: %s for token: \"%s...\"", res.Email, token[0:10]) } else { fmt.Printf("User email: %s for token: \"%s\"", res.Email, token) }
-	h.GraphQL(graphql.NewExecutableSchema(graphql.Config{Resolvers: s.resolver})).ServeHTTP(writer, request)
+	if len(token) > 10 {
+		fmt.Printf("User email: %s for token: \"%s...\"", res.Email, token[0:10])
+	} else {
+		fmt.Printf("User email: %s for token: \"%s\"", res.Email, token)
+	}
+	h.GraphQL(generated.NewExecutableSchema(generated.Config{Resolvers: s.composer.Resolver()})).ServeHTTP(writer, request)
 }
-

@@ -3,17 +3,35 @@
 # Refer to https://gqlgen.com/config/
 # for detailed .gqlgen.yml documentation.
 
-schema:
-- schema.graphql
+schema: schema.graphql
 exec:
-  filename: generated.go
-model:
-  filename: models_gen.go
-resolver:
-  filename: resolver.go
-  type: Resolver
-autobind: []
-
+  filename: generated/generated.go
 models:
-  Todo:
-    model: github.com/pPrecel/BeerKongServer/internal/model.Todo
+  League:
+    model: github.com/pPrecel/BeerKongServer/pkg/prisma/generated/prisma-client.League
+  LeagueWhereInput:
+    model: github.com/pPrecel/BeerKongServer/pkg/prisma/generated/prisma-client.LeagueWhereInput
+  LeagueWhereUniqueInput:
+    model: github.com/pPrecel/BeerKongServer/pkg/prisma/generated/prisma-client.LeagueWhereUniqueInput
+  LeagueOrderByInput:
+    model: github.com/pPrecel/BeerKongServer/pkg/prisma/generated/prisma-client.LeagueOrderByInput
+  Team:
+    model: github.com/pPrecel/BeerKongServer/pkg/prisma/generated/prisma-client.Team
+  TeamWhereInput:
+    model: github.com/pPrecel/BeerKongServer/pkg/prisma/generated/prisma-client.TeamWhereInput
+  TeamWhereUniqueInput:
+    model: github.com/pPrecel/BeerKongServer/pkg/prisma/generated/prisma-client.TeamWhereUniqueInput
+  TeamOrderByInput:
+    model: github.com/pPrecel/BeerKongServer/pkg/prisma/generated/prisma-client.TeamOrderByInput
+  User:
+    model: github.com/pPrecel/BeerKongServer/pkg/prisma/generated/prisma-client.User
+  UserWhereInput:
+    model: github.com/pPrecel/BeerKongServer/pkg/prisma/generated/prisma-client.UserWhereInput
+  UserWhereUniqueInput:
+    model: github.com/pPrecel/BeerKongServer/pkg/prisma/generated/prisma-client.UserWhereUniqueInput
+  UserOrderByInput:
+    model: github.com/pPrecel/BeerKongServer/pkg/prisma/generated/prisma-client.UserOrderByInput
+resolver:
+  filename: generated/resolver.go
+  type: Resolver
+omit_slice_element_pointers: true
