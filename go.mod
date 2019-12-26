@@ -8,6 +8,7 @@ require (
 	github.com/go-chi/chi v3.3.2+incompatible
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/machinebox/graphql v0.2.2
+	github.com/pkg/errors v0.8.1
 	github.com/prisma/prisma-client-lib-go v0.0.0-20181017161110-68a1f9908416
 	github.com/rs/cors v1.6.0
 	github.com/sirupsen/logrus v1.4.2

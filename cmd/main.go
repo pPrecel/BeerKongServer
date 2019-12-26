@@ -55,9 +55,8 @@ func main() {
 	handlers := handlers.New(authClient, graphqlcomposer.New(prismaClient))
 
 	log.Infof("Set handlers")
-	router.Handle("/", handler.Playground("GraphQL playground", "/q-tmp"))
-	router.HandleFunc("/q-tmp", handlers.GraphQlHandler)
-	router.HandleFunc("/query", handlers.GraphQlAuthHandler)
+	router.HandleFunc("/", handlers.PrismaGQL)
+	router.Handle("/playground", handler.Playground("GraphQL playground", "/"))
 
 	log.Infof("Start listening on port \":%s\"", conf.Port)
 	if err != http.ListenAndServe(fmt.Sprintf(":%s", conf.Port), router) {

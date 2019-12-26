@@ -4,11 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/pPrecel/BeerKongServer/internal/programerrors"
+	"github.com/pkg/errors"
 	"net/http"
 )
 
-const GoogleApiURL="https://www.googleapis.com/oauth2/v3/tokeninfo?id_token="
+const GoogleApiURL = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token="
 
 //GoogleAccount contains all information about Google Account
 type GoogleAccount struct {
@@ -34,12 +34,12 @@ type GoogleAccount struct {
 
 //Auth describe functionality of this package
 type Auth interface {
-	GetAccount(string) (GoogleAccount, programerrors.Error)
+	GetAccount(string) (GoogleAccount, error)
 }
 
 //HttpClient describe given client used for rest communication
 type HttpClint interface {
-	Get(string) (*http.Response,error)
+	Get(string) (*http.Response, error)
 }
 
 type auth struct {
@@ -52,13 +52,14 @@ func New(client HttpClint) Auth {
 }
 
 //GetAccount - Prepare request to google API and return GoogleAccount struct
-func (s *auth) GetAccount(tokenId string) (GoogleAccount, programerrors.Error){
-	res, err := s.client.Get(fmt.Sprintf("%s%s",GoogleApiURL,tokenId))
-	if err != nil{
-		return GoogleAccount{}, programerrors.Internal("Sending request error: %s", err)
+func (s *auth) GetAccount(tokenId string) (GoogleAccount, error) {
+	res, err := s.client.Get(fmt.Sprintf("%s%s", GoogleApiURL, tokenId))
+	if err != nil {
+		return GoogleAccount{}, errors.Wrapf(err, "While Sending request")
 	}
 	if res.StatusCode != http.StatusOK {
-		return GoogleAccount{}, programerrors.UpstreamServerCallFailed("Google Call fail: Status %s", res.Status)
+
+		return GoogleAccount{}, fmt.Errorf("Google Call fail with Status %s", res.Status)
 	}
 
 	buf := new(bytes.Buffer)
@@ -67,7 +68,7 @@ func (s *auth) GetAccount(tokenId string) (GoogleAccount, programerrors.Error){
 	var account GoogleAccount
 	err = json.Unmarshal(buf.Bytes(), &account)
 	if err != nil {
-		return GoogleAccount{}, programerrors.Internal("Cannot parse response: %s", err.Error())
+		return GoogleAccount{}, errors.Wrapf(err, "while parsing response")
 	}
 	return account, nil
 }

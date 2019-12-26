@@ -9,10 +9,11 @@ import (
 
 type Resolver struct {
 	prismaClient *prisma.Client
+	user         *prisma.User
 }
 
-func New(prismaClient *prisma.Client) *Resolver {
-	return &Resolver{prismaClient: prismaClient}
+func New(prismaClient *prisma.Client, user *prisma.User) *Resolver {
+	return &Resolver{prismaClient: prismaClient, user: user}
 }
 
 func (r *Resolver) League() LeagueResolver {
@@ -126,12 +127,12 @@ type leagueResolver struct{ *Resolver }
 
 func (r *leagueResolver) Teams(ctx context.Context, obj *prisma.League) ([]prisma.Team, error) {
 	return r.prismaClient.League(prisma.LeagueWhereUniqueInput{
-		ID:   &obj.ID,
+		ID: &obj.ID,
 	}).Teams(nil).Exec(ctx)
 }
 func (r *leagueResolver) Users(ctx context.Context, obj *prisma.League) ([]prisma.User, error) {
 	return r.prismaClient.League(prisma.LeagueWhereUniqueInput{
-		ID:   &obj.ID,
+		ID: &obj.ID,
 	}).Users(nil).Exec(ctx)
 }
 func (r *leagueResolver) Owner(ctx context.Context, obj *prisma.League) (*prisma.User, error) {
@@ -144,17 +145,17 @@ type teamResolver struct{ *Resolver }
 
 func (r *teamResolver) League(ctx context.Context, obj *prisma.Team) (*prisma.League, error) {
 	return r.prismaClient.Team(prisma.TeamWhereUniqueInput{
-		ID:   &obj.ID,
+		ID: &obj.ID,
 	}).League().Exec(ctx)
 }
 func (r *teamResolver) Users(ctx context.Context, obj *prisma.Team) ([]prisma.User, error) {
 	return r.prismaClient.Team(prisma.TeamWhereUniqueInput{
-		ID:   &obj.ID,
+		ID: &obj.ID,
 	}).Users(nil).Exec(ctx)
 }
 func (r *teamResolver) Owner(ctx context.Context, obj *prisma.Team) (*prisma.User, error) {
 	return r.prismaClient.Team(prisma.TeamWhereUniqueInput{
-		ID:   &obj.ID,
+		ID: &obj.ID,
 	}).Owner().Exec(ctx)
 }
 
@@ -162,21 +163,21 @@ type userResolver struct{ *Resolver }
 
 func (r *userResolver) Teams(ctx context.Context, obj *prisma.User) ([]prisma.Team, error) {
 	return r.prismaClient.User(prisma.UserWhereUniqueInput{
-		ID:   &obj.ID,
+		ID: &obj.ID,
 	}).Teams(nil).Exec(ctx)
 }
 func (r *userResolver) Leagues(ctx context.Context, obj *prisma.User) ([]prisma.League, error) {
 	return r.prismaClient.User(prisma.UserWhereUniqueInput{
-		ID:   &obj.ID,
+		ID: &obj.ID,
 	}).Leagues(nil).Exec(ctx)
 }
 func (r *userResolver) OwnedTeams(ctx context.Context, obj *prisma.User) ([]prisma.Team, error) {
 	return r.prismaClient.User(prisma.UserWhereUniqueInput{
-		ID:   &obj.ID,
+		ID: &obj.ID,
 	}).OwnedTeams(nil).Exec(ctx)
 }
 func (r *userResolver) OwnedLeagues(ctx context.Context, obj *prisma.User) ([]prisma.League, error) {
 	return r.prismaClient.User(prisma.UserWhereUniqueInput{
-		ID:   &obj.ID,
+		ID: &obj.ID,
 	}).OwnedLeagues(nil).Exec(ctx)
 }
