@@ -12,8 +12,6 @@ import (
 )
 
 type Handler interface {
-	//GraphQlAuthHandler(http.ResponseWriter, *http.Request)
-	//GraphQlHandler(http.ResponseWriter, *http.Request)
 	PrismaGQL(writer http.ResponseWriter, request *http.Request)
 }
 
@@ -25,34 +23,6 @@ type handler struct {
 func New(auth auth.Auth, composer graphqlcomposer.Composer) Handler {
 	return handler{auth: auth, composer: composer}
 }
-
-//func (s handler) GraphQlHandler(writer http.ResponseWriter, request *http.Request) {
-//	log.Infof("Handle request without authorization")
-//	h.GraphQL(generated.NewExecutableSchema(generated.Config{Resolvers: s.composer.Resolver()})).ServeHTTP(writer, request)
-//}
-//
-//func (s handler) GraphQlAuthHandler(writer http.ResponseWriter, request *http.Request) {
-//	log.Infof("Handle request with authorization")
-//	token := request.Header.Get("Authorization")
-//	if token == "" {
-//
-//	}
-//
-//	log.Infof("For token: %s", fmtToken(token))
-//	res, err := s.auth.GetAccount(token)
-//	if err != nil {
-//		log.Warnf("ERROR: \"%s\"", err.Error())
-//		servererrors.SendErrorResponse(err, writer)
-//		return
-//	}
-//
-//	if len(token) > 10 {
-//		fmt.Printf("User email: %s for token: \"%s...\"", res.Email, token[0:10])
-//	} else {
-//		fmt.Printf("User email: %s for token: \"%s\"", res.Email, token)
-//	}
-//	h.GraphQL(generated.NewExecutableSchema(generated.Config{Resolvers: s.composer.Resolver()})).ServeHTTP(writer, request)
-//}
 
 func (s handler) PrismaGQL(writer http.ResponseWriter, request *http.Request) {
 	log.Infof("Handle request with authorization")
