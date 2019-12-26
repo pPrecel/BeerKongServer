@@ -14,8 +14,8 @@ type League {
   createdAt: DateTime!
   description: String!
   name: String!
-  teams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team!]
-  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+  teams: [Team!]
+  users: [User!]
   owner: User!
 }
 
@@ -25,7 +25,7 @@ type Team {
   description: String!
   name: String!
   league: League!
-  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+  users: [User!]
   owner: User!
 }
 
@@ -35,10 +35,10 @@ type User {
   name: String!
   sub: String!
   picture: String!
-  teams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team!]
-  leagues(where: LeagueWhereInput, orderBy: LeagueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [League!]
-  ownedTeams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team!]
-  ownedLeagues(where: LeagueWhereInput, orderBy: LeagueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [League!]
+  teams: [Team!]
+  leagues: [League!]
+  ownedTeams: [Team!]
+  ownedLeagues: [League!]
 }
 
 enum LeagueOrderByInput {

@@ -51,8 +51,8 @@ type ComplexityRoot struct {
 		ID          func(childComplexity int) int
 		Name        func(childComplexity int) int
 		Owner       func(childComplexity int) int
-		Teams       func(childComplexity int, where *prisma.TeamWhereInput, orderBy *prisma.TeamOrderByInput, skip *int, after *string, before *string, first *int, last *int) int
-		Users       func(childComplexity int, where *prisma.UserWhereInput, orderBy *prisma.UserOrderByInput, skip *int, after *string, before *string, first *int, last *int) int
+		Teams       func(childComplexity int) int
+		Users       func(childComplexity int) int
 	}
 
 	Query struct {
@@ -71,25 +71,25 @@ type ComplexityRoot struct {
 		League      func(childComplexity int) int
 		Name        func(childComplexity int) int
 		Owner       func(childComplexity int) int
-		Users       func(childComplexity int, where *prisma.UserWhereInput, orderBy *prisma.UserOrderByInput, skip *int, after *string, before *string, first *int, last *int) int
+		Users       func(childComplexity int) int
 	}
 
 	User struct {
 		CreatedAt    func(childComplexity int) int
 		ID           func(childComplexity int) int
-		Leagues      func(childComplexity int, where *prisma.LeagueWhereInput, orderBy *prisma.LeagueOrderByInput, skip *int, after *string, before *string, first *int, last *int) int
+		Leagues      func(childComplexity int) int
 		Name         func(childComplexity int) int
-		OwnedLeagues func(childComplexity int, where *prisma.LeagueWhereInput, orderBy *prisma.LeagueOrderByInput, skip *int, after *string, before *string, first *int, last *int) int
-		OwnedTeams   func(childComplexity int, where *prisma.TeamWhereInput, orderBy *prisma.TeamOrderByInput, skip *int, after *string, before *string, first *int, last *int) int
+		OwnedLeagues func(childComplexity int) int
+		OwnedTeams   func(childComplexity int) int
 		Picture      func(childComplexity int) int
 		Sub          func(childComplexity int) int
-		Teams        func(childComplexity int, where *prisma.TeamWhereInput, orderBy *prisma.TeamOrderByInput, skip *int, after *string, before *string, first *int, last *int) int
+		Teams        func(childComplexity int) int
 	}
 }
 
 type LeagueResolver interface {
-	Teams(ctx context.Context, obj *prisma.League, where *prisma.TeamWhereInput, orderBy *prisma.TeamOrderByInput, skip *int, after *string, before *string, first *int, last *int) ([]prisma.Team, error)
-	Users(ctx context.Context, obj *prisma.League, where *prisma.UserWhereInput, orderBy *prisma.UserOrderByInput, skip *int, after *string, before *string, first *int, last *int) ([]prisma.User, error)
+	Teams(ctx context.Context, obj *prisma.League) ([]prisma.Team, error)
+	Users(ctx context.Context, obj *prisma.League) ([]prisma.User, error)
 	Owner(ctx context.Context, obj *prisma.League) (*prisma.User, error)
 }
 type QueryResolver interface {
@@ -102,14 +102,14 @@ type QueryResolver interface {
 }
 type TeamResolver interface {
 	League(ctx context.Context, obj *prisma.Team) (*prisma.League, error)
-	Users(ctx context.Context, obj *prisma.Team, where *prisma.UserWhereInput, orderBy *prisma.UserOrderByInput, skip *int, after *string, before *string, first *int, last *int) ([]prisma.User, error)
+	Users(ctx context.Context, obj *prisma.Team) ([]prisma.User, error)
 	Owner(ctx context.Context, obj *prisma.Team) (*prisma.User, error)
 }
 type UserResolver interface {
-	Teams(ctx context.Context, obj *prisma.User, where *prisma.TeamWhereInput, orderBy *prisma.TeamOrderByInput, skip *int, after *string, before *string, first *int, last *int) ([]prisma.Team, error)
-	Leagues(ctx context.Context, obj *prisma.User, where *prisma.LeagueWhereInput, orderBy *prisma.LeagueOrderByInput, skip *int, after *string, before *string, first *int, last *int) ([]prisma.League, error)
-	OwnedTeams(ctx context.Context, obj *prisma.User, where *prisma.TeamWhereInput, orderBy *prisma.TeamOrderByInput, skip *int, after *string, before *string, first *int, last *int) ([]prisma.Team, error)
-	OwnedLeagues(ctx context.Context, obj *prisma.User, where *prisma.LeagueWhereInput, orderBy *prisma.LeagueOrderByInput, skip *int, after *string, before *string, first *int, last *int) ([]prisma.League, error)
+	Teams(ctx context.Context, obj *prisma.User) ([]prisma.Team, error)
+	Leagues(ctx context.Context, obj *prisma.User) ([]prisma.League, error)
+	OwnedTeams(ctx context.Context, obj *prisma.User) ([]prisma.Team, error)
+	OwnedLeagues(ctx context.Context, obj *prisma.User) ([]prisma.League, error)
 }
 
 type executableSchema struct {
@@ -167,24 +167,14 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		args, err := ec.field_League_teams_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.League.Teams(childComplexity, args["where"].(*prisma.TeamWhereInput), args["orderBy"].(*prisma.TeamOrderByInput), args["skip"].(*int), args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
+		return e.complexity.League.Teams(childComplexity), true
 
 	case "League.users":
 		if e.complexity.League.Users == nil {
 			break
 		}
 
-		args, err := ec.field_League_users_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.League.Users(childComplexity, args["where"].(*prisma.UserWhereInput), args["orderBy"].(*prisma.UserOrderByInput), args["skip"].(*int), args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
+		return e.complexity.League.Users(childComplexity), true
 
 	case "Query.league":
 		if e.complexity.Query.League == nil {
@@ -305,12 +295,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		args, err := ec.field_Team_users_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Team.Users(childComplexity, args["where"].(*prisma.UserWhereInput), args["orderBy"].(*prisma.UserOrderByInput), args["skip"].(*int), args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
+		return e.complexity.Team.Users(childComplexity), true
 
 	case "User.createdAt":
 		if e.complexity.User.CreatedAt == nil {
@@ -331,12 +316,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		args, err := ec.field_User_leagues_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.User.Leagues(childComplexity, args["where"].(*prisma.LeagueWhereInput), args["orderBy"].(*prisma.LeagueOrderByInput), args["skip"].(*int), args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
+		return e.complexity.User.Leagues(childComplexity), true
 
 	case "User.name":
 		if e.complexity.User.Name == nil {
@@ -350,24 +330,14 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		args, err := ec.field_User_ownedLeagues_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.User.OwnedLeagues(childComplexity, args["where"].(*prisma.LeagueWhereInput), args["orderBy"].(*prisma.LeagueOrderByInput), args["skip"].(*int), args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
+		return e.complexity.User.OwnedLeagues(childComplexity), true
 
 	case "User.ownedTeams":
 		if e.complexity.User.OwnedTeams == nil {
 			break
 		}
 
-		args, err := ec.field_User_ownedTeams_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.User.OwnedTeams(childComplexity, args["where"].(*prisma.TeamWhereInput), args["orderBy"].(*prisma.TeamOrderByInput), args["skip"].(*int), args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
+		return e.complexity.User.OwnedTeams(childComplexity), true
 
 	case "User.picture":
 		if e.complexity.User.Picture == nil {
@@ -388,12 +358,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		args, err := ec.field_User_teams_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.User.Teams(childComplexity, args["where"].(*prisma.TeamWhereInput), args["orderBy"].(*prisma.TeamOrderByInput), args["skip"].(*int), args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
+		return e.complexity.User.Teams(childComplexity), true
 
 	}
 	return 0, false
@@ -460,8 +425,8 @@ type League {
   createdAt: DateTime!
   description: String!
   name: String!
-  teams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team!]
-  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+  teams: [Team!]
+  users: [User!]
   owner: User!
 }
 
@@ -471,7 +436,7 @@ type Team {
   description: String!
   name: String!
   league: League!
-  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+  users: [User!]
   owner: User!
 }
 
@@ -481,10 +446,10 @@ type User {
   name: String!
   sub: String!
   picture: String!
-  teams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team!]
-  leagues(where: LeagueWhereInput, orderBy: LeagueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [League!]
-  ownedTeams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team!]
-  ownedLeagues(where: LeagueWhereInput, orderBy: LeagueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [League!]
+  teams: [Team!]
+  leagues: [League!]
+  ownedTeams: [Team!]
+  ownedLeagues: [League!]
 }
 
 enum LeagueOrderByInput {
@@ -749,130 +714,6 @@ input UserWhereUniqueInput {
 
 // region    ***************************** args.gotpl *****************************
 
-func (ec *executionContext) field_League_teams_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *prisma.TeamWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		arg0, err = ec.unmarshalOTeamWhereInput2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamWhereInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["where"] = arg0
-	var arg1 *prisma.TeamOrderByInput
-	if tmp, ok := rawArgs["orderBy"]; ok {
-		arg1, err = ec.unmarshalOTeamOrderByInput2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamOrderByInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["orderBy"] = arg1
-	var arg2 *int
-	if tmp, ok := rawArgs["skip"]; ok {
-		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["skip"] = arg2
-	var arg3 *string
-	if tmp, ok := rawArgs["after"]; ok {
-		arg3, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["after"] = arg3
-	var arg4 *string
-	if tmp, ok := rawArgs["before"]; ok {
-		arg4, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["before"] = arg4
-	var arg5 *int
-	if tmp, ok := rawArgs["first"]; ok {
-		arg5, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["first"] = arg5
-	var arg6 *int
-	if tmp, ok := rawArgs["last"]; ok {
-		arg6, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["last"] = arg6
-	return args, nil
-}
-
-func (ec *executionContext) field_League_users_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *prisma.UserWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		arg0, err = ec.unmarshalOUserWhereInput2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserWhereInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["where"] = arg0
-	var arg1 *prisma.UserOrderByInput
-	if tmp, ok := rawArgs["orderBy"]; ok {
-		arg1, err = ec.unmarshalOUserOrderByInput2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserOrderByInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["orderBy"] = arg1
-	var arg2 *int
-	if tmp, ok := rawArgs["skip"]; ok {
-		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["skip"] = arg2
-	var arg3 *string
-	if tmp, ok := rawArgs["after"]; ok {
-		arg3, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["after"] = arg3
-	var arg4 *string
-	if tmp, ok := rawArgs["before"]; ok {
-		arg4, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["before"] = arg4
-	var arg5 *int
-	if tmp, ok := rawArgs["first"]; ok {
-		arg5, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["first"] = arg5
-	var arg6 *int
-	if tmp, ok := rawArgs["last"]; ok {
-		arg6, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["last"] = arg6
-	return args, nil
-}
-
 func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -1067,316 +908,6 @@ func (ec *executionContext) field_Query_users_args(ctx context.Context, rawArgs 
 	var arg1 *prisma.UserOrderByInput
 	if tmp, ok := rawArgs["orderBy"]; ok {
 		arg1, err = ec.unmarshalOUserOrderByInput2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserOrderByInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["orderBy"] = arg1
-	var arg2 *int
-	if tmp, ok := rawArgs["skip"]; ok {
-		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["skip"] = arg2
-	var arg3 *string
-	if tmp, ok := rawArgs["after"]; ok {
-		arg3, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["after"] = arg3
-	var arg4 *string
-	if tmp, ok := rawArgs["before"]; ok {
-		arg4, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["before"] = arg4
-	var arg5 *int
-	if tmp, ok := rawArgs["first"]; ok {
-		arg5, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["first"] = arg5
-	var arg6 *int
-	if tmp, ok := rawArgs["last"]; ok {
-		arg6, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["last"] = arg6
-	return args, nil
-}
-
-func (ec *executionContext) field_Team_users_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *prisma.UserWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		arg0, err = ec.unmarshalOUserWhereInput2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserWhereInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["where"] = arg0
-	var arg1 *prisma.UserOrderByInput
-	if tmp, ok := rawArgs["orderBy"]; ok {
-		arg1, err = ec.unmarshalOUserOrderByInput2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserOrderByInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["orderBy"] = arg1
-	var arg2 *int
-	if tmp, ok := rawArgs["skip"]; ok {
-		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["skip"] = arg2
-	var arg3 *string
-	if tmp, ok := rawArgs["after"]; ok {
-		arg3, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["after"] = arg3
-	var arg4 *string
-	if tmp, ok := rawArgs["before"]; ok {
-		arg4, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["before"] = arg4
-	var arg5 *int
-	if tmp, ok := rawArgs["first"]; ok {
-		arg5, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["first"] = arg5
-	var arg6 *int
-	if tmp, ok := rawArgs["last"]; ok {
-		arg6, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["last"] = arg6
-	return args, nil
-}
-
-func (ec *executionContext) field_User_leagues_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *prisma.LeagueWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		arg0, err = ec.unmarshalOLeagueWhereInput2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueWhereInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["where"] = arg0
-	var arg1 *prisma.LeagueOrderByInput
-	if tmp, ok := rawArgs["orderBy"]; ok {
-		arg1, err = ec.unmarshalOLeagueOrderByInput2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueOrderByInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["orderBy"] = arg1
-	var arg2 *int
-	if tmp, ok := rawArgs["skip"]; ok {
-		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["skip"] = arg2
-	var arg3 *string
-	if tmp, ok := rawArgs["after"]; ok {
-		arg3, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["after"] = arg3
-	var arg4 *string
-	if tmp, ok := rawArgs["before"]; ok {
-		arg4, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["before"] = arg4
-	var arg5 *int
-	if tmp, ok := rawArgs["first"]; ok {
-		arg5, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["first"] = arg5
-	var arg6 *int
-	if tmp, ok := rawArgs["last"]; ok {
-		arg6, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["last"] = arg6
-	return args, nil
-}
-
-func (ec *executionContext) field_User_ownedLeagues_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *prisma.LeagueWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		arg0, err = ec.unmarshalOLeagueWhereInput2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueWhereInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["where"] = arg0
-	var arg1 *prisma.LeagueOrderByInput
-	if tmp, ok := rawArgs["orderBy"]; ok {
-		arg1, err = ec.unmarshalOLeagueOrderByInput2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueOrderByInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["orderBy"] = arg1
-	var arg2 *int
-	if tmp, ok := rawArgs["skip"]; ok {
-		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["skip"] = arg2
-	var arg3 *string
-	if tmp, ok := rawArgs["after"]; ok {
-		arg3, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["after"] = arg3
-	var arg4 *string
-	if tmp, ok := rawArgs["before"]; ok {
-		arg4, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["before"] = arg4
-	var arg5 *int
-	if tmp, ok := rawArgs["first"]; ok {
-		arg5, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["first"] = arg5
-	var arg6 *int
-	if tmp, ok := rawArgs["last"]; ok {
-		arg6, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["last"] = arg6
-	return args, nil
-}
-
-func (ec *executionContext) field_User_ownedTeams_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *prisma.TeamWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		arg0, err = ec.unmarshalOTeamWhereInput2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamWhereInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["where"] = arg0
-	var arg1 *prisma.TeamOrderByInput
-	if tmp, ok := rawArgs["orderBy"]; ok {
-		arg1, err = ec.unmarshalOTeamOrderByInput2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamOrderByInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["orderBy"] = arg1
-	var arg2 *int
-	if tmp, ok := rawArgs["skip"]; ok {
-		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["skip"] = arg2
-	var arg3 *string
-	if tmp, ok := rawArgs["after"]; ok {
-		arg3, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["after"] = arg3
-	var arg4 *string
-	if tmp, ok := rawArgs["before"]; ok {
-		arg4, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["before"] = arg4
-	var arg5 *int
-	if tmp, ok := rawArgs["first"]; ok {
-		arg5, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["first"] = arg5
-	var arg6 *int
-	if tmp, ok := rawArgs["last"]; ok {
-		arg6, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["last"] = arg6
-	return args, nil
-}
-
-func (ec *executionContext) field_User_teams_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *prisma.TeamWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		arg0, err = ec.unmarshalOTeamWhereInput2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamWhereInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["where"] = arg0
-	var arg1 *prisma.TeamOrderByInput
-	if tmp, ok := rawArgs["orderBy"]; ok {
-		arg1, err = ec.unmarshalOTeamOrderByInput2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamOrderByInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1625,17 +1156,10 @@ func (ec *executionContext) _League_teams(ctx context.Context, field graphql.Col
 		IsMethod: true,
 	}
 	ctx = graphql.WithResolverContext(ctx, rctx)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_League_teams_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	rctx.Args = args
 	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.League().Teams(rctx, obj, args["where"].(*prisma.TeamWhereInput), args["orderBy"].(*prisma.TeamOrderByInput), args["skip"].(*int), args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
+		return ec.resolvers.League().Teams(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1666,17 +1190,10 @@ func (ec *executionContext) _League_users(ctx context.Context, field graphql.Col
 		IsMethod: true,
 	}
 	ctx = graphql.WithResolverContext(ctx, rctx)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_League_users_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	rctx.Args = args
 	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.League().Users(rctx, obj, args["where"].(*prisma.UserWhereInput), args["orderBy"].(*prisma.UserOrderByInput), args["skip"].(*int), args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
+		return ec.resolvers.League().Users(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2259,17 +1776,10 @@ func (ec *executionContext) _Team_users(ctx context.Context, field graphql.Colle
 		IsMethod: true,
 	}
 	ctx = graphql.WithResolverContext(ctx, rctx)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Team_users_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	rctx.Args = args
 	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Team().Users(rctx, obj, args["where"].(*prisma.UserWhereInput), args["orderBy"].(*prisma.UserOrderByInput), args["skip"].(*int), args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
+		return ec.resolvers.Team().Users(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2522,17 +2032,10 @@ func (ec *executionContext) _User_teams(ctx context.Context, field graphql.Colle
 		IsMethod: true,
 	}
 	ctx = graphql.WithResolverContext(ctx, rctx)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_User_teams_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	rctx.Args = args
 	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.User().Teams(rctx, obj, args["where"].(*prisma.TeamWhereInput), args["orderBy"].(*prisma.TeamOrderByInput), args["skip"].(*int), args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
+		return ec.resolvers.User().Teams(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2563,17 +2066,10 @@ func (ec *executionContext) _User_leagues(ctx context.Context, field graphql.Col
 		IsMethod: true,
 	}
 	ctx = graphql.WithResolverContext(ctx, rctx)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_User_leagues_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	rctx.Args = args
 	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.User().Leagues(rctx, obj, args["where"].(*prisma.LeagueWhereInput), args["orderBy"].(*prisma.LeagueOrderByInput), args["skip"].(*int), args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
+		return ec.resolvers.User().Leagues(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2604,17 +2100,10 @@ func (ec *executionContext) _User_ownedTeams(ctx context.Context, field graphql.
 		IsMethod: true,
 	}
 	ctx = graphql.WithResolverContext(ctx, rctx)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_User_ownedTeams_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	rctx.Args = args
 	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.User().OwnedTeams(rctx, obj, args["where"].(*prisma.TeamWhereInput), args["orderBy"].(*prisma.TeamOrderByInput), args["skip"].(*int), args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
+		return ec.resolvers.User().OwnedTeams(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2645,17 +2134,10 @@ func (ec *executionContext) _User_ownedLeagues(ctx context.Context, field graphq
 		IsMethod: true,
 	}
 	ctx = graphql.WithResolverContext(ctx, rctx)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_User_ownedLeagues_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	rctx.Args = args
 	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.User().OwnedLeagues(rctx, obj, args["where"].(*prisma.LeagueWhereInput), args["orderBy"].(*prisma.LeagueOrderByInput), args["skip"].(*int), args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
+		return ec.resolvers.User().OwnedLeagues(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
