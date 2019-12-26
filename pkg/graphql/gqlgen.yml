@@ -3,9 +3,11 @@
 # Refer to https://gqlgen.com/config/
 # for detailed .gqlgen.yml documentation.
 
-schema: schema.graphql
+schema: scheme/*.graphql
 exec:
   filename: generated/generated.go
+model:
+  filename: generated/models.go
 models:
   League:
     model: github.com/pPrecel/BeerKongServer/pkg/prisma/generated/prisma-client.League

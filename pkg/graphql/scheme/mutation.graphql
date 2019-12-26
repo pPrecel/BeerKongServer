@@ -1,0 +1,28 @@
+type Mutation {
+  createLeague(data: LeagueCreateInput!): League!
+  deleteLeague(where: LeagueWhereUniqueInput!): League
+  createTeam(data: TeamCreateInput!): Team!
+  deleteTeam(where: TeamWhereUniqueInput!): Team
+  createUser(data: UserCreateInput!): User!
+  deleteUser: User
+}
+
+input LeagueCreateInput {
+  description: String!
+  name: String!
+  users: [UserWhereUniqueInput!]
+}
+
+input TeamCreateInput {
+  id: ID
+  description: String!
+  name: String!
+  league: LeagueWhereUniqueInput!
+}
+
+input UserCreateInput {
+  id: ID
+  name: String!
+  sub: String!
+  picture: String!
+}

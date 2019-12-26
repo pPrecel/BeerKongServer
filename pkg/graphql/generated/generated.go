@@ -36,6 +36,7 @@ type Config struct {
 
 type ResolverRoot interface {
 	League() LeagueResolver
+	Mutation() MutationResolver
 	Query() QueryResolver
 	Team() TeamResolver
 	User() UserResolver
@@ -53,6 +54,15 @@ type ComplexityRoot struct {
 		Owner       func(childComplexity int) int
 		Teams       func(childComplexity int) int
 		Users       func(childComplexity int) int
+	}
+
+	Mutation struct {
+		CreateLeague func(childComplexity int, data LeagueCreateInput) int
+		CreateTeam   func(childComplexity int, data TeamCreateInput) int
+		CreateUser   func(childComplexity int, data UserCreateInput) int
+		DeleteLeague func(childComplexity int, where prisma.LeagueWhereUniqueInput) int
+		DeleteTeam   func(childComplexity int, where prisma.TeamWhereUniqueInput) int
+		DeleteUser   func(childComplexity int) int
 	}
 
 	Query struct {
@@ -91,6 +101,14 @@ type LeagueResolver interface {
 	Teams(ctx context.Context, obj *prisma.League) ([]prisma.Team, error)
 	Users(ctx context.Context, obj *prisma.League) ([]prisma.User, error)
 	Owner(ctx context.Context, obj *prisma.League) (*prisma.User, error)
+}
+type MutationResolver interface {
+	CreateLeague(ctx context.Context, data LeagueCreateInput) (*prisma.League, error)
+	DeleteLeague(ctx context.Context, where prisma.LeagueWhereUniqueInput) (*prisma.League, error)
+	CreateTeam(ctx context.Context, data TeamCreateInput) (*prisma.Team, error)
+	DeleteTeam(ctx context.Context, where prisma.TeamWhereUniqueInput) (*prisma.Team, error)
+	CreateUser(ctx context.Context, data UserCreateInput) (*prisma.User, error)
+	DeleteUser(ctx context.Context) (*prisma.User, error)
 }
 type QueryResolver interface {
 	League(ctx context.Context, where prisma.LeagueWhereUniqueInput) (*prisma.League, error)
@@ -175,6 +193,73 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.League.Users(childComplexity), true
+
+	case "Mutation.createLeague":
+		if e.complexity.Mutation.CreateLeague == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createLeague_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateLeague(childComplexity, args["data"].(LeagueCreateInput)), true
+
+	case "Mutation.createTeam":
+		if e.complexity.Mutation.CreateTeam == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createTeam_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateTeam(childComplexity, args["data"].(TeamCreateInput)), true
+
+	case "Mutation.createUser":
+		if e.complexity.Mutation.CreateUser == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createUser_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateUser(childComplexity, args["data"].(UserCreateInput)), true
+
+	case "Mutation.deleteLeague":
+		if e.complexity.Mutation.DeleteLeague == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteLeague_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteLeague(childComplexity, args["where"].(prisma.LeagueWhereUniqueInput)), true
+
+	case "Mutation.deleteTeam":
+		if e.complexity.Mutation.DeleteTeam == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteTeam_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteTeam(childComplexity, args["where"].(prisma.TeamWhereUniqueInput)), true
+
+	case "Mutation.deleteUser":
+		if e.complexity.Mutation.DeleteUser == nil {
+			break
+		}
+
+		return e.complexity.Mutation.DeleteUser(childComplexity), true
 
 	case "Query.league":
 		if e.complexity.Query.League == nil {
@@ -382,7 +467,20 @@ func (e *executableSchema) Query(ctx context.Context, op *ast.OperationDefinitio
 }
 
 func (e *executableSchema) Mutation(ctx context.Context, op *ast.OperationDefinition) *graphql.Response {
-	return graphql.ErrorResponse(ctx, "mutations are not supported")
+	ec := executionContext{graphql.GetRequestContext(ctx), e}
+
+	buf := ec.RequestMiddleware(ctx, func(ctx context.Context) []byte {
+		data := ec._Mutation(ctx, op.SelectionSet)
+		var buf bytes.Buffer
+		data.MarshalGQL(&buf)
+		return buf.Bytes()
+	})
+
+	return &graphql.Response{
+		Data:       buf,
+		Errors:     ec.Errors,
+		Extensions: ec.Extensions,
+	}
 }
 
 func (e *executableSchema) Subscription(ctx context.Context, op *ast.OperationDefinition) func() *graphql.Response {
@@ -409,7 +507,35 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var parsedSchema = gqlparser.MustLoadSchema(
-	&ast.Source{Name: "schema.graphql", Input: `type Query {
+	&ast.Source{Name: "scheme/mutation.graphql", Input: `type Mutation {
+  createLeague(data: LeagueCreateInput!): League!
+  deleteLeague(where: LeagueWhereUniqueInput!): League
+  createTeam(data: TeamCreateInput!): Team!
+  deleteTeam(where: TeamWhereUniqueInput!): Team
+  createUser(data: UserCreateInput!): User!
+  deleteUser: User
+}
+
+input LeagueCreateInput {
+  description: String!
+  name: String!
+  users: [UserWhereUniqueInput!]
+}
+
+input TeamCreateInput {
+  id: ID
+  description: String!
+  name: String!
+  league: LeagueWhereUniqueInput!
+}
+
+input UserCreateInput {
+  id: ID
+  name: String!
+  sub: String!
+  picture: String!
+}`},
+	&ast.Source{Name: "scheme/query.graphql", Input: `type Query {
   league(where: LeagueWhereUniqueInput!): League
   leagues(where: LeagueWhereInput, orderBy: LeagueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [League]!
   team(where: TeamWhereUniqueInput!): Team
@@ -707,12 +833,83 @@ input UserWhereUniqueInput {
   id: ID
   name: String
   sub: String
-}`},
+}
+`},
 )
 
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_Mutation_createLeague_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 LeagueCreateInput
+	if tmp, ok := rawArgs["data"]; ok {
+		arg0, err = ec.unmarshalNLeagueCreateInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋgraphqlᚋgeneratedᚐLeagueCreateInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["data"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createTeam_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 TeamCreateInput
+	if tmp, ok := rawArgs["data"]; ok {
+		arg0, err = ec.unmarshalNTeamCreateInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋgraphqlᚋgeneratedᚐTeamCreateInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["data"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 UserCreateInput
+	if tmp, ok := rawArgs["data"]; ok {
+		arg0, err = ec.unmarshalNUserCreateInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋgraphqlᚋgeneratedᚐUserCreateInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["data"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_deleteLeague_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 prisma.LeagueWhereUniqueInput
+	if tmp, ok := rawArgs["where"]; ok {
+		arg0, err = ec.unmarshalNLeagueWhereUniqueInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueWhereUniqueInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_deleteTeam_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 prisma.TeamWhereUniqueInput
+	if tmp, ok := rawArgs["where"]; ok {
+		arg0, err = ec.unmarshalNTeamWhereUniqueInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamWhereUniqueInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg0
+	return args, nil
+}
 
 func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -1243,6 +1440,254 @@ func (ec *executionContext) _League_owner(ctx context.Context, field graphql.Col
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
 	return ec.marshalNUser2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_createLeague(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+		ec.Tracer.EndFieldExecution(ctx)
+	}()
+	rctx := &graphql.ResolverContext{
+		Object:   "Mutation",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createLeague_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	rctx.Args = args
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateLeague(rctx, args["data"].(LeagueCreateInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*prisma.League)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+	return ec.marshalNLeague2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeague(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_deleteLeague(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+		ec.Tracer.EndFieldExecution(ctx)
+	}()
+	rctx := &graphql.ResolverContext{
+		Object:   "Mutation",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_deleteLeague_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	rctx.Args = args
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteLeague(rctx, args["where"].(prisma.LeagueWhereUniqueInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*prisma.League)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+	return ec.marshalOLeague2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeague(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_createTeam(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+		ec.Tracer.EndFieldExecution(ctx)
+	}()
+	rctx := &graphql.ResolverContext{
+		Object:   "Mutation",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createTeam_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	rctx.Args = args
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateTeam(rctx, args["data"].(TeamCreateInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*prisma.Team)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+	return ec.marshalNTeam2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeam(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_deleteTeam(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+		ec.Tracer.EndFieldExecution(ctx)
+	}()
+	rctx := &graphql.ResolverContext{
+		Object:   "Mutation",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_deleteTeam_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	rctx.Args = args
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteTeam(rctx, args["where"].(prisma.TeamWhereUniqueInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*prisma.Team)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+	return ec.marshalOTeam2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeam(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_createUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+		ec.Tracer.EndFieldExecution(ctx)
+	}()
+	rctx := &graphql.ResolverContext{
+		Object:   "Mutation",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createUser_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	rctx.Args = args
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateUser(rctx, args["data"].(UserCreateInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*prisma.User)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+	return ec.marshalNUser2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_deleteUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+		ec.Tracer.EndFieldExecution(ctx)
+	}()
+	rctx := &graphql.ResolverContext{
+		Object:   "Mutation",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteUser(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*prisma.User)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+	return ec.marshalOUser2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_league(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -3303,6 +3748,36 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 // region    **************************** input.gotpl *****************************
 
+func (ec *executionContext) unmarshalInputLeagueCreateInput(ctx context.Context, obj interface{}) (LeagueCreateInput, error) {
+	var it LeagueCreateInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "description":
+			var err error
+			it.Description, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "name":
+			var err error
+			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "users":
+			var err error
+			it.Users, err = ec.unmarshalOUserWhereUniqueInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserWhereUniqueInput(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputLeagueWhereInput(ctx context.Context, obj interface{}) (prisma.LeagueWhereInput, error) {
 	var it prisma.LeagueWhereInput
 	var asMap = obj.(map[string]interface{})
@@ -3699,6 +4174,42 @@ func (ec *executionContext) unmarshalInputLeagueWhereUniqueInput(ctx context.Con
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputTeamCreateInput(ctx context.Context, obj interface{}) (TeamCreateInput, error) {
+	var it TeamCreateInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+			it.ID, err = ec.unmarshalOID2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "description":
+			var err error
+			it.Description, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "name":
+			var err error
+			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "league":
+			var err error
+			it.League, err = ec.unmarshalNLeagueWhereUniqueInput2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueWhereUniqueInput(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputTeamWhereInput(ctx context.Context, obj interface{}) (prisma.TeamWhereInput, error) {
 	var it prisma.TeamWhereInput
 	var asMap = obj.(map[string]interface{})
@@ -4074,6 +4585,42 @@ func (ec *executionContext) unmarshalInputTeamWhereUniqueInput(ctx context.Conte
 		case "name":
 			var err error
 			it.Name, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUserCreateInput(ctx context.Context, obj interface{}) (UserCreateInput, error) {
+	var it UserCreateInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+			it.ID, err = ec.unmarshalOID2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "name":
+			var err error
+			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "sub":
+			var err error
+			it.Sub, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "picture":
+			var err error
+			it.Picture, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4674,6 +5221,53 @@ func (ec *executionContext) _League(ctx context.Context, sel ast.SelectionSet, o
 				}
 				return res
 			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var mutationImplementors = []string{"Mutation"}
+
+func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.RequestContext, sel, mutationImplementors)
+
+	ctx = graphql.WithResolverContext(ctx, &graphql.ResolverContext{
+		Object: "Mutation",
+	})
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Mutation")
+		case "createLeague":
+			out.Values[i] = ec._Mutation_createLeague(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "deleteLeague":
+			out.Values[i] = ec._Mutation_deleteLeague(ctx, field)
+		case "createTeam":
+			out.Values[i] = ec._Mutation_createTeam(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "deleteTeam":
+			out.Values[i] = ec._Mutation_deleteTeam(ctx, field)
+		case "createUser":
+			out.Values[i] = ec._Mutation_createUser(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "deleteUser":
+			out.Values[i] = ec._Mutation_deleteUser(ctx, field)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5300,12 +5894,24 @@ func (ec *executionContext) marshalNLeague2ᚖgithubᚗcomᚋpPrecelᚋBeerKongS
 	return ec._League(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNLeagueCreateInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋgraphqlᚋgeneratedᚐLeagueCreateInput(ctx context.Context, v interface{}) (LeagueCreateInput, error) {
+	return ec.unmarshalInputLeagueCreateInput(ctx, v)
+}
+
 func (ec *executionContext) unmarshalNLeagueWhereInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueWhereInput(ctx context.Context, v interface{}) (prisma.LeagueWhereInput, error) {
 	return ec.unmarshalInputLeagueWhereInput(ctx, v)
 }
 
 func (ec *executionContext) unmarshalNLeagueWhereUniqueInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueWhereUniqueInput(ctx context.Context, v interface{}) (prisma.LeagueWhereUniqueInput, error) {
 	return ec.unmarshalInputLeagueWhereUniqueInput(ctx, v)
+}
+
+func (ec *executionContext) unmarshalNLeagueWhereUniqueInput2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueWhereUniqueInput(ctx context.Context, v interface{}) (*prisma.LeagueWhereUniqueInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalNLeagueWhereUniqueInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueWhereUniqueInput(ctx, v)
+	return &res, err
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
@@ -5361,6 +5967,20 @@ func (ec *executionContext) marshalNTeam2ᚕᚖgithubᚗcomᚋpPrecelᚋBeerKong
 	}
 	wg.Wait()
 	return ret
+}
+
+func (ec *executionContext) marshalNTeam2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeam(ctx context.Context, sel ast.SelectionSet, v *prisma.Team) graphql.Marshaler {
+	if v == nil {
+		if !ec.HasError(graphql.GetResolverContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Team(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNTeamCreateInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋgraphqlᚋgeneratedᚐTeamCreateInput(ctx context.Context, v interface{}) (TeamCreateInput, error) {
+	return ec.unmarshalInputTeamCreateInput(ctx, v)
 }
 
 func (ec *executionContext) unmarshalNTeamWhereInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamWhereInput(ctx context.Context, v interface{}) (prisma.TeamWhereInput, error) {
@@ -5420,6 +6040,10 @@ func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋpPrecelᚋBeerKongSer
 		return graphql.Null
 	}
 	return ec._User(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNUserCreateInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋgraphqlᚋgeneratedᚐUserCreateInput(ctx context.Context, v interface{}) (UserCreateInput, error) {
+	return ec.unmarshalInputUserCreateInput(ctx, v)
 }
 
 func (ec *executionContext) unmarshalNUserWhereInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserWhereInput(ctx context.Context, v interface{}) (prisma.UserWhereInput, error) {
@@ -6186,6 +6810,26 @@ func (ec *executionContext) unmarshalOUserWhereInput2ᚖgithubᚗcomᚋpPrecel�
 	}
 	res, err := ec.unmarshalOUserWhereInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserWhereInput(ctx, v)
 	return &res, err
+}
+
+func (ec *executionContext) unmarshalOUserWhereUniqueInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserWhereUniqueInput(ctx context.Context, v interface{}) ([]prisma.UserWhereUniqueInput, error) {
+	var vSlice []interface{}
+	if v != nil {
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
+	}
+	var err error
+	res := make([]prisma.UserWhereUniqueInput, len(vSlice))
+	for i := range vSlice {
+		res[i], err = ec.unmarshalNUserWhereUniqueInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserWhereUniqueInput(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
 }
 
 func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValue(ctx context.Context, sel ast.SelectionSet, v []introspection.EnumValue) graphql.Marshaler {

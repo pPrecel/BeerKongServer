@@ -1,8 +1,10 @@
 package generated
 
 import (
-	"context"
+"context"
+	"fmt"
 	prisma "github.com/pPrecel/BeerKongServer/pkg/prisma/generated/prisma-client"
+	"github.com/pkg/errors"
 )
 
 // THIS CODE IS A STARTING POINT ONLY. IT WILL NOT BE UPDATED WITH SCHEMA CHANGES.
@@ -28,6 +30,9 @@ func (r *Resolver) Team() TeamResolver {
 func (r *Resolver) User() UserResolver {
 	return &userResolver{r}
 }
+func (r *Resolver) Mutation() MutationResolver {
+	return &mutationResolver{r}
+}
 
 func intToInt32(value *int) *int32 {
 	var converted *int32
@@ -36,6 +41,84 @@ func intToInt32(value *int) *int32 {
 		converted = &tmp
 	}
 	return converted
+}
+
+type mutationResolver struct{ *Resolver }
+
+func (r *Resolver) checkAccess(sub string) bool {
+	if r.user == nil {
+		return false
+	}
+	if r.user.Sub != sub {
+		return false
+	}
+
+	return true
+}
+
+func (r *mutationResolver) CreateLeague(ctx context.Context, data LeagueCreateInput) (*prisma.League, error) {
+	return r.prismaClient.CreateLeague(prisma.LeagueCreateInput{
+		Description: data.Description,
+		Name:        data.Name,
+		Users:       &prisma.UserCreateManyWithoutLeaguesInput{
+			Connect: data.Users,
+		},
+	}).Exec(ctx)
+}
+func (r *mutationResolver) DeleteLeague(ctx context.Context, where prisma.LeagueWhereUniqueInput) (*prisma.League, error) {
+	owner, err := r.prismaClient.League(where).Owner().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if !r.checkAccess(owner.Sub) {
+		return nil, errors.New(fmt.Sprintf("You don't have permission to finish this operation"))
+	}
+
+	return r.prismaClient.DeleteLeague(where).Exec(ctx)
+}
+func (r *mutationResolver) CreateTeam(ctx context.Context, data TeamCreateInput) (*prisma.Team, error) {
+	if r.user == nil {
+		return nil, errors.New(fmt.Sprintf("You don't have permission to finish this operation"))
+	}
+	return r.prismaClient.CreateTeam(prisma.TeamCreateInput{
+		Description: data.Description,
+		Name:        data.Name,
+		League:      prisma.LeagueCreateOneWithoutTeamsInput{
+			Connect: data.League,
+		},
+		Owner:       prisma.UserCreateOneWithoutOwnedTeamsInput{
+				Connect: &prisma.UserWhereUniqueInput{
+					Sub:  &r.user.Sub,
+				},
+		},
+	}).Exec(ctx)
+}
+func (r *mutationResolver) DeleteTeam(ctx context.Context, where prisma.TeamWhereUniqueInput) (*prisma.Team, error) {
+	owner, err := r.prismaClient.Team(where).Owner().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if !r.checkAccess(owner.Sub) {
+		return nil, errors.New(fmt.Sprintf("You don't have permission to finish this operation"))
+	}
+
+	return r.prismaClient.DeleteTeam(where).Exec(ctx)
+}
+func (r *mutationResolver) CreateUser(ctx context.Context, data UserCreateInput) (*prisma.User, error) {
+	return r.prismaClient.CreateUser(prisma.UserCreateInput{
+		Name:         data.Name,
+		Sub:          data.Sub,
+		Picture:      data.Picture,
+	}).Exec(ctx)
+}
+func (r *mutationResolver) DeleteUser(ctx context.Context) (*prisma.User, error) {
+	if r.user == nil {
+		return nil, errors.New(fmt.Sprintf("You don't have permission to finish this operation"))
+	}
+
+	return r.prismaClient.DeleteUser(prisma.UserWhereUniqueInput{
+		Sub:  &r.user.Sub,
+	}).Exec(ctx)
 }
 
 type queryResolver struct{ *Resolver }
