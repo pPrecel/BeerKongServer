@@ -30,7 +30,7 @@ func main() {
 		log.Fatalf("Flag error: %s", err.Error())
 	}
 
-	log.Info("Set prisma connection")
+	log.Infof("Set prisma connection for options: endpoint - %s, secret - %s", conf.PrismaEndpoint, conf.PrismaSecret)
 	prismaClient := prisma.New(&prisma.Options{
 		Endpoint: conf.PrismaEndpoint,
 		Secret:   conf.PrismaSecret,
