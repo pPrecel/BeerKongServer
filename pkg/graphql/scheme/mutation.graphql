@@ -5,6 +5,8 @@ type Mutation {
   deleteTeam(where: TeamWhereUniqueInput!): Team
   createUser(data: UserCreateInput!): User!
   deleteUser: User
+  createMatch(data: MatchCreateInput!): Match!
+  deleteMatch(where: MatchWhereUniqueInput!): Match
 }
 
 input LeagueCreateInput {
@@ -25,4 +27,12 @@ input UserCreateInput {
   name: String!
   sub: String!
   picture: String!
+}
+
+input MatchCreateInput {
+  expiration: DateTime!
+  isRanked: Boolean!
+  league: LeagueWhereUniqueInput!
+  user1: UserWhereUniqueInput!
+  user2: UserWhereUniqueInput!
 }

@@ -162,6 +162,104 @@ func (client *Client) LeaguesConnection(params *LeaguesConnectionParams) *League
 	return &LeagueConnectionExec{ret}
 }
 
+func (client *Client) Match(params MatchWhereUniqueInput) *MatchExec {
+	ret := client.Client.GetOne(
+		nil,
+		params,
+		[2]string{"MatchWhereUniqueInput!", "Match"},
+		"match",
+		[]string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+
+	return &MatchExec{ret}
+}
+
+type MatchesParams struct {
+	Where   *MatchWhereInput   `json:"where,omitempty"`
+	OrderBy *MatchOrderByInput `json:"orderBy,omitempty"`
+	Skip    *int32             `json:"skip,omitempty"`
+	After   *string            `json:"after,omitempty"`
+	Before  *string            `json:"before,omitempty"`
+	First   *int32             `json:"first,omitempty"`
+	Last    *int32             `json:"last,omitempty"`
+}
+
+func (client *Client) Matches(params *MatchesParams) *MatchExecArray {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := client.Client.GetMany(
+		nil,
+		wparams,
+		[3]string{"MatchWhereInput", "MatchOrderByInput", "Match"},
+		"matches",
+		[]string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+
+	return &MatchExecArray{ret}
+}
+
+type MatchesConnectionParams struct {
+	Where   *MatchWhereInput   `json:"where,omitempty"`
+	OrderBy *MatchOrderByInput `json:"orderBy,omitempty"`
+	Skip    *int32             `json:"skip,omitempty"`
+	After   *string            `json:"after,omitempty"`
+	Before  *string            `json:"before,omitempty"`
+	First   *int32             `json:"first,omitempty"`
+	Last    *int32             `json:"last,omitempty"`
+}
+
+// Nodes return just nodes without cursors. It uses the already fetched edges.
+func (s *MatchConnection) Nodes() []Match {
+	var nodes []Match
+	for _, edge := range s.Edges {
+		nodes = append(nodes, edge.Node)
+	}
+	return nodes
+}
+
+// Nodes return just nodes without cursors, but as a slice of pointers. It uses the already fetched edges.
+func (s *MatchConnection) NodesPtr() []*Match {
+	var nodes []*Match
+	for _, edge := range s.Edges {
+		item := edge
+		nodes = append(nodes, &item.Node)
+	}
+	return nodes
+}
+
+func (client *Client) MatchesConnection(params *MatchesConnectionParams) *MatchConnectionExec {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := client.Client.GetMany(
+		nil,
+		wparams,
+		[3]string{"MatchWhereInput", "MatchOrderByInput", "Match"},
+		"matchesConnection",
+		[]string{"edges", "pageInfo"})
+
+	return &MatchConnectionExec{ret}
+}
+
 func (client *Client) Team(params TeamWhereUniqueInput) *TeamExec {
 	ret := client.Client.GetOne(
 		nil,
@@ -438,6 +536,86 @@ func (client *Client) DeleteManyLeagues(params *LeagueWhereInput) *BatchPayloadE
 	return &BatchPayloadExec{exec}
 }
 
+func (client *Client) CreateMatch(params MatchCreateInput) *MatchExec {
+	ret := client.Client.Create(
+		params,
+		[2]string{"MatchCreateInput!", "Match"},
+		"createMatch",
+		[]string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+
+	return &MatchExec{ret}
+}
+
+type MatchUpdateParams struct {
+	Data  MatchUpdateInput      `json:"data"`
+	Where MatchWhereUniqueInput `json:"where"`
+}
+
+func (client *Client) UpdateMatch(params MatchUpdateParams) *MatchExec {
+	ret := client.Client.Update(
+		prisma.UpdateParams{
+			Data:  params.Data,
+			Where: params.Where,
+		},
+		[3]string{"MatchUpdateInput!", "MatchWhereUniqueInput!", "Match"},
+		"updateMatch",
+		[]string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+
+	return &MatchExec{ret}
+}
+
+type MatchUpdateManyParams struct {
+	Data  MatchUpdateManyMutationInput `json:"data"`
+	Where *MatchWhereInput             `json:"where,omitempty"`
+}
+
+func (client *Client) UpdateManyMatches(params MatchUpdateManyParams) *BatchPayloadExec {
+	exec := client.Client.UpdateMany(
+		prisma.UpdateParams{
+			Data:  params.Data,
+			Where: params.Where,
+		},
+		[2]string{"MatchUpdateManyMutationInput!", "MatchWhereInput"},
+		"updateManyMatches")
+	return &BatchPayloadExec{exec}
+}
+
+type MatchUpsertParams struct {
+	Where  MatchWhereUniqueInput `json:"where"`
+	Create MatchCreateInput      `json:"create"`
+	Update MatchUpdateInput      `json:"update"`
+}
+
+func (client *Client) UpsertMatch(params MatchUpsertParams) *MatchExec {
+	uparams := &prisma.UpsertParams{
+		Where:  params.Where,
+		Create: params.Create,
+		Update: params.Update,
+	}
+	ret := client.Client.Upsert(
+		uparams,
+		[4]string{"MatchWhereUniqueInput!", "MatchCreateInput!", "MatchUpdateInput!", "Match"},
+		"upsertMatch",
+		[]string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+
+	return &MatchExec{ret}
+}
+
+func (client *Client) DeleteMatch(params MatchWhereUniqueInput) *MatchExec {
+	ret := client.Client.Delete(
+		params,
+		[2]string{"MatchWhereUniqueInput!", "Match"},
+		"deleteMatch",
+		[]string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+
+	return &MatchExec{ret}
+}
+
+func (client *Client) DeleteManyMatches(params *MatchWhereInput) *BatchPayloadExec {
+	exec := client.Client.DeleteMany(params, "MatchWhereInput", "deleteManyMatches")
+	return &BatchPayloadExec{exec}
+}
+
 func (client *Client) CreateTeam(params TeamCreateInput) *TeamExec {
 	ret := client.Client.Create(
 		params,
@@ -639,6 +817,27 @@ const (
 	LeagueOrderByInputNameDesc        LeagueOrderByInput = "name_DESC"
 )
 
+type MatchOrderByInput string
+
+const (
+	MatchOrderByInputIDAsc            MatchOrderByInput = "id_ASC"
+	MatchOrderByInputIDDesc           MatchOrderByInput = "id_DESC"
+	MatchOrderByInputCreatedAtAsc     MatchOrderByInput = "createdAt_ASC"
+	MatchOrderByInputCreatedAtDesc    MatchOrderByInput = "createdAt_DESC"
+	MatchOrderByInputExpirationAsc    MatchOrderByInput = "expiration_ASC"
+	MatchOrderByInputExpirationDesc   MatchOrderByInput = "expiration_DESC"
+	MatchOrderByInputIsRankedAsc      MatchOrderByInput = "isRanked_ASC"
+	MatchOrderByInputIsRankedDesc     MatchOrderByInput = "isRanked_DESC"
+	MatchOrderByInputIsFinishedAsc    MatchOrderByInput = "isFinished_ASC"
+	MatchOrderByInputIsFinishedDesc   MatchOrderByInput = "isFinished_DESC"
+	MatchOrderByInputUser1pointsAsc   MatchOrderByInput = "user1points_ASC"
+	MatchOrderByInputUser1pointsDesc  MatchOrderByInput = "user1points_DESC"
+	MatchOrderByInputUser2pointsAsc   MatchOrderByInput = "user2points_ASC"
+	MatchOrderByInputUser2pointsDesc  MatchOrderByInput = "user2points_DESC"
+	MatchOrderByInputWinnerpointsAsc  MatchOrderByInput = "winnerpoints_ASC"
+	MatchOrderByInputWinnerpointsDesc MatchOrderByInput = "winnerpoints_DESC"
+)
+
 type MutationType string
 
 const (
@@ -771,6 +970,9 @@ type LeagueWhereInput struct {
 	UsersSome                *UserWhereInput    `json:"users_some,omitempty"`
 	UsersNone                *UserWhereInput    `json:"users_none,omitempty"`
 	Owner                    *UserWhereInput    `json:"owner,omitempty"`
+	MatchesEvery             *MatchWhereInput   `json:"matches_every,omitempty"`
+	MatchesSome              *MatchWhereInput   `json:"matches_some,omitempty"`
+	MatchesNone              *MatchWhereInput   `json:"matches_none,omitempty"`
 	And                      []LeagueWhereInput `json:"AND,omitempty"`
 	Or                       []LeagueWhereInput `json:"OR,omitempty"`
 	Not                      []LeagueWhereInput `json:"NOT,omitempty"`
@@ -853,9 +1055,84 @@ type UserWhereInput struct {
 	OwnedLeaguesEvery    *LeagueWhereInput `json:"ownedLeagues_every,omitempty"`
 	OwnedLeaguesSome     *LeagueWhereInput `json:"ownedLeagues_some,omitempty"`
 	OwnedLeaguesNone     *LeagueWhereInput `json:"ownedLeagues_none,omitempty"`
+	MatchesEvery         *MatchWhereInput  `json:"matches_every,omitempty"`
+	MatchesSome          *MatchWhereInput  `json:"matches_some,omitempty"`
+	MatchesNone          *MatchWhereInput  `json:"matches_none,omitempty"`
 	And                  []UserWhereInput  `json:"AND,omitempty"`
 	Or                   []UserWhereInput  `json:"OR,omitempty"`
 	Not                  []UserWhereInput  `json:"NOT,omitempty"`
+}
+
+type MatchWhereInput struct {
+	ID                *string           `json:"id,omitempty"`
+	IDNot             *string           `json:"id_not,omitempty"`
+	IDIn              []string          `json:"id_in,omitempty"`
+	IDNotIn           []string          `json:"id_not_in,omitempty"`
+	IDLt              *string           `json:"id_lt,omitempty"`
+	IDLte             *string           `json:"id_lte,omitempty"`
+	IDGt              *string           `json:"id_gt,omitempty"`
+	IDGte             *string           `json:"id_gte,omitempty"`
+	IDContains        *string           `json:"id_contains,omitempty"`
+	IDNotContains     *string           `json:"id_not_contains,omitempty"`
+	IDStartsWith      *string           `json:"id_starts_with,omitempty"`
+	IDNotStartsWith   *string           `json:"id_not_starts_with,omitempty"`
+	IDEndsWith        *string           `json:"id_ends_with,omitempty"`
+	IDNotEndsWith     *string           `json:"id_not_ends_with,omitempty"`
+	CreatedAt         *string           `json:"createdAt,omitempty"`
+	CreatedAtNot      *string           `json:"createdAt_not,omitempty"`
+	CreatedAtIn       []string          `json:"createdAt_in,omitempty"`
+	CreatedAtNotIn    []string          `json:"createdAt_not_in,omitempty"`
+	CreatedAtLt       *string           `json:"createdAt_lt,omitempty"`
+	CreatedAtLte      *string           `json:"createdAt_lte,omitempty"`
+	CreatedAtGt       *string           `json:"createdAt_gt,omitempty"`
+	CreatedAtGte      *string           `json:"createdAt_gte,omitempty"`
+	Expiration        *string           `json:"expiration,omitempty"`
+	ExpirationNot     *string           `json:"expiration_not,omitempty"`
+	ExpirationIn      []string          `json:"expiration_in,omitempty"`
+	ExpirationNotIn   []string          `json:"expiration_not_in,omitempty"`
+	ExpirationLt      *string           `json:"expiration_lt,omitempty"`
+	ExpirationLte     *string           `json:"expiration_lte,omitempty"`
+	ExpirationGt      *string           `json:"expiration_gt,omitempty"`
+	ExpirationGte     *string           `json:"expiration_gte,omitempty"`
+	IsRanked          *bool             `json:"isRanked,omitempty"`
+	IsRankedNot       *bool             `json:"isRanked_not,omitempty"`
+	IsFinished        *bool             `json:"isFinished,omitempty"`
+	IsFinishedNot     *bool             `json:"isFinished_not,omitempty"`
+	League            *LeagueWhereInput `json:"league,omitempty"`
+	User1             *UserWhereInput   `json:"user1,omitempty"`
+	User1points       *int32            `json:"user1points,omitempty"`
+	User1pointsNot    *int32            `json:"user1points_not,omitempty"`
+	User1pointsIn     []int32           `json:"user1points_in,omitempty"`
+	User1pointsNotIn  []int32           `json:"user1points_not_in,omitempty"`
+	User1pointsLt     *int32            `json:"user1points_lt,omitempty"`
+	User1pointsLte    *int32            `json:"user1points_lte,omitempty"`
+	User1pointsGt     *int32            `json:"user1points_gt,omitempty"`
+	User1pointsGte    *int32            `json:"user1points_gte,omitempty"`
+	User2             *UserWhereInput   `json:"user2,omitempty"`
+	User2points       *int32            `json:"user2points,omitempty"`
+	User2pointsNot    *int32            `json:"user2points_not,omitempty"`
+	User2pointsIn     []int32           `json:"user2points_in,omitempty"`
+	User2pointsNotIn  []int32           `json:"user2points_not_in,omitempty"`
+	User2pointsLt     *int32            `json:"user2points_lt,omitempty"`
+	User2pointsLte    *int32            `json:"user2points_lte,omitempty"`
+	User2pointsGt     *int32            `json:"user2points_gt,omitempty"`
+	User2pointsGte    *int32            `json:"user2points_gte,omitempty"`
+	Winner            *UserWhereInput   `json:"winner,omitempty"`
+	Winnerpoints      *int32            `json:"winnerpoints,omitempty"`
+	WinnerpointsNot   *int32            `json:"winnerpoints_not,omitempty"`
+	WinnerpointsIn    []int32           `json:"winnerpoints_in,omitempty"`
+	WinnerpointsNotIn []int32           `json:"winnerpoints_not_in,omitempty"`
+	WinnerpointsLt    *int32            `json:"winnerpoints_lt,omitempty"`
+	WinnerpointsLte   *int32            `json:"winnerpoints_lte,omitempty"`
+	WinnerpointsGt    *int32            `json:"winnerpoints_gt,omitempty"`
+	WinnerpointsGte   *int32            `json:"winnerpoints_gte,omitempty"`
+	And               []MatchWhereInput `json:"AND,omitempty"`
+	Or                []MatchWhereInput `json:"OR,omitempty"`
+	Not               []MatchWhereInput `json:"NOT,omitempty"`
+}
+
+type MatchWhereUniqueInput struct {
+	ID *string `json:"id,omitempty"`
 }
 
 type TeamWhereUniqueInput struct {
@@ -876,6 +1153,7 @@ type LeagueCreateInput struct {
 	Teams       *TeamCreateManyWithoutLeagueInput     `json:"teams,omitempty"`
 	Users       *UserCreateManyWithoutLeaguesInput    `json:"users,omitempty"`
 	Owner       UserCreateOneWithoutOwnedLeaguesInput `json:"owner"`
+	Matches     *MatchCreateManyWithoutLeagueInput    `json:"matches,omitempty"`
 }
 
 type TeamCreateManyWithoutLeagueInput struct {
@@ -904,6 +1182,7 @@ type UserCreateWithoutTeamsInput struct {
 	Leagues      *LeagueCreateManyWithoutUsersInput `json:"leagues,omitempty"`
 	OwnedTeams   *TeamCreateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
 	OwnedLeagues *LeagueCreateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
+	Matches      *MatchCreateManyInput              `json:"matches,omitempty"`
 }
 
 type LeagueCreateManyWithoutUsersInput struct {
@@ -917,6 +1196,7 @@ type LeagueCreateWithoutUsersInput struct {
 	Name        string                                `json:"name"`
 	Teams       *TeamCreateManyWithoutLeagueInput     `json:"teams,omitempty"`
 	Owner       UserCreateOneWithoutOwnedLeaguesInput `json:"owner"`
+	Matches     *MatchCreateManyWithoutLeagueInput    `json:"matches,omitempty"`
 }
 
 type UserCreateOneWithoutOwnedLeaguesInput struct {
@@ -932,6 +1212,7 @@ type UserCreateWithoutOwnedLeaguesInput struct {
 	Teams      *TeamCreateManyWithoutUsersInput   `json:"teams,omitempty"`
 	Leagues    *LeagueCreateManyWithoutUsersInput `json:"leagues,omitempty"`
 	OwnedTeams *TeamCreateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
+	Matches    *MatchCreateManyInput              `json:"matches,omitempty"`
 }
 
 type TeamCreateManyWithoutUsersInput struct {
@@ -958,6 +1239,7 @@ type LeagueCreateWithoutTeamsInput struct {
 	Name        string                                `json:"name"`
 	Users       *UserCreateManyWithoutLeaguesInput    `json:"users,omitempty"`
 	Owner       UserCreateOneWithoutOwnedLeaguesInput `json:"owner"`
+	Matches     *MatchCreateManyWithoutLeagueInput    `json:"matches,omitempty"`
 }
 
 type UserCreateManyWithoutLeaguesInput struct {
@@ -973,6 +1255,7 @@ type UserCreateWithoutLeaguesInput struct {
 	Teams        *TeamCreateManyWithoutUsersInput   `json:"teams,omitempty"`
 	OwnedTeams   *TeamCreateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
 	OwnedLeagues *LeagueCreateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
+	Matches      *MatchCreateManyInput              `json:"matches,omitempty"`
 }
 
 type TeamCreateManyWithoutOwnerInput struct {
@@ -999,6 +1282,75 @@ type LeagueCreateWithoutOwnerInput struct {
 	Name        string                             `json:"name"`
 	Teams       *TeamCreateManyWithoutLeagueInput  `json:"teams,omitempty"`
 	Users       *UserCreateManyWithoutLeaguesInput `json:"users,omitempty"`
+	Matches     *MatchCreateManyWithoutLeagueInput `json:"matches,omitempty"`
+}
+
+type MatchCreateManyWithoutLeagueInput struct {
+	Create  []MatchCreateWithoutLeagueInput `json:"create,omitempty"`
+	Connect []MatchWhereUniqueInput         `json:"connect,omitempty"`
+}
+
+type MatchCreateWithoutLeagueInput struct {
+	ID           *string             `json:"id,omitempty"`
+	Expiration   string              `json:"expiration"`
+	IsRanked     bool                `json:"isRanked"`
+	IsFinished   *bool               `json:"isFinished,omitempty"`
+	User1        UserCreateOneInput  `json:"user1"`
+	User1points  *int32              `json:"user1points,omitempty"`
+	User2        UserCreateOneInput  `json:"user2"`
+	User2points  *int32              `json:"user2points,omitempty"`
+	Winner       *UserCreateOneInput `json:"winner,omitempty"`
+	Winnerpoints *int32              `json:"winnerpoints,omitempty"`
+}
+
+type UserCreateOneInput struct {
+	Create  *UserCreateInput      `json:"create,omitempty"`
+	Connect *UserWhereUniqueInput `json:"connect,omitempty"`
+}
+
+type UserCreateInput struct {
+	ID           *string                            `json:"id,omitempty"`
+	Name         string                             `json:"name"`
+	Sub          string                             `json:"sub"`
+	Picture      string                             `json:"picture"`
+	Teams        *TeamCreateManyWithoutUsersInput   `json:"teams,omitempty"`
+	Leagues      *LeagueCreateManyWithoutUsersInput `json:"leagues,omitempty"`
+	OwnedTeams   *TeamCreateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
+	OwnedLeagues *LeagueCreateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
+	Matches      *MatchCreateManyInput              `json:"matches,omitempty"`
+}
+
+type MatchCreateManyInput struct {
+	Create  []MatchCreateInput      `json:"create,omitempty"`
+	Connect []MatchWhereUniqueInput `json:"connect,omitempty"`
+}
+
+type MatchCreateInput struct {
+	ID           *string                            `json:"id,omitempty"`
+	Expiration   string                             `json:"expiration"`
+	IsRanked     bool                               `json:"isRanked"`
+	IsFinished   *bool                              `json:"isFinished,omitempty"`
+	League       LeagueCreateOneWithoutMatchesInput `json:"league"`
+	User1        UserCreateOneInput                 `json:"user1"`
+	User1points  *int32                             `json:"user1points,omitempty"`
+	User2        UserCreateOneInput                 `json:"user2"`
+	User2points  *int32                             `json:"user2points,omitempty"`
+	Winner       *UserCreateOneInput                `json:"winner,omitempty"`
+	Winnerpoints *int32                             `json:"winnerpoints,omitempty"`
+}
+
+type LeagueCreateOneWithoutMatchesInput struct {
+	Create  *LeagueCreateWithoutMatchesInput `json:"create,omitempty"`
+	Connect *LeagueWhereUniqueInput          `json:"connect,omitempty"`
+}
+
+type LeagueCreateWithoutMatchesInput struct {
+	ID          *string                               `json:"id,omitempty"`
+	Description string                                `json:"description"`
+	Name        string                                `json:"name"`
+	Teams       *TeamCreateManyWithoutLeagueInput     `json:"teams,omitempty"`
+	Users       *UserCreateManyWithoutLeaguesInput    `json:"users,omitempty"`
+	Owner       UserCreateOneWithoutOwnedLeaguesInput `json:"owner"`
 }
 
 type UserCreateOneWithoutOwnedTeamsInput struct {
@@ -1014,6 +1366,7 @@ type UserCreateWithoutOwnedTeamsInput struct {
 	Teams        *TeamCreateManyWithoutUsersInput   `json:"teams,omitempty"`
 	Leagues      *LeagueCreateManyWithoutUsersInput `json:"leagues,omitempty"`
 	OwnedLeagues *LeagueCreateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
+	Matches      *MatchCreateManyInput              `json:"matches,omitempty"`
 }
 
 type LeagueUpdateInput struct {
@@ -1022,6 +1375,7 @@ type LeagueUpdateInput struct {
 	Teams       *TeamUpdateManyWithoutLeagueInput              `json:"teams,omitempty"`
 	Users       *UserUpdateManyWithoutLeaguesInput             `json:"users,omitempty"`
 	Owner       *UserUpdateOneRequiredWithoutOwnedLeaguesInput `json:"owner,omitempty"`
+	Matches     *MatchUpdateManyWithoutLeagueInput             `json:"matches,omitempty"`
 }
 
 type TeamUpdateManyWithoutLeagueInput struct {
@@ -1072,6 +1426,7 @@ type UserUpdateWithoutTeamsDataInput struct {
 	Leagues      *LeagueUpdateManyWithoutUsersInput `json:"leagues,omitempty"`
 	OwnedTeams   *TeamUpdateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
 	OwnedLeagues *LeagueUpdateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
+	Matches      *MatchUpdateManyInput              `json:"matches,omitempty"`
 }
 
 type LeagueUpdateManyWithoutUsersInput struct {
@@ -1096,6 +1451,7 @@ type LeagueUpdateWithoutUsersDataInput struct {
 	Name        *string                                        `json:"name,omitempty"`
 	Teams       *TeamUpdateManyWithoutLeagueInput              `json:"teams,omitempty"`
 	Owner       *UserUpdateOneRequiredWithoutOwnedLeaguesInput `json:"owner,omitempty"`
+	Matches     *MatchUpdateManyWithoutLeagueInput             `json:"matches,omitempty"`
 }
 
 type UserUpdateOneRequiredWithoutOwnedLeaguesInput struct {
@@ -1112,6 +1468,7 @@ type UserUpdateWithoutOwnedLeaguesDataInput struct {
 	Teams      *TeamUpdateManyWithoutUsersInput   `json:"teams,omitempty"`
 	Leagues    *LeagueUpdateManyWithoutUsersInput `json:"leagues,omitempty"`
 	OwnedTeams *TeamUpdateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
+	Matches    *MatchUpdateManyInput              `json:"matches,omitempty"`
 }
 
 type TeamUpdateManyWithoutUsersInput struct {
@@ -1150,6 +1507,7 @@ type LeagueUpdateWithoutTeamsDataInput struct {
 	Name        *string                                        `json:"name,omitempty"`
 	Users       *UserUpdateManyWithoutLeaguesInput             `json:"users,omitempty"`
 	Owner       *UserUpdateOneRequiredWithoutOwnedLeaguesInput `json:"owner,omitempty"`
+	Matches     *MatchUpdateManyWithoutLeagueInput             `json:"matches,omitempty"`
 }
 
 type UserUpdateManyWithoutLeaguesInput struct {
@@ -1176,6 +1534,7 @@ type UserUpdateWithoutLeaguesDataInput struct {
 	Teams        *TeamUpdateManyWithoutUsersInput   `json:"teams,omitempty"`
 	OwnedTeams   *TeamUpdateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
 	OwnedLeagues *LeagueUpdateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
+	Matches      *MatchUpdateManyInput              `json:"matches,omitempty"`
 }
 
 type TeamUpdateManyWithoutOwnerInput struct {
@@ -1296,6 +1655,208 @@ type LeagueUpdateWithoutOwnerDataInput struct {
 	Name        *string                            `json:"name,omitempty"`
 	Teams       *TeamUpdateManyWithoutLeagueInput  `json:"teams,omitempty"`
 	Users       *UserUpdateManyWithoutLeaguesInput `json:"users,omitempty"`
+	Matches     *MatchUpdateManyWithoutLeagueInput `json:"matches,omitempty"`
+}
+
+type MatchUpdateManyWithoutLeagueInput struct {
+	Create     []MatchCreateWithoutLeagueInput                `json:"create,omitempty"`
+	Delete     []MatchWhereUniqueInput                        `json:"delete,omitempty"`
+	Connect    []MatchWhereUniqueInput                        `json:"connect,omitempty"`
+	Set        []MatchWhereUniqueInput                        `json:"set,omitempty"`
+	Disconnect []MatchWhereUniqueInput                        `json:"disconnect,omitempty"`
+	Update     []MatchUpdateWithWhereUniqueWithoutLeagueInput `json:"update,omitempty"`
+	Upsert     []MatchUpsertWithWhereUniqueWithoutLeagueInput `json:"upsert,omitempty"`
+	DeleteMany []MatchScalarWhereInput                        `json:"deleteMany,omitempty"`
+	UpdateMany []MatchUpdateManyWithWhereNestedInput          `json:"updateMany,omitempty"`
+}
+
+type MatchUpdateWithWhereUniqueWithoutLeagueInput struct {
+	Where MatchWhereUniqueInput             `json:"where"`
+	Data  MatchUpdateWithoutLeagueDataInput `json:"data"`
+}
+
+type MatchUpdateWithoutLeagueDataInput struct {
+	Expiration   *string                     `json:"expiration,omitempty"`
+	IsRanked     *bool                       `json:"isRanked,omitempty"`
+	IsFinished   *bool                       `json:"isFinished,omitempty"`
+	User1        *UserUpdateOneRequiredInput `json:"user1,omitempty"`
+	User1points  *int32                      `json:"user1points,omitempty"`
+	User2        *UserUpdateOneRequiredInput `json:"user2,omitempty"`
+	User2points  *int32                      `json:"user2points,omitempty"`
+	Winner       *UserUpdateOneInput         `json:"winner,omitempty"`
+	Winnerpoints *int32                      `json:"winnerpoints,omitempty"`
+}
+
+type UserUpdateOneRequiredInput struct {
+	Create  *UserCreateInput       `json:"create,omitempty"`
+	Update  *UserUpdateDataInput   `json:"update,omitempty"`
+	Upsert  *UserUpsertNestedInput `json:"upsert,omitempty"`
+	Connect *UserWhereUniqueInput  `json:"connect,omitempty"`
+}
+
+type UserUpdateDataInput struct {
+	Name         *string                            `json:"name,omitempty"`
+	Sub          *string                            `json:"sub,omitempty"`
+	Picture      *string                            `json:"picture,omitempty"`
+	Teams        *TeamUpdateManyWithoutUsersInput   `json:"teams,omitempty"`
+	Leagues      *LeagueUpdateManyWithoutUsersInput `json:"leagues,omitempty"`
+	OwnedTeams   *TeamUpdateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
+	OwnedLeagues *LeagueUpdateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
+	Matches      *MatchUpdateManyInput              `json:"matches,omitempty"`
+}
+
+type MatchUpdateManyInput struct {
+	Create     []MatchCreateInput                      `json:"create,omitempty"`
+	Update     []MatchUpdateWithWhereUniqueNestedInput `json:"update,omitempty"`
+	Upsert     []MatchUpsertWithWhereUniqueNestedInput `json:"upsert,omitempty"`
+	Delete     []MatchWhereUniqueInput                 `json:"delete,omitempty"`
+	Connect    []MatchWhereUniqueInput                 `json:"connect,omitempty"`
+	Set        []MatchWhereUniqueInput                 `json:"set,omitempty"`
+	Disconnect []MatchWhereUniqueInput                 `json:"disconnect,omitempty"`
+	DeleteMany []MatchScalarWhereInput                 `json:"deleteMany,omitempty"`
+	UpdateMany []MatchUpdateManyWithWhereNestedInput   `json:"updateMany,omitempty"`
+}
+
+type MatchUpdateWithWhereUniqueNestedInput struct {
+	Where MatchWhereUniqueInput `json:"where"`
+	Data  MatchUpdateDataInput  `json:"data"`
+}
+
+type MatchUpdateDataInput struct {
+	Expiration   *string                                     `json:"expiration,omitempty"`
+	IsRanked     *bool                                       `json:"isRanked,omitempty"`
+	IsFinished   *bool                                       `json:"isFinished,omitempty"`
+	League       *LeagueUpdateOneRequiredWithoutMatchesInput `json:"league,omitempty"`
+	User1        *UserUpdateOneRequiredInput                 `json:"user1,omitempty"`
+	User1points  *int32                                      `json:"user1points,omitempty"`
+	User2        *UserUpdateOneRequiredInput                 `json:"user2,omitempty"`
+	User2points  *int32                                      `json:"user2points,omitempty"`
+	Winner       *UserUpdateOneInput                         `json:"winner,omitempty"`
+	Winnerpoints *int32                                      `json:"winnerpoints,omitempty"`
+}
+
+type LeagueUpdateOneRequiredWithoutMatchesInput struct {
+	Create  *LeagueCreateWithoutMatchesInput     `json:"create,omitempty"`
+	Update  *LeagueUpdateWithoutMatchesDataInput `json:"update,omitempty"`
+	Upsert  *LeagueUpsertWithoutMatchesInput     `json:"upsert,omitempty"`
+	Connect *LeagueWhereUniqueInput              `json:"connect,omitempty"`
+}
+
+type LeagueUpdateWithoutMatchesDataInput struct {
+	Description *string                                        `json:"description,omitempty"`
+	Name        *string                                        `json:"name,omitempty"`
+	Teams       *TeamUpdateManyWithoutLeagueInput              `json:"teams,omitempty"`
+	Users       *UserUpdateManyWithoutLeaguesInput             `json:"users,omitempty"`
+	Owner       *UserUpdateOneRequiredWithoutOwnedLeaguesInput `json:"owner,omitempty"`
+}
+
+type LeagueUpsertWithoutMatchesInput struct {
+	Update LeagueUpdateWithoutMatchesDataInput `json:"update"`
+	Create LeagueCreateWithoutMatchesInput     `json:"create"`
+}
+
+type UserUpdateOneInput struct {
+	Create     *UserCreateInput       `json:"create,omitempty"`
+	Update     *UserUpdateDataInput   `json:"update,omitempty"`
+	Upsert     *UserUpsertNestedInput `json:"upsert,omitempty"`
+	Delete     *bool                  `json:"delete,omitempty"`
+	Disconnect *bool                  `json:"disconnect,omitempty"`
+	Connect    *UserWhereUniqueInput  `json:"connect,omitempty"`
+}
+
+type UserUpsertNestedInput struct {
+	Update UserUpdateDataInput `json:"update"`
+	Create UserCreateInput     `json:"create"`
+}
+
+type MatchUpsertWithWhereUniqueNestedInput struct {
+	Where  MatchWhereUniqueInput `json:"where"`
+	Update MatchUpdateDataInput  `json:"update"`
+	Create MatchCreateInput      `json:"create"`
+}
+
+type MatchScalarWhereInput struct {
+	ID                *string                 `json:"id,omitempty"`
+	IDNot             *string                 `json:"id_not,omitempty"`
+	IDIn              []string                `json:"id_in,omitempty"`
+	IDNotIn           []string                `json:"id_not_in,omitempty"`
+	IDLt              *string                 `json:"id_lt,omitempty"`
+	IDLte             *string                 `json:"id_lte,omitempty"`
+	IDGt              *string                 `json:"id_gt,omitempty"`
+	IDGte             *string                 `json:"id_gte,omitempty"`
+	IDContains        *string                 `json:"id_contains,omitempty"`
+	IDNotContains     *string                 `json:"id_not_contains,omitempty"`
+	IDStartsWith      *string                 `json:"id_starts_with,omitempty"`
+	IDNotStartsWith   *string                 `json:"id_not_starts_with,omitempty"`
+	IDEndsWith        *string                 `json:"id_ends_with,omitempty"`
+	IDNotEndsWith     *string                 `json:"id_not_ends_with,omitempty"`
+	CreatedAt         *string                 `json:"createdAt,omitempty"`
+	CreatedAtNot      *string                 `json:"createdAt_not,omitempty"`
+	CreatedAtIn       []string                `json:"createdAt_in,omitempty"`
+	CreatedAtNotIn    []string                `json:"createdAt_not_in,omitempty"`
+	CreatedAtLt       *string                 `json:"createdAt_lt,omitempty"`
+	CreatedAtLte      *string                 `json:"createdAt_lte,omitempty"`
+	CreatedAtGt       *string                 `json:"createdAt_gt,omitempty"`
+	CreatedAtGte      *string                 `json:"createdAt_gte,omitempty"`
+	Expiration        *string                 `json:"expiration,omitempty"`
+	ExpirationNot     *string                 `json:"expiration_not,omitempty"`
+	ExpirationIn      []string                `json:"expiration_in,omitempty"`
+	ExpirationNotIn   []string                `json:"expiration_not_in,omitempty"`
+	ExpirationLt      *string                 `json:"expiration_lt,omitempty"`
+	ExpirationLte     *string                 `json:"expiration_lte,omitempty"`
+	ExpirationGt      *string                 `json:"expiration_gt,omitempty"`
+	ExpirationGte     *string                 `json:"expiration_gte,omitempty"`
+	IsRanked          *bool                   `json:"isRanked,omitempty"`
+	IsRankedNot       *bool                   `json:"isRanked_not,omitempty"`
+	IsFinished        *bool                   `json:"isFinished,omitempty"`
+	IsFinishedNot     *bool                   `json:"isFinished_not,omitempty"`
+	User1points       *int32                  `json:"user1points,omitempty"`
+	User1pointsNot    *int32                  `json:"user1points_not,omitempty"`
+	User1pointsIn     []int32                 `json:"user1points_in,omitempty"`
+	User1pointsNotIn  []int32                 `json:"user1points_not_in,omitempty"`
+	User1pointsLt     *int32                  `json:"user1points_lt,omitempty"`
+	User1pointsLte    *int32                  `json:"user1points_lte,omitempty"`
+	User1pointsGt     *int32                  `json:"user1points_gt,omitempty"`
+	User1pointsGte    *int32                  `json:"user1points_gte,omitempty"`
+	User2points       *int32                  `json:"user2points,omitempty"`
+	User2pointsNot    *int32                  `json:"user2points_not,omitempty"`
+	User2pointsIn     []int32                 `json:"user2points_in,omitempty"`
+	User2pointsNotIn  []int32                 `json:"user2points_not_in,omitempty"`
+	User2pointsLt     *int32                  `json:"user2points_lt,omitempty"`
+	User2pointsLte    *int32                  `json:"user2points_lte,omitempty"`
+	User2pointsGt     *int32                  `json:"user2points_gt,omitempty"`
+	User2pointsGte    *int32                  `json:"user2points_gte,omitempty"`
+	Winnerpoints      *int32                  `json:"winnerpoints,omitempty"`
+	WinnerpointsNot   *int32                  `json:"winnerpoints_not,omitempty"`
+	WinnerpointsIn    []int32                 `json:"winnerpoints_in,omitempty"`
+	WinnerpointsNotIn []int32                 `json:"winnerpoints_not_in,omitempty"`
+	WinnerpointsLt    *int32                  `json:"winnerpoints_lt,omitempty"`
+	WinnerpointsLte   *int32                  `json:"winnerpoints_lte,omitempty"`
+	WinnerpointsGt    *int32                  `json:"winnerpoints_gt,omitempty"`
+	WinnerpointsGte   *int32                  `json:"winnerpoints_gte,omitempty"`
+	And               []MatchScalarWhereInput `json:"AND,omitempty"`
+	Or                []MatchScalarWhereInput `json:"OR,omitempty"`
+	Not               []MatchScalarWhereInput `json:"NOT,omitempty"`
+}
+
+type MatchUpdateManyWithWhereNestedInput struct {
+	Where MatchScalarWhereInput    `json:"where"`
+	Data  MatchUpdateManyDataInput `json:"data"`
+}
+
+type MatchUpdateManyDataInput struct {
+	Expiration   *string `json:"expiration,omitempty"`
+	IsRanked     *bool   `json:"isRanked,omitempty"`
+	IsFinished   *bool   `json:"isFinished,omitempty"`
+	User1points  *int32  `json:"user1points,omitempty"`
+	User2points  *int32  `json:"user2points,omitempty"`
+	Winnerpoints *int32  `json:"winnerpoints,omitempty"`
+}
+
+type MatchUpsertWithWhereUniqueWithoutLeagueInput struct {
+	Where  MatchWhereUniqueInput             `json:"where"`
+	Update MatchUpdateWithoutLeagueDataInput `json:"update"`
+	Create MatchCreateWithoutLeagueInput     `json:"create"`
 }
 
 type LeagueUpsertWithWhereUniqueWithoutOwnerInput struct {
@@ -1476,6 +2037,7 @@ type UserUpdateWithoutOwnedTeamsDataInput struct {
 	Teams        *TeamUpdateManyWithoutUsersInput   `json:"teams,omitempty"`
 	Leagues      *LeagueUpdateManyWithoutUsersInput `json:"leagues,omitempty"`
 	OwnedLeagues *LeagueUpdateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
+	Matches      *MatchUpdateManyInput              `json:"matches,omitempty"`
 }
 
 type UserUpsertWithoutOwnedTeamsInput struct {
@@ -1517,6 +2079,28 @@ type LeagueUpdateManyMutationInput struct {
 	Name        *string `json:"name,omitempty"`
 }
 
+type MatchUpdateInput struct {
+	Expiration   *string                                     `json:"expiration,omitempty"`
+	IsRanked     *bool                                       `json:"isRanked,omitempty"`
+	IsFinished   *bool                                       `json:"isFinished,omitempty"`
+	League       *LeagueUpdateOneRequiredWithoutMatchesInput `json:"league,omitempty"`
+	User1        *UserUpdateOneRequiredInput                 `json:"user1,omitempty"`
+	User1points  *int32                                      `json:"user1points,omitempty"`
+	User2        *UserUpdateOneRequiredInput                 `json:"user2,omitempty"`
+	User2points  *int32                                      `json:"user2points,omitempty"`
+	Winner       *UserUpdateOneInput                         `json:"winner,omitempty"`
+	Winnerpoints *int32                                      `json:"winnerpoints,omitempty"`
+}
+
+type MatchUpdateManyMutationInput struct {
+	Expiration   *string `json:"expiration,omitempty"`
+	IsRanked     *bool   `json:"isRanked,omitempty"`
+	IsFinished   *bool   `json:"isFinished,omitempty"`
+	User1points  *int32  `json:"user1points,omitempty"`
+	User2points  *int32  `json:"user2points,omitempty"`
+	Winnerpoints *int32  `json:"winnerpoints,omitempty"`
+}
+
 type TeamCreateInput struct {
 	ID          *string                             `json:"id,omitempty"`
 	Description string                              `json:"description"`
@@ -1539,17 +2123,6 @@ type TeamUpdateManyMutationInput struct {
 	Name        *string `json:"name,omitempty"`
 }
 
-type UserCreateInput struct {
-	ID           *string                            `json:"id,omitempty"`
-	Name         string                             `json:"name"`
-	Sub          string                             `json:"sub"`
-	Picture      string                             `json:"picture"`
-	Teams        *TeamCreateManyWithoutUsersInput   `json:"teams,omitempty"`
-	Leagues      *LeagueCreateManyWithoutUsersInput `json:"leagues,omitempty"`
-	OwnedTeams   *TeamCreateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
-	OwnedLeagues *LeagueCreateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
-}
-
 type UserUpdateInput struct {
 	Name         *string                            `json:"name,omitempty"`
 	Sub          *string                            `json:"sub,omitempty"`
@@ -1558,6 +2131,7 @@ type UserUpdateInput struct {
 	Leagues      *LeagueUpdateManyWithoutUsersInput `json:"leagues,omitempty"`
 	OwnedTeams   *TeamUpdateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
 	OwnedLeagues *LeagueUpdateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
+	Matches      *MatchUpdateManyInput              `json:"matches,omitempty"`
 }
 
 type UserUpdateManyMutationInput struct {
@@ -1575,6 +2149,17 @@ type LeagueSubscriptionWhereInput struct {
 	And                        []LeagueSubscriptionWhereInput `json:"AND,omitempty"`
 	Or                         []LeagueSubscriptionWhereInput `json:"OR,omitempty"`
 	Not                        []LeagueSubscriptionWhereInput `json:"NOT,omitempty"`
+}
+
+type MatchSubscriptionWhereInput struct {
+	MutationIn                 []MutationType                `json:"mutation_in,omitempty"`
+	UpdatedFieldsContains      *string                       `json:"updatedFields_contains,omitempty"`
+	UpdatedFieldsContainsEvery []string                      `json:"updatedFields_contains_every,omitempty"`
+	UpdatedFieldsContainsSome  []string                      `json:"updatedFields_contains_some,omitempty"`
+	Node                       *MatchWhereInput              `json:"node,omitempty"`
+	And                        []MatchSubscriptionWhereInput `json:"AND,omitempty"`
+	Or                         []MatchSubscriptionWhereInput `json:"OR,omitempty"`
+	Not                        []MatchSubscriptionWhereInput `json:"NOT,omitempty"`
 }
 
 type TeamSubscriptionWhereInput struct {
@@ -1680,6 +2265,40 @@ func (instance *LeagueExec) Owner() *UserExec {
 		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserExec{ret}
+}
+
+type MatchesParamsExec struct {
+	Where   *MatchWhereInput
+	OrderBy *MatchOrderByInput
+	Skip    *int32
+	After   *string
+	Before  *string
+	First   *int32
+	Last    *int32
+}
+
+func (instance *LeagueExec) Matches(params *MatchesParamsExec) *MatchExecArray {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := instance.exec.Client.GetMany(
+		instance.exec,
+		wparams,
+		[3]string{"MatchWhereInput", "MatchOrderByInput", "Match"},
+		"matches",
+		[]string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+
+	return &MatchExecArray{ret}
 }
 
 func (instance LeagueExec) Exec(ctx context.Context) (*League, error) {
@@ -1932,6 +2551,30 @@ func (instance *UserExec) OwnedLeagues(params *OwnedLeaguesParamsExec) *LeagueEx
 	return &LeagueExecArray{ret}
 }
 
+func (instance *UserExec) Matches(params *MatchesParamsExec) *MatchExecArray {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := instance.exec.Client.GetMany(
+		instance.exec,
+		wparams,
+		[3]string{"MatchWhereInput", "MatchOrderByInput", "Match"},
+		"matches",
+		[]string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+
+	return &MatchExecArray{ret}
+}
+
 func (instance UserExec) Exec(ctx context.Context) (*User, error) {
 	var v User
 	ok, err := instance.exec.Exec(ctx, &v)
@@ -1966,6 +2609,93 @@ type User struct {
 	Name      string `json:"name"`
 	Sub       string `json:"sub"`
 	Picture   string `json:"picture"`
+}
+
+type MatchExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *MatchExec) League() *LeagueExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "League"},
+		"league",
+		[]string{"id", "createdAt", "description", "name"})
+
+	return &LeagueExec{ret}
+}
+
+func (instance *MatchExec) User1() *UserExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "User"},
+		"user1",
+		[]string{"id", "createdAt", "name", "sub", "picture"})
+
+	return &UserExec{ret}
+}
+
+func (instance *MatchExec) User2() *UserExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "User"},
+		"user2",
+		[]string{"id", "createdAt", "name", "sub", "picture"})
+
+	return &UserExec{ret}
+}
+
+func (instance *MatchExec) Winner() *UserExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "User"},
+		"winner",
+		[]string{"id", "createdAt", "name", "sub", "picture"})
+
+	return &UserExec{ret}
+}
+
+func (instance MatchExec) Exec(ctx context.Context) (*Match, error) {
+	var v Match
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance MatchExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type MatchExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance MatchExecArray) Exec(ctx context.Context) ([]Match, error) {
+	var v []Match
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var MatchFields = []string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"}
+
+type Match struct {
+	ID           string `json:"id"`
+	CreatedAt    string `json:"createdAt"`
+	Expiration   string `json:"expiration"`
+	IsRanked     bool   `json:"isRanked"`
+	IsFinished   *bool  `json:"isFinished,omitempty"`
+	User1points  *int32 `json:"user1points,omitempty"`
+	User2points  *int32 `json:"user2points,omitempty"`
+	Winnerpoints *int32 `json:"winnerpoints,omitempty"`
 }
 
 type LeagueConnectionExec struct {
@@ -2136,6 +2866,138 @@ var LeagueEdgeFields = []string{"cursor"}
 
 type LeagueEdge struct {
 	Node   League `json:"node"`
+	Cursor string `json:"cursor"`
+}
+
+type MatchConnectionExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *MatchConnectionExec) PageInfo() *PageInfoExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "PageInfo"},
+		"pageInfo",
+		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
+
+	return &PageInfoExec{ret}
+}
+
+func (instance *MatchConnectionExec) Edges() *MatchEdgeExecArray {
+	edges := instance.exec.Client.GetMany(
+		instance.exec,
+		nil,
+		[3]string{"MatchWhereInput", "MatchOrderByInput", "MatchEdge"},
+		"edges",
+		[]string{"cursor"})
+
+	nodes := edges.Client.GetOne(
+		edges,
+		nil,
+		[2]string{"", "Match"},
+		"node",
+		MatchFields)
+
+	return &MatchEdgeExecArray{nodes}
+}
+
+func (instance *MatchConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "AggregateMatch"},
+		"aggregate",
+		[]string{"count"})
+
+	var v Aggregate
+	_, err := ret.Exec(ctx, &v)
+	return &v, err
+}
+
+func (instance MatchConnectionExec) Exec(ctx context.Context) (*MatchConnection, error) {
+	edges, err := instance.Edges().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	pageInfo, err := instance.PageInfo().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &MatchConnection{
+		Edges:    edges,
+		PageInfo: *pageInfo,
+	}, nil
+}
+
+func (instance MatchConnectionExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type MatchConnectionExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance MatchConnectionExecArray) Exec(ctx context.Context) ([]MatchConnection, error) {
+	var v []MatchConnection
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var MatchConnectionFields = []string{}
+
+type MatchConnection struct {
+	PageInfo PageInfo    `json:"pageInfo"`
+	Edges    []MatchEdge `json:"edges"`
+}
+
+type MatchEdgeExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *MatchEdgeExec) Node() *MatchExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "Match"},
+		"node",
+		[]string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+
+	return &MatchExec{ret}
+}
+
+func (instance MatchEdgeExec) Exec(ctx context.Context) (*MatchEdge, error) {
+	var v MatchEdge
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance MatchEdgeExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type MatchEdgeExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance MatchEdgeExecArray) Exec(ctx context.Context) ([]MatchEdge, error) {
+	var v []MatchEdge
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var MatchEdgeFields = []string{"cursor"}
+
+type MatchEdge struct {
+	Node   Match  `json:"node"`
 	Cursor string `json:"cursor"`
 }
 
@@ -2500,6 +3362,109 @@ type LeaguePreviousValues struct {
 	CreatedAt   string `json:"createdAt"`
 	Description string `json:"description"`
 	Name        string `json:"name"`
+}
+
+type MatchSubscriptionPayloadExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *MatchSubscriptionPayloadExec) Node() *MatchExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "Match"},
+		"node",
+		[]string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+
+	return &MatchExec{ret}
+}
+
+func (instance *MatchSubscriptionPayloadExec) PreviousValues() *MatchPreviousValuesExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "MatchPreviousValues"},
+		"previousValues",
+		[]string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+
+	return &MatchPreviousValuesExec{ret}
+}
+
+func (instance MatchSubscriptionPayloadExec) Exec(ctx context.Context) (*MatchSubscriptionPayload, error) {
+	var v MatchSubscriptionPayload
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance MatchSubscriptionPayloadExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type MatchSubscriptionPayloadExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance MatchSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]MatchSubscriptionPayload, error) {
+	var v []MatchSubscriptionPayload
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var MatchSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
+
+type MatchSubscriptionPayload struct {
+	Mutation      MutationType `json:"mutation"`
+	Node          *Match       `json:"node,omitempty"`
+	UpdatedFields []string     `json:"updatedFields,omitempty"`
+}
+
+type MatchPreviousValuesExec struct {
+	exec *prisma.Exec
+}
+
+func (instance MatchPreviousValuesExec) Exec(ctx context.Context) (*MatchPreviousValues, error) {
+	var v MatchPreviousValues
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance MatchPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type MatchPreviousValuesExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance MatchPreviousValuesExecArray) Exec(ctx context.Context) ([]MatchPreviousValues, error) {
+	var v []MatchPreviousValues
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var MatchPreviousValuesFields = []string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"}
+
+type MatchPreviousValues struct {
+	ID           string `json:"id"`
+	CreatedAt    string `json:"createdAt"`
+	Expiration   string `json:"expiration"`
+	IsRanked     bool   `json:"isRanked"`
+	IsFinished   *bool  `json:"isFinished,omitempty"`
+	User1points  *int32 `json:"user1points,omitempty"`
+	User2points  *int32 `json:"user2points,omitempty"`
+	Winnerpoints *int32 `json:"winnerpoints,omitempty"`
 }
 
 type TeamSubscriptionPayloadExec struct {

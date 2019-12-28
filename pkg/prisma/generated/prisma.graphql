@@ -2,6 +2,10 @@ type AggregateLeague {
   count: Int!
 }
 
+type AggregateMatch {
+  count: Int!
+}
+
 type AggregateTeam {
   count: Int!
 }
@@ -24,6 +28,7 @@ type League {
   teams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team!]
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
   owner: User!
+  matches(where: MatchWhereInput, orderBy: MatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Match!]
 }
 
 type LeagueConnection {
@@ -39,6 +44,7 @@ input LeagueCreateInput {
   teams: TeamCreateManyWithoutLeagueInput
   users: UserCreateManyWithoutLeaguesInput
   owner: UserCreateOneWithoutOwnedLeaguesInput!
+  matches: MatchCreateManyWithoutLeagueInput
 }
 
 input LeagueCreateManyWithoutOwnerInput {
@@ -51,9 +57,23 @@ input LeagueCreateManyWithoutUsersInput {
   connect: [LeagueWhereUniqueInput!]
 }
 
+input LeagueCreateOneWithoutMatchesInput {
+  create: LeagueCreateWithoutMatchesInput
+  connect: LeagueWhereUniqueInput
+}
+
 input LeagueCreateOneWithoutTeamsInput {
   create: LeagueCreateWithoutTeamsInput
   connect: LeagueWhereUniqueInput
+}
+
+input LeagueCreateWithoutMatchesInput {
+  id: ID
+  description: String!
+  name: String!
+  teams: TeamCreateManyWithoutLeagueInput
+  users: UserCreateManyWithoutLeaguesInput
+  owner: UserCreateOneWithoutOwnedLeaguesInput!
 }
 
 input LeagueCreateWithoutOwnerInput {
@@ -62,6 +82,7 @@ input LeagueCreateWithoutOwnerInput {
   name: String!
   teams: TeamCreateManyWithoutLeagueInput
   users: UserCreateManyWithoutLeaguesInput
+  matches: MatchCreateManyWithoutLeagueInput
 }
 
 input LeagueCreateWithoutTeamsInput {
@@ -70,6 +91,7 @@ input LeagueCreateWithoutTeamsInput {
   name: String!
   users: UserCreateManyWithoutLeaguesInput
   owner: UserCreateOneWithoutOwnedLeaguesInput!
+  matches: MatchCreateManyWithoutLeagueInput
 }
 
 input LeagueCreateWithoutUsersInput {
@@ -78,6 +100,7 @@ input LeagueCreateWithoutUsersInput {
   name: String!
   teams: TeamCreateManyWithoutLeagueInput
   owner: UserCreateOneWithoutOwnedLeaguesInput!
+  matches: MatchCreateManyWithoutLeagueInput
 }
 
 type LeagueEdge {
@@ -183,6 +206,7 @@ input LeagueUpdateInput {
   teams: TeamUpdateManyWithoutLeagueInput
   users: UserUpdateManyWithoutLeaguesInput
   owner: UserUpdateOneRequiredWithoutOwnedLeaguesInput
+  matches: MatchUpdateManyWithoutLeagueInput
 }
 
 input LeagueUpdateManyDataInput {
@@ -224,6 +248,13 @@ input LeagueUpdateManyWithWhereNestedInput {
   data: LeagueUpdateManyDataInput!
 }
 
+input LeagueUpdateOneRequiredWithoutMatchesInput {
+  create: LeagueCreateWithoutMatchesInput
+  update: LeagueUpdateWithoutMatchesDataInput
+  upsert: LeagueUpsertWithoutMatchesInput
+  connect: LeagueWhereUniqueInput
+}
+
 input LeagueUpdateOneRequiredWithoutTeamsInput {
   create: LeagueCreateWithoutTeamsInput
   update: LeagueUpdateWithoutTeamsDataInput
@@ -231,11 +262,20 @@ input LeagueUpdateOneRequiredWithoutTeamsInput {
   connect: LeagueWhereUniqueInput
 }
 
+input LeagueUpdateWithoutMatchesDataInput {
+  description: String
+  name: String
+  teams: TeamUpdateManyWithoutLeagueInput
+  users: UserUpdateManyWithoutLeaguesInput
+  owner: UserUpdateOneRequiredWithoutOwnedLeaguesInput
+}
+
 input LeagueUpdateWithoutOwnerDataInput {
   description: String
   name: String
   teams: TeamUpdateManyWithoutLeagueInput
   users: UserUpdateManyWithoutLeaguesInput
+  matches: MatchUpdateManyWithoutLeagueInput
 }
 
 input LeagueUpdateWithoutTeamsDataInput {
@@ -243,6 +283,7 @@ input LeagueUpdateWithoutTeamsDataInput {
   name: String
   users: UserUpdateManyWithoutLeaguesInput
   owner: UserUpdateOneRequiredWithoutOwnedLeaguesInput
+  matches: MatchUpdateManyWithoutLeagueInput
 }
 
 input LeagueUpdateWithoutUsersDataInput {
@@ -250,6 +291,7 @@ input LeagueUpdateWithoutUsersDataInput {
   name: String
   teams: TeamUpdateManyWithoutLeagueInput
   owner: UserUpdateOneRequiredWithoutOwnedLeaguesInput
+  matches: MatchUpdateManyWithoutLeagueInput
 }
 
 input LeagueUpdateWithWhereUniqueWithoutOwnerInput {
@@ -260,6 +302,11 @@ input LeagueUpdateWithWhereUniqueWithoutOwnerInput {
 input LeagueUpdateWithWhereUniqueWithoutUsersInput {
   where: LeagueWhereUniqueInput!
   data: LeagueUpdateWithoutUsersDataInput!
+}
+
+input LeagueUpsertWithoutMatchesInput {
+  update: LeagueUpdateWithoutMatchesDataInput!
+  create: LeagueCreateWithoutMatchesInput!
 }
 
 input LeagueUpsertWithoutTeamsInput {
@@ -337,6 +384,9 @@ input LeagueWhereInput {
   users_some: UserWhereInput
   users_none: UserWhereInput
   owner: UserWhereInput
+  matches_every: MatchWhereInput
+  matches_some: MatchWhereInput
+  matches_none: MatchWhereInput
   AND: [LeagueWhereInput!]
   OR: [LeagueWhereInput!]
   NOT: [LeagueWhereInput!]
@@ -349,6 +399,360 @@ input LeagueWhereUniqueInput {
 
 scalar Long
 
+type Match {
+  id: ID!
+  createdAt: DateTime!
+  expiration: DateTime!
+  isRanked: Boolean!
+  isFinished: Boolean
+  league: League!
+  user1: User!
+  user1points: Int
+  user2: User!
+  user2points: Int
+  winner: User
+  winnerpoints: Int
+}
+
+type MatchConnection {
+  pageInfo: PageInfo!
+  edges: [MatchEdge]!
+  aggregate: AggregateMatch!
+}
+
+input MatchCreateInput {
+  id: ID
+  expiration: DateTime!
+  isRanked: Boolean!
+  isFinished: Boolean
+  league: LeagueCreateOneWithoutMatchesInput!
+  user1: UserCreateOneInput!
+  user1points: Int
+  user2: UserCreateOneInput!
+  user2points: Int
+  winner: UserCreateOneInput
+  winnerpoints: Int
+}
+
+input MatchCreateManyInput {
+  create: [MatchCreateInput!]
+  connect: [MatchWhereUniqueInput!]
+}
+
+input MatchCreateManyWithoutLeagueInput {
+  create: [MatchCreateWithoutLeagueInput!]
+  connect: [MatchWhereUniqueInput!]
+}
+
+input MatchCreateWithoutLeagueInput {
+  id: ID
+  expiration: DateTime!
+  isRanked: Boolean!
+  isFinished: Boolean
+  user1: UserCreateOneInput!
+  user1points: Int
+  user2: UserCreateOneInput!
+  user2points: Int
+  winner: UserCreateOneInput
+  winnerpoints: Int
+}
+
+type MatchEdge {
+  node: Match!
+  cursor: String!
+}
+
+enum MatchOrderByInput {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  expiration_ASC
+  expiration_DESC
+  isRanked_ASC
+  isRanked_DESC
+  isFinished_ASC
+  isFinished_DESC
+  user1points_ASC
+  user1points_DESC
+  user2points_ASC
+  user2points_DESC
+  winnerpoints_ASC
+  winnerpoints_DESC
+}
+
+type MatchPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+  expiration: DateTime!
+  isRanked: Boolean!
+  isFinished: Boolean
+  user1points: Int
+  user2points: Int
+  winnerpoints: Int
+}
+
+input MatchScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  expiration: DateTime
+  expiration_not: DateTime
+  expiration_in: [DateTime!]
+  expiration_not_in: [DateTime!]
+  expiration_lt: DateTime
+  expiration_lte: DateTime
+  expiration_gt: DateTime
+  expiration_gte: DateTime
+  isRanked: Boolean
+  isRanked_not: Boolean
+  isFinished: Boolean
+  isFinished_not: Boolean
+  user1points: Int
+  user1points_not: Int
+  user1points_in: [Int!]
+  user1points_not_in: [Int!]
+  user1points_lt: Int
+  user1points_lte: Int
+  user1points_gt: Int
+  user1points_gte: Int
+  user2points: Int
+  user2points_not: Int
+  user2points_in: [Int!]
+  user2points_not_in: [Int!]
+  user2points_lt: Int
+  user2points_lte: Int
+  user2points_gt: Int
+  user2points_gte: Int
+  winnerpoints: Int
+  winnerpoints_not: Int
+  winnerpoints_in: [Int!]
+  winnerpoints_not_in: [Int!]
+  winnerpoints_lt: Int
+  winnerpoints_lte: Int
+  winnerpoints_gt: Int
+  winnerpoints_gte: Int
+  AND: [MatchScalarWhereInput!]
+  OR: [MatchScalarWhereInput!]
+  NOT: [MatchScalarWhereInput!]
+}
+
+type MatchSubscriptionPayload {
+  mutation: MutationType!
+  node: Match
+  updatedFields: [String!]
+  previousValues: MatchPreviousValues
+}
+
+input MatchSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: MatchWhereInput
+  AND: [MatchSubscriptionWhereInput!]
+  OR: [MatchSubscriptionWhereInput!]
+  NOT: [MatchSubscriptionWhereInput!]
+}
+
+input MatchUpdateDataInput {
+  expiration: DateTime
+  isRanked: Boolean
+  isFinished: Boolean
+  league: LeagueUpdateOneRequiredWithoutMatchesInput
+  user1: UserUpdateOneRequiredInput
+  user1points: Int
+  user2: UserUpdateOneRequiredInput
+  user2points: Int
+  winner: UserUpdateOneInput
+  winnerpoints: Int
+}
+
+input MatchUpdateInput {
+  expiration: DateTime
+  isRanked: Boolean
+  isFinished: Boolean
+  league: LeagueUpdateOneRequiredWithoutMatchesInput
+  user1: UserUpdateOneRequiredInput
+  user1points: Int
+  user2: UserUpdateOneRequiredInput
+  user2points: Int
+  winner: UserUpdateOneInput
+  winnerpoints: Int
+}
+
+input MatchUpdateManyDataInput {
+  expiration: DateTime
+  isRanked: Boolean
+  isFinished: Boolean
+  user1points: Int
+  user2points: Int
+  winnerpoints: Int
+}
+
+input MatchUpdateManyInput {
+  create: [MatchCreateInput!]
+  update: [MatchUpdateWithWhereUniqueNestedInput!]
+  upsert: [MatchUpsertWithWhereUniqueNestedInput!]
+  delete: [MatchWhereUniqueInput!]
+  connect: [MatchWhereUniqueInput!]
+  set: [MatchWhereUniqueInput!]
+  disconnect: [MatchWhereUniqueInput!]
+  deleteMany: [MatchScalarWhereInput!]
+  updateMany: [MatchUpdateManyWithWhereNestedInput!]
+}
+
+input MatchUpdateManyMutationInput {
+  expiration: DateTime
+  isRanked: Boolean
+  isFinished: Boolean
+  user1points: Int
+  user2points: Int
+  winnerpoints: Int
+}
+
+input MatchUpdateManyWithoutLeagueInput {
+  create: [MatchCreateWithoutLeagueInput!]
+  delete: [MatchWhereUniqueInput!]
+  connect: [MatchWhereUniqueInput!]
+  set: [MatchWhereUniqueInput!]
+  disconnect: [MatchWhereUniqueInput!]
+  update: [MatchUpdateWithWhereUniqueWithoutLeagueInput!]
+  upsert: [MatchUpsertWithWhereUniqueWithoutLeagueInput!]
+  deleteMany: [MatchScalarWhereInput!]
+  updateMany: [MatchUpdateManyWithWhereNestedInput!]
+}
+
+input MatchUpdateManyWithWhereNestedInput {
+  where: MatchScalarWhereInput!
+  data: MatchUpdateManyDataInput!
+}
+
+input MatchUpdateWithoutLeagueDataInput {
+  expiration: DateTime
+  isRanked: Boolean
+  isFinished: Boolean
+  user1: UserUpdateOneRequiredInput
+  user1points: Int
+  user2: UserUpdateOneRequiredInput
+  user2points: Int
+  winner: UserUpdateOneInput
+  winnerpoints: Int
+}
+
+input MatchUpdateWithWhereUniqueNestedInput {
+  where: MatchWhereUniqueInput!
+  data: MatchUpdateDataInput!
+}
+
+input MatchUpdateWithWhereUniqueWithoutLeagueInput {
+  where: MatchWhereUniqueInput!
+  data: MatchUpdateWithoutLeagueDataInput!
+}
+
+input MatchUpsertWithWhereUniqueNestedInput {
+  where: MatchWhereUniqueInput!
+  update: MatchUpdateDataInput!
+  create: MatchCreateInput!
+}
+
+input MatchUpsertWithWhereUniqueWithoutLeagueInput {
+  where: MatchWhereUniqueInput!
+  update: MatchUpdateWithoutLeagueDataInput!
+  create: MatchCreateWithoutLeagueInput!
+}
+
+input MatchWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  expiration: DateTime
+  expiration_not: DateTime
+  expiration_in: [DateTime!]
+  expiration_not_in: [DateTime!]
+  expiration_lt: DateTime
+  expiration_lte: DateTime
+  expiration_gt: DateTime
+  expiration_gte: DateTime
+  isRanked: Boolean
+  isRanked_not: Boolean
+  isFinished: Boolean
+  isFinished_not: Boolean
+  league: LeagueWhereInput
+  user1: UserWhereInput
+  user1points: Int
+  user1points_not: Int
+  user1points_in: [Int!]
+  user1points_not_in: [Int!]
+  user1points_lt: Int
+  user1points_lte: Int
+  user1points_gt: Int
+  user1points_gte: Int
+  user2: UserWhereInput
+  user2points: Int
+  user2points_not: Int
+  user2points_in: [Int!]
+  user2points_not_in: [Int!]
+  user2points_lt: Int
+  user2points_lte: Int
+  user2points_gt: Int
+  user2points_gte: Int
+  winner: UserWhereInput
+  winnerpoints: Int
+  winnerpoints_not: Int
+  winnerpoints_in: [Int!]
+  winnerpoints_not_in: [Int!]
+  winnerpoints_lt: Int
+  winnerpoints_lte: Int
+  winnerpoints_gt: Int
+  winnerpoints_gte: Int
+  AND: [MatchWhereInput!]
+  OR: [MatchWhereInput!]
+  NOT: [MatchWhereInput!]
+}
+
+input MatchWhereUniqueInput {
+  id: ID
+}
+
 type Mutation {
   createLeague(data: LeagueCreateInput!): League!
   updateLeague(data: LeagueUpdateInput!, where: LeagueWhereUniqueInput!): League
@@ -356,6 +760,12 @@ type Mutation {
   upsertLeague(where: LeagueWhereUniqueInput!, create: LeagueCreateInput!, update: LeagueUpdateInput!): League!
   deleteLeague(where: LeagueWhereUniqueInput!): League
   deleteManyLeagues(where: LeagueWhereInput): BatchPayload!
+  createMatch(data: MatchCreateInput!): Match!
+  updateMatch(data: MatchUpdateInput!, where: MatchWhereUniqueInput!): Match
+  updateManyMatches(data: MatchUpdateManyMutationInput!, where: MatchWhereInput): BatchPayload!
+  upsertMatch(where: MatchWhereUniqueInput!, create: MatchCreateInput!, update: MatchUpdateInput!): Match!
+  deleteMatch(where: MatchWhereUniqueInput!): Match
+  deleteManyMatches(where: MatchWhereInput): BatchPayload!
   createTeam(data: TeamCreateInput!): Team!
   updateTeam(data: TeamUpdateInput!, where: TeamWhereUniqueInput!): Team
   updateManyTeams(data: TeamUpdateManyMutationInput!, where: TeamWhereInput): BatchPayload!
@@ -391,6 +801,9 @@ type Query {
   league(where: LeagueWhereUniqueInput!): League
   leagues(where: LeagueWhereInput, orderBy: LeagueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [League]!
   leaguesConnection(where: LeagueWhereInput, orderBy: LeagueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LeagueConnection!
+  match(where: MatchWhereUniqueInput!): Match
+  matches(where: MatchWhereInput, orderBy: MatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Match]!
+  matchesConnection(where: MatchWhereInput, orderBy: MatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): MatchConnection!
   team(where: TeamWhereUniqueInput!): Team
   teams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team]!
   teamsConnection(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TeamConnection!
@@ -402,6 +815,7 @@ type Query {
 
 type Subscription {
   league(where: LeagueSubscriptionWhereInput): LeagueSubscriptionPayload
+  match(where: MatchSubscriptionWhereInput): MatchSubscriptionPayload
   team(where: TeamSubscriptionWhereInput): TeamSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
@@ -756,6 +1170,7 @@ type User {
   leagues(where: LeagueWhereInput, orderBy: LeagueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [League!]
   ownedTeams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team!]
   ownedLeagues(where: LeagueWhereInput, orderBy: LeagueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [League!]
+  matches(where: MatchWhereInput, orderBy: MatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Match!]
 }
 
 type UserConnection {
@@ -773,6 +1188,7 @@ input UserCreateInput {
   leagues: LeagueCreateManyWithoutUsersInput
   ownedTeams: TeamCreateManyWithoutOwnerInput
   ownedLeagues: LeagueCreateManyWithoutOwnerInput
+  matches: MatchCreateManyInput
 }
 
 input UserCreateManyWithoutLeaguesInput {
@@ -783,6 +1199,11 @@ input UserCreateManyWithoutLeaguesInput {
 input UserCreateManyWithoutTeamsInput {
   create: [UserCreateWithoutTeamsInput!]
   connect: [UserWhereUniqueInput!]
+}
+
+input UserCreateOneInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
 }
 
 input UserCreateOneWithoutOwnedLeaguesInput {
@@ -803,6 +1224,7 @@ input UserCreateWithoutLeaguesInput {
   teams: TeamCreateManyWithoutUsersInput
   ownedTeams: TeamCreateManyWithoutOwnerInput
   ownedLeagues: LeagueCreateManyWithoutOwnerInput
+  matches: MatchCreateManyInput
 }
 
 input UserCreateWithoutOwnedLeaguesInput {
@@ -813,6 +1235,7 @@ input UserCreateWithoutOwnedLeaguesInput {
   teams: TeamCreateManyWithoutUsersInput
   leagues: LeagueCreateManyWithoutUsersInput
   ownedTeams: TeamCreateManyWithoutOwnerInput
+  matches: MatchCreateManyInput
 }
 
 input UserCreateWithoutOwnedTeamsInput {
@@ -823,6 +1246,7 @@ input UserCreateWithoutOwnedTeamsInput {
   teams: TeamCreateManyWithoutUsersInput
   leagues: LeagueCreateManyWithoutUsersInput
   ownedLeagues: LeagueCreateManyWithoutOwnerInput
+  matches: MatchCreateManyInput
 }
 
 input UserCreateWithoutTeamsInput {
@@ -833,6 +1257,7 @@ input UserCreateWithoutTeamsInput {
   leagues: LeagueCreateManyWithoutUsersInput
   ownedTeams: TeamCreateManyWithoutOwnerInput
   ownedLeagues: LeagueCreateManyWithoutOwnerInput
+  matches: MatchCreateManyInput
 }
 
 type UserEdge {
@@ -949,6 +1374,17 @@ input UserSubscriptionWhereInput {
   NOT: [UserSubscriptionWhereInput!]
 }
 
+input UserUpdateDataInput {
+  name: String
+  sub: String
+  picture: String
+  teams: TeamUpdateManyWithoutUsersInput
+  leagues: LeagueUpdateManyWithoutUsersInput
+  ownedTeams: TeamUpdateManyWithoutOwnerInput
+  ownedLeagues: LeagueUpdateManyWithoutOwnerInput
+  matches: MatchUpdateManyInput
+}
+
 input UserUpdateInput {
   name: String
   sub: String
@@ -957,6 +1393,7 @@ input UserUpdateInput {
   leagues: LeagueUpdateManyWithoutUsersInput
   ownedTeams: TeamUpdateManyWithoutOwnerInput
   ownedLeagues: LeagueUpdateManyWithoutOwnerInput
+  matches: MatchUpdateManyInput
 }
 
 input UserUpdateManyDataInput {
@@ -1000,6 +1437,22 @@ input UserUpdateManyWithWhereNestedInput {
   data: UserUpdateManyDataInput!
 }
 
+input UserUpdateOneInput {
+  create: UserCreateInput
+  update: UserUpdateDataInput
+  upsert: UserUpsertNestedInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: UserWhereUniqueInput
+}
+
+input UserUpdateOneRequiredInput {
+  create: UserCreateInput
+  update: UserUpdateDataInput
+  upsert: UserUpsertNestedInput
+  connect: UserWhereUniqueInput
+}
+
 input UserUpdateOneRequiredWithoutOwnedLeaguesInput {
   create: UserCreateWithoutOwnedLeaguesInput
   update: UserUpdateWithoutOwnedLeaguesDataInput
@@ -1021,6 +1474,7 @@ input UserUpdateWithoutLeaguesDataInput {
   teams: TeamUpdateManyWithoutUsersInput
   ownedTeams: TeamUpdateManyWithoutOwnerInput
   ownedLeagues: LeagueUpdateManyWithoutOwnerInput
+  matches: MatchUpdateManyInput
 }
 
 input UserUpdateWithoutOwnedLeaguesDataInput {
@@ -1030,6 +1484,7 @@ input UserUpdateWithoutOwnedLeaguesDataInput {
   teams: TeamUpdateManyWithoutUsersInput
   leagues: LeagueUpdateManyWithoutUsersInput
   ownedTeams: TeamUpdateManyWithoutOwnerInput
+  matches: MatchUpdateManyInput
 }
 
 input UserUpdateWithoutOwnedTeamsDataInput {
@@ -1039,6 +1494,7 @@ input UserUpdateWithoutOwnedTeamsDataInput {
   teams: TeamUpdateManyWithoutUsersInput
   leagues: LeagueUpdateManyWithoutUsersInput
   ownedLeagues: LeagueUpdateManyWithoutOwnerInput
+  matches: MatchUpdateManyInput
 }
 
 input UserUpdateWithoutTeamsDataInput {
@@ -1048,6 +1504,7 @@ input UserUpdateWithoutTeamsDataInput {
   leagues: LeagueUpdateManyWithoutUsersInput
   ownedTeams: TeamUpdateManyWithoutOwnerInput
   ownedLeagues: LeagueUpdateManyWithoutOwnerInput
+  matches: MatchUpdateManyInput
 }
 
 input UserUpdateWithWhereUniqueWithoutLeaguesInput {
@@ -1058,6 +1515,11 @@ input UserUpdateWithWhereUniqueWithoutLeaguesInput {
 input UserUpdateWithWhereUniqueWithoutTeamsInput {
   where: UserWhereUniqueInput!
   data: UserUpdateWithoutTeamsDataInput!
+}
+
+input UserUpsertNestedInput {
+  update: UserUpdateDataInput!
+  create: UserCreateInput!
 }
 
 input UserUpsertWithoutOwnedLeaguesInput {
@@ -1159,6 +1621,9 @@ input UserWhereInput {
   ownedLeagues_every: LeagueWhereInput
   ownedLeagues_some: LeagueWhereInput
   ownedLeagues_none: LeagueWhereInput
+  matches_every: MatchWhereInput
+  matches_some: MatchWhereInput
+  matches_none: MatchWhereInput
   AND: [UserWhereInput!]
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]

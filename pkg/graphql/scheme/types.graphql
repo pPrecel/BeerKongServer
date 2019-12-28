@@ -1,0 +1,46 @@
+type League {
+  id: ID!
+  createdAt: DateTime!
+  description: String!
+  name: String!
+  teams: [Team!]
+  users: [User!]
+  owner: User!
+}
+
+type Team {
+  id: ID!
+  createdAt: DateTime!
+  description: String!
+  name: String!
+  league: League!
+  users: [User!]
+  owner: User!
+}
+
+type User {
+  id: ID!
+  createdAt: DateTime!
+  name: String!
+  sub: String!
+  picture: String!
+  teams: [Team!]
+  leagues: [League!]
+  ownedTeams: [Team!]
+  ownedLeagues: [League!]
+}
+
+type Match {
+  id: ID!
+  createdAt: DateTime!
+  expiration: DateTime!
+  isRanked: Boolean!
+  isFinished: Boolean
+  league: League!
+  user1: User!
+  user1points: Int
+  user2: User!
+  user2points: Int
+  winner: User
+  winnerpoints: Int
+}

@@ -33,6 +33,14 @@ models:
     model: github.com/pPrecel/BeerKongServer/pkg/prisma/generated/prisma-client.UserWhereUniqueInput
   UserOrderByInput:
     model: github.com/pPrecel/BeerKongServer/pkg/prisma/generated/prisma-client.UserOrderByInput
+  Match:
+    model: github.com/pPrecel/BeerKongServer/pkg/prisma/generated/prisma-client.Match
+  MatchWhereInput:
+    model: github.com/pPrecel/BeerKongServer/pkg/prisma/generated/prisma-client.MatchWhereInput
+  MatchWhereUniqueInput:
+    model: github.com/pPrecel/BeerKongServer/pkg/prisma/generated/prisma-client.MatchWhereUniqueInput
+  MatchOrderByInput:
+    model: github.com/pPrecel/BeerKongServer/pkg/prisma/generated/prisma-client.MatchOrderByInput
 resolver:
   filename: generated/resolver.go
   type: Resolver

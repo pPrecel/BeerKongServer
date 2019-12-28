@@ -12,6 +12,14 @@ type LeagueCreateInput struct {
 	Users       []prisma.UserWhereUniqueInput `json:"users"`
 }
 
+type MatchCreateInput struct {
+	Expiration string                         `json:"expiration"`
+	IsRanked   bool                           `json:"isRanked"`
+	League     *prisma.LeagueWhereUniqueInput `json:"league"`
+	User1      *prisma.UserWhereUniqueInput   `json:"user1"`
+	User2      *prisma.UserWhereUniqueInput   `json:"user2"`
+}
+
 type TeamCreateInput struct {
 	ID          *string                        `json:"id"`
 	Description string                         `json:"description"`

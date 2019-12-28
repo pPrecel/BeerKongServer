@@ -8,6 +8,7 @@ type User {
   leagues: [League!]! @relation(name: "UserLeague")
   ownedTeams: [Team!]! @relation(name: "OwnedTeam", onDelete: CASCADE)
   ownedLeagues: [League!]! @relation(name: "OwnedLeague", onDelete: CASCADE)
+  matches: [Match!]! @relation(name: "UserMatches")
 }
 
 type Team {
@@ -28,9 +29,26 @@ type League {
   teams: [Team!]! @relation(name: "ContainTeam", onDelete: CASCADE)
   users: [User!]! @relation(name: "UserLeague")
   owner: User! @relation(name: "OwnedLeague")
+  matches: [Match!]! @relation(name: "LeagueMatches")
 }
 
 type UserTeam @relationTable {
   user: User!
   team: Team!
 }
+
+type Match {
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  expiration: DateTime!
+  isRanked: Boolean!
+  isFinished: Boolean
+  league: League! @relation(name: "LeagueMatches")
+  user1: User! @relation(name: "User1")
+  user1points: Int
+  user2: User! @relation(name: "User2")
+  user2points: Int
+  winner: User @relation(name: "UserWonMatches", link: INLINE)
+  winnerpoints: Int
+}
+
