@@ -57,11 +57,19 @@ func (r *Resolver) checkAccess(sub string) bool {
 }
 
 func (r *mutationResolver) CreateLeague(ctx context.Context, data LeagueCreateInput) (*prisma.League, error) {
+	if r.user != nil {
+		return nil, errors.New(fmt.Sprintf("You don't have permission to finish this operation"))
+	}
 	return r.prismaClient.CreateLeague(prisma.LeagueCreateInput{
 		Description: data.Description,
 		Name:        data.Name,
 		Users:       &prisma.UserCreateManyWithoutLeaguesInput{
 			Connect: data.Users,
+		},
+		Owner: prisma.UserCreateOneWithoutOwnedLeaguesInput{
+			Connect: &prisma.UserWhereUniqueInput{
+				Sub:  &r.user.Sub,
+			},
 		},
 	}).Exec(ctx)
 }
