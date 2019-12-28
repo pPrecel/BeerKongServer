@@ -1,10 +1,11 @@
 package generated
 
 import (
-"context"
+	"context"
 	"fmt"
 	prisma "github.com/pPrecel/BeerKongServer/pkg/prisma/generated/prisma-client"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 )
 
 // THIS CODE IS A STARTING POINT ONLY. IT WILL NOT BE UPDATED WITH SCHEMA CHANGES.
@@ -57,18 +58,18 @@ func (r *Resolver) checkAccess(sub string) bool {
 }
 
 func (r *mutationResolver) CreateLeague(ctx context.Context, data LeagueCreateInput) (*prisma.League, error) {
-	if r.user != nil {
+	if r.user == nil {
 		return nil, errors.New(fmt.Sprintf("You don't have permission to finish this operation"))
 	}
 	return r.prismaClient.CreateLeague(prisma.LeagueCreateInput{
 		Description: data.Description,
 		Name:        data.Name,
-		Users:       &prisma.UserCreateManyWithoutLeaguesInput{
+		Users: &prisma.UserCreateManyWithoutLeaguesInput{
 			Connect: data.Users,
 		},
 		Owner: prisma.UserCreateOneWithoutOwnedLeaguesInput{
 			Connect: &prisma.UserWhereUniqueInput{
-				Sub:  &r.user.Sub,
+				Sub: &r.user.Sub,
 			},
 		},
 	}).Exec(ctx)
@@ -91,13 +92,13 @@ func (r *mutationResolver) CreateTeam(ctx context.Context, data TeamCreateInput)
 	return r.prismaClient.CreateTeam(prisma.TeamCreateInput{
 		Description: data.Description,
 		Name:        data.Name,
-		League:      prisma.LeagueCreateOneWithoutTeamsInput{
+		League: prisma.LeagueCreateOneWithoutTeamsInput{
 			Connect: data.League,
 		},
-		Owner:       prisma.UserCreateOneWithoutOwnedTeamsInput{
-				Connect: &prisma.UserWhereUniqueInput{
-					Sub:  &r.user.Sub,
-				},
+		Owner: prisma.UserCreateOneWithoutOwnedTeamsInput{
+			Connect: &prisma.UserWhereUniqueInput{
+				Sub: &r.user.Sub,
+			},
 		},
 	}).Exec(ctx)
 }
@@ -113,11 +114,31 @@ func (r *mutationResolver) DeleteTeam(ctx context.Context, where prisma.TeamWher
 	return r.prismaClient.DeleteTeam(where).Exec(ctx)
 }
 func (r *mutationResolver) CreateUser(ctx context.Context, data UserCreateInput) (*prisma.User, error) {
-	return r.prismaClient.CreateUser(prisma.UserCreateInput{
-		Name:         data.Name,
-		Sub:          data.Sub,
-		Picture:      data.Picture,
-	}).Exec(ctx)
+	if user, err := r.prismaClient.User(prisma.UserWhereUniqueInput{
+		Sub: &data.Sub,
+	}).Exec(ctx); err == nil {
+		updated, err := r.prismaClient.UpdateUser(prisma.UserUpdateParams{
+			Data: prisma.UserUpdateInput{
+				Name:    &data.Name,
+				Sub:     &data.Sub,
+				Picture: &data.Picture,
+			},
+			Where: prisma.UserWhereUniqueInput{
+				Sub: &data.Sub,
+			},
+		}).Exec(ctx)
+		if err != nil {
+			logrus.Infof("User not updated: %s", err.Error())
+			return user, err
+		}
+		return updated, nil
+	} else {
+		return r.prismaClient.CreateUser(prisma.UserCreateInput{
+			Name:    data.Name,
+			Sub:     data.Sub,
+			Picture: data.Picture,
+		}).Exec(ctx)
+	}
 }
 func (r *mutationResolver) DeleteUser(ctx context.Context) (*prisma.User, error) {
 	if r.user == nil {
@@ -125,7 +146,7 @@ func (r *mutationResolver) DeleteUser(ctx context.Context) (*prisma.User, error)
 	}
 
 	return r.prismaClient.DeleteUser(prisma.UserWhereUniqueInput{
-		Sub:  &r.user.Sub,
+		Sub: &r.user.Sub,
 	}).Exec(ctx)
 }
 
