@@ -1,8 +1,9 @@
-package generated
+package resolver
 
 import (
 	"context"
 	"fmt"
+	"github.com/pPrecel/BeerKongServer/pkg/graphql/generated"
 	prisma "github.com/pPrecel/BeerKongServer/pkg/prisma/generated/prisma-client"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -19,22 +20,22 @@ func New(prismaClient *prisma.Client, user *prisma.User) *Resolver {
 	return &Resolver{prismaClient: prismaClient, user: user}
 }
 
-func (r *Resolver) League() LeagueResolver {
+func (r *Resolver) League() generated.LeagueResolver {
 	return &leagueResolver{r}
 }
-func (r *Resolver) Query() QueryResolver {
+func (r *Resolver) Query() generated.QueryResolver {
 	return &queryResolver{r}
 }
-func (r *Resolver) Team() TeamResolver {
+func (r *Resolver) Team() generated.TeamResolver {
 	return &teamResolver{r}
 }
-func (r *Resolver) User() UserResolver {
+func (r *Resolver) User() generated.UserResolver {
 	return &userResolver{r}
 }
-func (r *Resolver) Mutation() MutationResolver {
+func (r *Resolver) Mutation() generated.MutationResolver {
 	return &mutationResolver{r}
 }
-func (r *Resolver) Match() MatchResolver{
+func (r *Resolver) Match() generated.MatchResolver {
 	return &matchResolver{r}
 }
 
@@ -49,7 +50,7 @@ func intToInt32(value *int) *int32 {
 
 type mutationResolver struct{ *Resolver }
 
-func (r *Resolver) getAdmins() []string{
+func (r *Resolver) getAdmins() []string {
 	return []string{
 		"111923199050409291371",
 		"103308660506651951126",
@@ -71,8 +72,53 @@ func (r *Resolver) checkAccessWithUser(sub string) bool {
 
 	return true
 }
+func (r *mutationResolver) createRankMatch(ctx context.Context, data generated.MatchCreateInput) (*prisma.Match, error) {
+	falseValue := false
+	leagueOwner, err := r.prismaClient.League(prisma.LeagueWhereUniqueInput{
+		Name: data.League.Name,
+	}).Owner().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if !r.checkAccessWithUser(leagueOwner.Sub) {
+		return nil, errors.New(fmt.Sprintf("You don't have permission to finish this operation"))
+	}
+	match, err := r.prismaClient.CreateMatch(prisma.MatchCreateInput{
+		Expiration: data.Expiration,
+		IsRanked:   data.IsRanked,
+		IsFinished: &falseValue,
+		League:     prisma.LeagueCreateOneWithoutMatchesInput{Connect: &prisma.LeagueWhereUniqueInput{Name: data.League.Name}},
+		User1:      prisma.UserCreateOneInput{Connect: &prisma.UserWhereUniqueInput{Sub: data.User1.Sub}},
+		User2:      prisma.UserCreateOneInput{Connect: &prisma.UserWhereUniqueInput{Sub: data.User2.Sub}},
+	}).Exec(ctx)
 
-func (r *mutationResolver) CreateLeague(ctx context.Context, data LeagueCreateInput) (*prisma.League, error) {
+	_, err = r.prismaClient.UpdateUser(prisma.UserUpdateParams{
+		Data: prisma.UserUpdateInput{
+			Matches: &prisma.MatchUpdateManyInput{
+				Connect: []prisma.MatchWhereUniqueInput{prisma.MatchWhereUniqueInput{ID: &match.ID}},
+			},
+		},
+		Where: prisma.UserWhereUniqueInput{Sub: data.User1.Sub},
+	}).Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	_, err = r.prismaClient.UpdateUser(prisma.UserUpdateParams{
+		Data: prisma.UserUpdateInput{
+			Matches: &prisma.MatchUpdateManyInput{
+				Connect: []prisma.MatchWhereUniqueInput{prisma.MatchWhereUniqueInput{ID: &match.ID}},
+			},
+		},
+		Where: prisma.UserWhereUniqueInput{Sub: data.User2.Sub},
+	}).Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return match, err
+}
+
+func (r *mutationResolver) CreateLeague(ctx context.Context, data generated.LeagueCreateInput) (*prisma.League, error) {
 	if r.user == nil {
 		return nil, errors.New(fmt.Sprintf("You don't have permission to finish this operation"))
 	}
@@ -100,7 +146,7 @@ func (r *mutationResolver) DeleteLeague(ctx context.Context, where prisma.League
 
 	return r.prismaClient.DeleteLeague(where).Exec(ctx)
 }
-func (r *mutationResolver) CreateTeam(ctx context.Context, data TeamCreateInput) (*prisma.Team, error) {
+func (r *mutationResolver) CreateTeam(ctx context.Context, data generated.TeamCreateInput) (*prisma.Team, error) {
 	if r.user == nil {
 		return nil, errors.New(fmt.Sprintf("You don't have permission to finish this operation"))
 	}
@@ -128,7 +174,7 @@ func (r *mutationResolver) DeleteTeam(ctx context.Context, where prisma.TeamWher
 
 	return r.prismaClient.DeleteTeam(where).Exec(ctx)
 }
-func (r *mutationResolver) CreateUser(ctx context.Context, data UserCreateInput) (*prisma.User, error) {
+func (r *mutationResolver) CreateUser(ctx context.Context, data generated.UserCreateInput) (*prisma.User, error) {
 	if user, err := r.prismaClient.User(prisma.UserWhereUniqueInput{
 		Sub: &data.Sub,
 	}).Exec(ctx); err == nil {
@@ -164,8 +210,12 @@ func (r *mutationResolver) DeleteUser(ctx context.Context) (*prisma.User, error)
 		Sub: &r.user.Sub,
 	}).Exec(ctx)
 }
-func (r *mutationResolver) CreateMatch(ctx context.Context, data MatchCreateInput) (*prisma.Match, error) {
-	return nil, nil
+func (r *mutationResolver) CreateMatch(ctx context.Context, data generated.MatchCreateInput) (*prisma.Match, error) {
+	if data.IsRanked {
+		return r.createRankMatch(ctx, data)
+	}
+
+	return nil, fmt.Errorf("Unexpected error xd")
 }
 func (r *mutationResolver) DeleteMatch(ctx context.Context, where prisma.MatchWhereUniqueInput) (*prisma.Match, error) {
 	return nil, nil
@@ -197,6 +247,17 @@ func buildTeamsParams(where *prisma.TeamWhereInput, orderBy *prisma.TeamOrderByI
 }
 func buildUsersParams(where *prisma.UserWhereInput, orderBy *prisma.UserOrderByInput, skip *int, after *string, before *string, first *int, last *int) *prisma.UsersParams {
 	return &prisma.UsersParams{
+		Where:   where,
+		OrderBy: orderBy,
+		Skip:    intToInt32(skip),
+		After:   after,
+		Before:  before,
+		First:   intToInt32(first),
+		Last:    intToInt32(last),
+	}
+}
+func buildMatchesParams(where *prisma.MatchWhereInput, orderBy *prisma.MatchOrderByInput, skip *int, after *string, before *string, first *int, last *int) *prisma.MatchesParams {
+	return &prisma.MatchesParams{
 		Where:   where,
 		OrderBy: orderBy,
 		Skip:    intToInt32(skip),
@@ -255,11 +316,21 @@ func (r *queryResolver) Users(ctx context.Context, where *prisma.UserWhereInput,
 
 	return dataPointers, nil
 }
-func (r *queryResolver) Match(ctx context.Context, where prisma.MatchWhereUniqueInput) (*prisma.Match, error){
-	return nil, nil
+func (r *queryResolver) Match(ctx context.Context, where prisma.MatchWhereUniqueInput) (*prisma.Match, error) {
+	return r.prismaClient.Match(where).Exec(ctx)
 }
-func (r *queryResolver) Matches(ctx context.Context, where *prisma.MatchWhereInput, orderBy *prisma.MatchOrderByInput, skip *int, after *string, before *string, first *int, last *int) ([]*prisma.Match, error){
-	return nil, nil
+func (r *queryResolver) Matches(ctx context.Context, where *prisma.MatchWhereInput, orderBy *prisma.MatchOrderByInput, skip *int, after *string, before *string, first *int, last *int) ([]*prisma.Match, error) {
+	data, err := r.prismaClient.Matches(buildMatchesParams(where, orderBy, skip, after, before, first, last)).Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	dataPointers := make([]*prisma.Match, len(data))
+	for index, _ := range data {
+		dataPointers[index] = &data[index]
+	}
+
+	return dataPointers, nil
 }
 
 type leagueResolver struct{ *Resolver }
@@ -323,15 +394,15 @@ func (r *userResolver) OwnedLeagues(ctx context.Context, obj *prisma.User) ([]pr
 
 type matchResolver struct{ *Resolver }
 
-func (r *matchResolver) League(ctx context.Context, obj *prisma.Match) (*prisma.League, error){
+func (r *matchResolver) League(ctx context.Context, obj *prisma.Match) (*prisma.League, error) {
 	return nil, nil
 }
-func (r *matchResolver) User1(ctx context.Context, obj *prisma.Match) (*prisma.User, error){
+func (r *matchResolver) User1(ctx context.Context, obj *prisma.Match) (*prisma.User, error) {
 	return nil, nil
 }
-func (r *matchResolver) User2(ctx context.Context, obj *prisma.Match) (*prisma.User, error){
+func (r *matchResolver) User2(ctx context.Context, obj *prisma.Match) (*prisma.User, error) {
 	return nil, nil
 }
-func (r *matchResolver) Winner(ctx context.Context, obj *prisma.Match) (*prisma.User, error){
+func (r *matchResolver) Winner(ctx context.Context, obj *prisma.Match) (*prisma.User, error) {
 	return nil, nil
 }

@@ -42,6 +42,6 @@ models:
   MatchOrderByInput:
     model: github.com/pPrecel/BeerKongServer/pkg/prisma/generated/prisma-client.MatchOrderByInput
 resolver:
-  filename: generated/resolver.go
+  filename: resolver/resolver.go
   type: Resolver
 omit_slice_element_pointers: true

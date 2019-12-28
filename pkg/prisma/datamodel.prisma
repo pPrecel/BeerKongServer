@@ -4,6 +4,7 @@ type User {
   name: String! @unique
   sub: String! @unique
   picture: String!
+  points: Int
   teams: [Team!]! @relation(name: "UserTeam", link: TABLE)
   leagues: [League!]! @relation(name: "UserLeague")
   ownedTeams: [Team!]! @relation(name: "OwnedTeam", onDelete: CASCADE)
@@ -16,6 +17,7 @@ type Team {
   createdAt: DateTime! @createdAt
   description: String!
   name: String! @unique
+  points: Int
   league: League! @relation(name: "ContainTeam")
   users: [User!]! @relation(name: "UserTeam")
   owner: User! @relation(name: "OwnedTeam")
