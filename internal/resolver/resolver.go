@@ -167,7 +167,15 @@ func (r *mutationResolver) CreateTeam(ctx context.Context, data generated.TeamCr
 				Sub: &r.user.Sub,
 			},
 		},
+		Users: &prisma.UserCreateManyWithoutTeamsInput{
+			Connect: []prisma.UserWhereUniqueInput{
+				 *r.chooseUserWhereUniqueInput(r.user),
+			},
+		},
 	}).Exec(ctx)
+}
+func (r *mutationResolver) RemoveUserFromTeam(ctx context.Context, data generated.TeamCreateInput) (*prisma.Team, error) {
+	return nil, nil
 }
 func (r *mutationResolver) DeleteTeam(ctx context.Context, where prisma.TeamWhereUniqueInput) (*prisma.Team, error) {
 	owner, err := r.prismaClient.Team(where).Owner().Exec(ctx)
@@ -210,7 +218,7 @@ func (r *mutationResolver) LoginOrRegisterUser(ctx context.Context, data generat
 func (r *mutationResolver) AddUserToTeam(ctx context.Context, where prisma.TeamWhereUniqueInput, data prisma.UserWhereUniqueInput) (*prisma.Team, error) {
 	league, isIn := r.isUserInLeague(ctx, where, data)
 	if isIn {
-		return nil, fmt.Errorf("User %s is a member of this or another team in this league", data.Name)
+		return nil, fmt.Errorf("User %s is a member of this or another team in this league", data.ID)
 	}
 
 	team, err := r.prismaClient.UpdateTeam(prisma.TeamUpdateParams{
@@ -511,5 +519,7 @@ func (r *matchResolver) User2(ctx context.Context, obj *prisma.Match) (*prisma.U
 	return r.prismaClient.Match(*r.chooseMatchWhereUniqueInput(obj)).User2().Exec(ctx)
 }
 func (r *matchResolver) Winner(ctx context.Context, obj *prisma.Match) (*prisma.User, error) {
-	return r.prismaClient.Match(*r.chooseMatchWhereUniqueInput(obj)).Winner().Exec(ctx)
+	unique := *r.chooseMatchWhereUniqueInput(obj)
+	data, _ :=  r.prismaClient.Match(unique).Winner().Exec(ctx)
+	return data, nil
 }

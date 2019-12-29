@@ -26,7 +26,7 @@ func (r *Resolver) checkAccessWithUser(sub string) bool {
 	if r.user == nil {
 		return false
 	}
-	if r.user.Sub != sub {
+	if r.isSameUser(r.user, &prisma.User{Sub: sub}){
 		return false
 	}
 
@@ -40,23 +40,6 @@ func (r *Resolver) chooseMatchWhereUniqueInput(match *prisma.Match) * prisma.Mat
 
 	if match.ID != "" {
 		return &prisma.MatchWhereUniqueInput{ID: &match.ID}
-	}
-
-	return nil
-}
-func (r *Resolver) chooseUserWhereUniqueInput(user *prisma.User) * prisma.UserWhereUniqueInput {
-	if user == nil {
-		return nil
-	}
-
-	if user.ID != "" {
-		return &prisma.UserWhereUniqueInput{ID: &user.ID}
-	}
-	if user.Name != "" {
-		return &prisma.UserWhereUniqueInput{Name: &user.Name}
-	}
-	if user.Sub != "" {
-		return &prisma.UserWhereUniqueInput{Sub: &user.Sub}
 	}
 
 	return nil
@@ -88,6 +71,66 @@ func (r *Resolver) chooseLeagueWhereUniqueInput(league *prisma.League) * prisma.
 	}
 
 	return nil
+}
+func (r *Resolver) chooseUserWhereUniqueInput(user *prisma.User) * prisma.UserWhereUniqueInput {
+	if user == nil {
+		return nil
+	}
+
+	if user.ID != "" {
+		return &prisma.UserWhereUniqueInput{ID: &user.ID}
+	}
+	if user.Name != "" {
+		return &prisma.UserWhereUniqueInput{Name: &user.Name}
+	}
+	if user.Sub != "" {
+		return &prisma.UserWhereUniqueInput{Sub: &user.Sub}
+	}
+
+	return nil
+}
+
+func (r *Resolver) isSameMatch(match1 *prisma.Match, match2 *prisma.Match) bool {
+	if match1 == nil || match2 == nil {
+		return false
+	}
+	if match1.ID == match2.ID {
+		return true
+	}
+	return false
+}
+func (r *Resolver) isSameLeague(league1 *prisma.Team, league2 *prisma.Team) bool {
+	if league1 == nil || league2 == nil {
+		return false
+	}
+	if league1.ID == league2.ID {
+		return true
+	}
+	return false
+}
+func (r *Resolver) isSameTeam(team1 *prisma.Team, team2 *prisma.Team) bool {
+	if team1 == nil || team2 == nil {
+		return false
+	}
+	if team1.ID == team2.ID {
+		return true
+	}
+	return false
+}
+func (r *Resolver) isSameUser(user1 *prisma.User, user2 *prisma.User) bool {
+	if user1 == nil || user2 == nil {
+		return false
+	}
+	if user1.ID == user2.ID {
+		return true
+	}
+	if user1.Sub == user2.Sub {
+		return true
+	}
+	if user1.Name == user2.Name {
+		return true
+	}
+	return false
 }
 
 func (r *Resolver) fillUserWhereUniqueInput(user *prisma.UserWhereUniqueInput) *prisma.UserWhereUniqueInput {
