@@ -63,8 +63,8 @@ enum MatchOrderByInput {
   user1points_DESC
   user2points_ASC
   user2points_DESC
-  winnerpoints_ASC
-  winnerpoints_DESC
+  winnerPoints_ASC
+  winnerPoints_DESC
 }
 
 input LeagueWhereInput {
@@ -339,14 +339,14 @@ input MatchWhereInput {
   user2points_gt: Int
   user2points_gte: Int
   winner: UserWhereInput
-  winnerpoints: Int
-  winnerpoints_not: Int
-  winnerpoints_in: [Int!]
-  winnerpoints_not_in: [Int!]
-  winnerpoints_lt: Int
-  winnerpoints_lte: Int
-  winnerpoints_gt: Int
-  winnerpoints_gte: Int
+  winnerPoints: Int
+  winnerPoints_not: Int
+  winnerPoints_in: [Int!]
+  winnerPoints_not_in: [Int!]
+  winnerPoints_lt: Int
+  winnerPoints_lte: Int
+  winnerPoints_gt: Int
+  winnerPoints_gte: Int
   AND: [MatchWhereInput!]
   OR: [MatchWhereInput!]
   NOT: [MatchWhereInput!]

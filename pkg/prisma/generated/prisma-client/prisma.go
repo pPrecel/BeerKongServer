@@ -168,7 +168,7 @@ func (client *Client) Match(params MatchWhereUniqueInput) *MatchExec {
 		params,
 		[2]string{"MatchWhereUniqueInput!", "Match"},
 		"match",
-		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerPoints"})
 
 	return &MatchExec{ret}
 }
@@ -202,7 +202,7 @@ func (client *Client) Matches(params *MatchesParams) *MatchExecArray {
 		wparams,
 		[3]string{"MatchWhereInput", "MatchOrderByInput", "Match"},
 		"matches",
-		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerPoints"})
 
 	return &MatchExecArray{ret}
 }
@@ -541,7 +541,7 @@ func (client *Client) CreateMatch(params MatchCreateInput) *MatchExec {
 		params,
 		[2]string{"MatchCreateInput!", "Match"},
 		"createMatch",
-		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerPoints"})
 
 	return &MatchExec{ret}
 }
@@ -559,7 +559,7 @@ func (client *Client) UpdateMatch(params MatchUpdateParams) *MatchExec {
 		},
 		[3]string{"MatchUpdateInput!", "MatchWhereUniqueInput!", "Match"},
 		"updateMatch",
-		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerPoints"})
 
 	return &MatchExec{ret}
 }
@@ -596,7 +596,7 @@ func (client *Client) UpsertMatch(params MatchUpsertParams) *MatchExec {
 		uparams,
 		[4]string{"MatchWhereUniqueInput!", "MatchCreateInput!", "MatchUpdateInput!", "Match"},
 		"upsertMatch",
-		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerPoints"})
 
 	return &MatchExec{ret}
 }
@@ -606,7 +606,7 @@ func (client *Client) DeleteMatch(params MatchWhereUniqueInput) *MatchExec {
 		params,
 		[2]string{"MatchWhereUniqueInput!", "Match"},
 		"deleteMatch",
-		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerPoints"})
 
 	return &MatchExec{ret}
 }
@@ -838,8 +838,8 @@ const (
 	MatchOrderByInputUser1pointsDesc  MatchOrderByInput = "user1points_DESC"
 	MatchOrderByInputUser2pointsAsc   MatchOrderByInput = "user2points_ASC"
 	MatchOrderByInputUser2pointsDesc  MatchOrderByInput = "user2points_DESC"
-	MatchOrderByInputWinnerpointsAsc  MatchOrderByInput = "winnerpoints_ASC"
-	MatchOrderByInputWinnerpointsDesc MatchOrderByInput = "winnerpoints_DESC"
+	MatchOrderByInputWinnerPointsAsc  MatchOrderByInput = "winnerPoints_ASC"
+	MatchOrderByInputWinnerPointsDesc MatchOrderByInput = "winnerPoints_DESC"
 )
 
 type MutationType string
@@ -1138,14 +1138,14 @@ type MatchWhereInput struct {
 	User2pointsGt     *int32            `json:"user2points_gt,omitempty"`
 	User2pointsGte    *int32            `json:"user2points_gte,omitempty"`
 	Winner            *UserWhereInput   `json:"winner,omitempty"`
-	Winnerpoints      *int32            `json:"winnerpoints,omitempty"`
-	WinnerpointsNot   *int32            `json:"winnerpoints_not,omitempty"`
-	WinnerpointsIn    []int32           `json:"winnerpoints_in,omitempty"`
-	WinnerpointsNotIn []int32           `json:"winnerpoints_not_in,omitempty"`
-	WinnerpointsLt    *int32            `json:"winnerpoints_lt,omitempty"`
-	WinnerpointsLte   *int32            `json:"winnerpoints_lte,omitempty"`
-	WinnerpointsGt    *int32            `json:"winnerpoints_gt,omitempty"`
-	WinnerpointsGte   *int32            `json:"winnerpoints_gte,omitempty"`
+	WinnerPoints      *int32            `json:"winnerPoints,omitempty"`
+	WinnerPointsNot   *int32            `json:"winnerPoints_not,omitempty"`
+	WinnerPointsIn    []int32           `json:"winnerPoints_in,omitempty"`
+	WinnerPointsNotIn []int32           `json:"winnerPoints_not_in,omitempty"`
+	WinnerPointsLt    *int32            `json:"winnerPoints_lt,omitempty"`
+	WinnerPointsLte   *int32            `json:"winnerPoints_lte,omitempty"`
+	WinnerPointsGt    *int32            `json:"winnerPoints_gt,omitempty"`
+	WinnerPointsGte   *int32            `json:"winnerPoints_gte,omitempty"`
 	And               []MatchWhereInput `json:"AND,omitempty"`
 	Or                []MatchWhereInput `json:"OR,omitempty"`
 	Not               []MatchWhereInput `json:"NOT,omitempty"`
@@ -1185,7 +1185,7 @@ type TeamCreateWithoutLeagueInput struct {
 	ID          *string                             `json:"id,omitempty"`
 	Description string                              `json:"description"`
 	Name        string                              `json:"name"`
-	Points      int32                               `json:"points"`
+	Points      *int32                              `json:"points,omitempty"`
 	Users       *UserCreateManyWithoutTeamsInput    `json:"users,omitempty"`
 	Owner       UserCreateOneWithoutOwnedTeamsInput `json:"owner"`
 }
@@ -1200,7 +1200,7 @@ type UserCreateWithoutTeamsInput struct {
 	Name         string                             `json:"name"`
 	Sub          string                             `json:"sub"`
 	Picture      string                             `json:"picture"`
-	Points       int32                              `json:"points"`
+	Points       *int32                             `json:"points,omitempty"`
 	Leagues      *LeagueCreateManyWithoutUsersInput `json:"leagues,omitempty"`
 	OwnedTeams   *TeamCreateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
 	OwnedLeagues *LeagueCreateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
@@ -1231,7 +1231,7 @@ type UserCreateWithoutOwnedLeaguesInput struct {
 	Name       string                             `json:"name"`
 	Sub        string                             `json:"sub"`
 	Picture    string                             `json:"picture"`
-	Points     int32                              `json:"points"`
+	Points     *int32                             `json:"points,omitempty"`
 	Teams      *TeamCreateManyWithoutUsersInput   `json:"teams,omitempty"`
 	Leagues    *LeagueCreateManyWithoutUsersInput `json:"leagues,omitempty"`
 	OwnedTeams *TeamCreateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
@@ -1247,7 +1247,7 @@ type TeamCreateWithoutUsersInput struct {
 	ID          *string                             `json:"id,omitempty"`
 	Description string                              `json:"description"`
 	Name        string                              `json:"name"`
-	Points      int32                               `json:"points"`
+	Points      *int32                              `json:"points,omitempty"`
 	League      LeagueCreateOneWithoutTeamsInput    `json:"league"`
 	Owner       UserCreateOneWithoutOwnedTeamsInput `json:"owner"`
 }
@@ -1276,7 +1276,7 @@ type UserCreateWithoutLeaguesInput struct {
 	Name         string                             `json:"name"`
 	Sub          string                             `json:"sub"`
 	Picture      string                             `json:"picture"`
-	Points       int32                              `json:"points"`
+	Points       *int32                             `json:"points,omitempty"`
 	Teams        *TeamCreateManyWithoutUsersInput   `json:"teams,omitempty"`
 	OwnedTeams   *TeamCreateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
 	OwnedLeagues *LeagueCreateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
@@ -1292,7 +1292,7 @@ type TeamCreateWithoutOwnerInput struct {
 	ID          *string                          `json:"id,omitempty"`
 	Description string                           `json:"description"`
 	Name        string                           `json:"name"`
-	Points      int32                            `json:"points"`
+	Points      *int32                           `json:"points,omitempty"`
 	League      LeagueCreateOneWithoutTeamsInput `json:"league"`
 	Users       *UserCreateManyWithoutTeamsInput `json:"users,omitempty"`
 }
@@ -1319,14 +1319,14 @@ type MatchCreateManyWithoutLeagueInput struct {
 type MatchCreateWithoutLeagueInput struct {
 	ID           *string             `json:"id,omitempty"`
 	PlannedAt    string              `json:"plannedAt"`
-	IsRanked     bool                `json:"isRanked"`
+	IsRanked     *bool               `json:"isRanked,omitempty"`
 	IsFinished   *bool               `json:"isFinished,omitempty"`
 	User1        UserCreateOneInput  `json:"user1"`
 	User1points  *int32              `json:"user1points,omitempty"`
 	User2        UserCreateOneInput  `json:"user2"`
 	User2points  *int32              `json:"user2points,omitempty"`
 	Winner       *UserCreateOneInput `json:"winner,omitempty"`
-	Winnerpoints *int32              `json:"winnerpoints,omitempty"`
+	WinnerPoints *int32              `json:"winnerPoints,omitempty"`
 }
 
 type UserCreateOneInput struct {
@@ -1339,7 +1339,7 @@ type UserCreateInput struct {
 	Name         string                             `json:"name"`
 	Sub          string                             `json:"sub"`
 	Picture      string                             `json:"picture"`
-	Points       int32                              `json:"points"`
+	Points       *int32                             `json:"points,omitempty"`
 	Teams        *TeamCreateManyWithoutUsersInput   `json:"teams,omitempty"`
 	Leagues      *LeagueCreateManyWithoutUsersInput `json:"leagues,omitempty"`
 	OwnedTeams   *TeamCreateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
@@ -1355,7 +1355,7 @@ type MatchCreateManyInput struct {
 type MatchCreateInput struct {
 	ID           *string                            `json:"id,omitempty"`
 	PlannedAt    string                             `json:"plannedAt"`
-	IsRanked     bool                               `json:"isRanked"`
+	IsRanked     *bool                              `json:"isRanked,omitempty"`
 	IsFinished   *bool                              `json:"isFinished,omitempty"`
 	League       LeagueCreateOneWithoutMatchesInput `json:"league"`
 	User1        UserCreateOneInput                 `json:"user1"`
@@ -1363,7 +1363,7 @@ type MatchCreateInput struct {
 	User2        UserCreateOneInput                 `json:"user2"`
 	User2points  *int32                             `json:"user2points,omitempty"`
 	Winner       *UserCreateOneInput                `json:"winner,omitempty"`
-	Winnerpoints *int32                             `json:"winnerpoints,omitempty"`
+	WinnerPoints *int32                             `json:"winnerPoints,omitempty"`
 }
 
 type LeagueCreateOneWithoutMatchesInput struct {
@@ -1390,7 +1390,7 @@ type UserCreateWithoutOwnedTeamsInput struct {
 	Name         string                             `json:"name"`
 	Sub          string                             `json:"sub"`
 	Picture      string                             `json:"picture"`
-	Points       int32                              `json:"points"`
+	Points       *int32                             `json:"points,omitempty"`
 	Teams        *TeamCreateManyWithoutUsersInput   `json:"teams,omitempty"`
 	Leagues      *LeagueCreateManyWithoutUsersInput `json:"leagues,omitempty"`
 	OwnedLeagues *LeagueCreateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
@@ -1727,7 +1727,7 @@ type MatchUpdateWithoutLeagueDataInput struct {
 	User2        *UserUpdateOneRequiredInput `json:"user2,omitempty"`
 	User2points  *int32                      `json:"user2points,omitempty"`
 	Winner       *UserUpdateOneInput         `json:"winner,omitempty"`
-	Winnerpoints *int32                      `json:"winnerpoints,omitempty"`
+	WinnerPoints *int32                      `json:"winnerPoints,omitempty"`
 }
 
 type UserUpdateOneRequiredInput struct {
@@ -1776,7 +1776,7 @@ type MatchUpdateDataInput struct {
 	User2        *UserUpdateOneRequiredInput                 `json:"user2,omitempty"`
 	User2points  *int32                                      `json:"user2points,omitempty"`
 	Winner       *UserUpdateOneInput                         `json:"winner,omitempty"`
-	Winnerpoints *int32                                      `json:"winnerpoints,omitempty"`
+	WinnerPoints *int32                                      `json:"winnerPoints,omitempty"`
 }
 
 type LeagueUpdateOneRequiredWithoutMatchesInput struct {
@@ -1870,14 +1870,14 @@ type MatchScalarWhereInput struct {
 	User2pointsLte    *int32                  `json:"user2points_lte,omitempty"`
 	User2pointsGt     *int32                  `json:"user2points_gt,omitempty"`
 	User2pointsGte    *int32                  `json:"user2points_gte,omitempty"`
-	Winnerpoints      *int32                  `json:"winnerpoints,omitempty"`
-	WinnerpointsNot   *int32                  `json:"winnerpoints_not,omitempty"`
-	WinnerpointsIn    []int32                 `json:"winnerpoints_in,omitempty"`
-	WinnerpointsNotIn []int32                 `json:"winnerpoints_not_in,omitempty"`
-	WinnerpointsLt    *int32                  `json:"winnerpoints_lt,omitempty"`
-	WinnerpointsLte   *int32                  `json:"winnerpoints_lte,omitempty"`
-	WinnerpointsGt    *int32                  `json:"winnerpoints_gt,omitempty"`
-	WinnerpointsGte   *int32                  `json:"winnerpoints_gte,omitempty"`
+	WinnerPoints      *int32                  `json:"winnerPoints,omitempty"`
+	WinnerPointsNot   *int32                  `json:"winnerPoints_not,omitempty"`
+	WinnerPointsIn    []int32                 `json:"winnerPoints_in,omitempty"`
+	WinnerPointsNotIn []int32                 `json:"winnerPoints_not_in,omitempty"`
+	WinnerPointsLt    *int32                  `json:"winnerPoints_lt,omitempty"`
+	WinnerPointsLte   *int32                  `json:"winnerPoints_lte,omitempty"`
+	WinnerPointsGt    *int32                  `json:"winnerPoints_gt,omitempty"`
+	WinnerPointsGte   *int32                  `json:"winnerPoints_gte,omitempty"`
 	And               []MatchScalarWhereInput `json:"AND,omitempty"`
 	Or                []MatchScalarWhereInput `json:"OR,omitempty"`
 	Not               []MatchScalarWhereInput `json:"NOT,omitempty"`
@@ -1894,7 +1894,7 @@ type MatchUpdateManyDataInput struct {
 	IsFinished   *bool   `json:"isFinished,omitempty"`
 	User1points  *int32  `json:"user1points,omitempty"`
 	User2points  *int32  `json:"user2points,omitempty"`
-	Winnerpoints *int32  `json:"winnerpoints,omitempty"`
+	WinnerPoints *int32  `json:"winnerPoints,omitempty"`
 }
 
 type MatchUpsertWithWhereUniqueWithoutLeagueInput struct {
@@ -2143,7 +2143,7 @@ type MatchUpdateInput struct {
 	User2        *UserUpdateOneRequiredInput                 `json:"user2,omitempty"`
 	User2points  *int32                                      `json:"user2points,omitempty"`
 	Winner       *UserUpdateOneInput                         `json:"winner,omitempty"`
-	Winnerpoints *int32                                      `json:"winnerpoints,omitempty"`
+	WinnerPoints *int32                                      `json:"winnerPoints,omitempty"`
 }
 
 type MatchUpdateManyMutationInput struct {
@@ -2152,14 +2152,14 @@ type MatchUpdateManyMutationInput struct {
 	IsFinished   *bool   `json:"isFinished,omitempty"`
 	User1points  *int32  `json:"user1points,omitempty"`
 	User2points  *int32  `json:"user2points,omitempty"`
-	Winnerpoints *int32  `json:"winnerpoints,omitempty"`
+	WinnerPoints *int32  `json:"winnerPoints,omitempty"`
 }
 
 type TeamCreateInput struct {
 	ID          *string                             `json:"id,omitempty"`
 	Description string                              `json:"description"`
 	Name        string                              `json:"name"`
-	Points      int32                               `json:"points"`
+	Points      *int32                              `json:"points,omitempty"`
 	League      LeagueCreateOneWithoutTeamsInput    `json:"league"`
 	Users       *UserCreateManyWithoutTeamsInput    `json:"users,omitempty"`
 	Owner       UserCreateOneWithoutOwnedTeamsInput `json:"owner"`
@@ -2355,7 +2355,7 @@ func (instance *LeagueExec) Matches(params *MatchesParamsExec) *MatchExecArray {
 		wparams,
 		[3]string{"MatchWhereInput", "MatchOrderByInput", "Match"},
 		"matches",
-		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerPoints"})
 
 	return &MatchExecArray{ret}
 }
@@ -2630,7 +2630,7 @@ func (instance *UserExec) Matches(params *MatchesParamsExec) *MatchExecArray {
 		wparams,
 		[3]string{"MatchWhereInput", "MatchOrderByInput", "Match"},
 		"matches",
-		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerPoints"})
 
 	return &MatchExecArray{ret}
 }
@@ -2746,17 +2746,17 @@ func (instance MatchExecArray) Exec(ctx context.Context) ([]Match, error) {
 	return v, err
 }
 
-var MatchFields = []string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"}
+var MatchFields = []string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerPoints"}
 
 type Match struct {
 	ID           string `json:"id"`
 	CreatedAt    string `json:"createdAt"`
 	PlannedAt    string `json:"plannedAt"`
 	IsRanked     bool   `json:"isRanked"`
-	IsFinished   *bool  `json:"isFinished,omitempty"`
-	User1points  *int32 `json:"user1points,omitempty"`
-	User2points  *int32 `json:"user2points,omitempty"`
-	Winnerpoints *int32 `json:"winnerpoints,omitempty"`
+	IsFinished   bool   `json:"isFinished"`
+	User1points  int32  `json:"user1points"`
+	User2points  int32  `json:"user2points"`
+	WinnerPoints int32  `json:"winnerPoints"`
 }
 
 type LeagueConnectionExec struct {
@@ -3024,7 +3024,7 @@ func (instance *MatchEdgeExec) Node() *MatchExec {
 		nil,
 		[2]string{"", "Match"},
 		"node",
-		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerPoints"})
 
 	return &MatchExec{ret}
 }
@@ -3435,7 +3435,7 @@ func (instance *MatchSubscriptionPayloadExec) Node() *MatchExec {
 		nil,
 		[2]string{"", "Match"},
 		"node",
-		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerPoints"})
 
 	return &MatchExec{ret}
 }
@@ -3446,7 +3446,7 @@ func (instance *MatchSubscriptionPayloadExec) PreviousValues() *MatchPreviousVal
 		nil,
 		[2]string{"", "MatchPreviousValues"},
 		"previousValues",
-		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerPoints"})
 
 	return &MatchPreviousValuesExec{ret}
 }
@@ -3515,17 +3515,17 @@ func (instance MatchPreviousValuesExecArray) Exec(ctx context.Context) ([]MatchP
 	return v, err
 }
 
-var MatchPreviousValuesFields = []string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"}
+var MatchPreviousValuesFields = []string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerPoints"}
 
 type MatchPreviousValues struct {
 	ID           string `json:"id"`
 	CreatedAt    string `json:"createdAt"`
 	PlannedAt    string `json:"plannedAt"`
 	IsRanked     bool   `json:"isRanked"`
-	IsFinished   *bool  `json:"isFinished,omitempty"`
-	User1points  *int32 `json:"user1points,omitempty"`
-	User2points  *int32 `json:"user2points,omitempty"`
-	Winnerpoints *int32 `json:"winnerpoints,omitempty"`
+	IsFinished   bool   `json:"isFinished"`
+	User1points  int32  `json:"user1points"`
+	User2points  int32  `json:"user2points"`
+	WinnerPoints int32  `json:"winnerPoints"`
 }
 
 type TeamSubscriptionPayloadExec struct {

@@ -404,14 +404,14 @@ type Match {
   createdAt: DateTime!
   plannedAt: DateTime!
   isRanked: Boolean!
-  isFinished: Boolean
+  isFinished: Boolean!
   league: League!
   user1: User!
-  user1points: Int
+  user1points: Int!
   user2: User!
-  user2points: Int
+  user2points: Int!
   winner: User
-  winnerpoints: Int
+  winnerPoints: Int!
 }
 
 type MatchConnection {
@@ -423,7 +423,7 @@ type MatchConnection {
 input MatchCreateInput {
   id: ID
   plannedAt: DateTime!
-  isRanked: Boolean!
+  isRanked: Boolean
   isFinished: Boolean
   league: LeagueCreateOneWithoutMatchesInput!
   user1: UserCreateOneInput!
@@ -431,7 +431,7 @@ input MatchCreateInput {
   user2: UserCreateOneInput!
   user2points: Int
   winner: UserCreateOneInput
-  winnerpoints: Int
+  winnerPoints: Int
 }
 
 input MatchCreateManyInput {
@@ -447,14 +447,14 @@ input MatchCreateManyWithoutLeagueInput {
 input MatchCreateWithoutLeagueInput {
   id: ID
   plannedAt: DateTime!
-  isRanked: Boolean!
+  isRanked: Boolean
   isFinished: Boolean
   user1: UserCreateOneInput!
   user1points: Int
   user2: UserCreateOneInput!
   user2points: Int
   winner: UserCreateOneInput
-  winnerpoints: Int
+  winnerPoints: Int
 }
 
 type MatchEdge {
@@ -477,8 +477,8 @@ enum MatchOrderByInput {
   user1points_DESC
   user2points_ASC
   user2points_DESC
-  winnerpoints_ASC
-  winnerpoints_DESC
+  winnerPoints_ASC
+  winnerPoints_DESC
 }
 
 type MatchPreviousValues {
@@ -486,10 +486,10 @@ type MatchPreviousValues {
   createdAt: DateTime!
   plannedAt: DateTime!
   isRanked: Boolean!
-  isFinished: Boolean
-  user1points: Int
-  user2points: Int
-  winnerpoints: Int
+  isFinished: Boolean!
+  user1points: Int!
+  user2points: Int!
+  winnerPoints: Int!
 }
 
 input MatchScalarWhereInput {
@@ -543,14 +543,14 @@ input MatchScalarWhereInput {
   user2points_lte: Int
   user2points_gt: Int
   user2points_gte: Int
-  winnerpoints: Int
-  winnerpoints_not: Int
-  winnerpoints_in: [Int!]
-  winnerpoints_not_in: [Int!]
-  winnerpoints_lt: Int
-  winnerpoints_lte: Int
-  winnerpoints_gt: Int
-  winnerpoints_gte: Int
+  winnerPoints: Int
+  winnerPoints_not: Int
+  winnerPoints_in: [Int!]
+  winnerPoints_not_in: [Int!]
+  winnerPoints_lt: Int
+  winnerPoints_lte: Int
+  winnerPoints_gt: Int
+  winnerPoints_gte: Int
   AND: [MatchScalarWhereInput!]
   OR: [MatchScalarWhereInput!]
   NOT: [MatchScalarWhereInput!]
@@ -584,7 +584,7 @@ input MatchUpdateDataInput {
   user2: UserUpdateOneRequiredInput
   user2points: Int
   winner: UserUpdateOneInput
-  winnerpoints: Int
+  winnerPoints: Int
 }
 
 input MatchUpdateInput {
@@ -597,7 +597,7 @@ input MatchUpdateInput {
   user2: UserUpdateOneRequiredInput
   user2points: Int
   winner: UserUpdateOneInput
-  winnerpoints: Int
+  winnerPoints: Int
 }
 
 input MatchUpdateManyDataInput {
@@ -606,7 +606,7 @@ input MatchUpdateManyDataInput {
   isFinished: Boolean
   user1points: Int
   user2points: Int
-  winnerpoints: Int
+  winnerPoints: Int
 }
 
 input MatchUpdateManyInput {
@@ -627,7 +627,7 @@ input MatchUpdateManyMutationInput {
   isFinished: Boolean
   user1points: Int
   user2points: Int
-  winnerpoints: Int
+  winnerPoints: Int
 }
 
 input MatchUpdateManyWithoutLeagueInput {
@@ -656,7 +656,7 @@ input MatchUpdateWithoutLeagueDataInput {
   user2: UserUpdateOneRequiredInput
   user2points: Int
   winner: UserUpdateOneInput
-  winnerpoints: Int
+  winnerPoints: Int
 }
 
 input MatchUpdateWithWhereUniqueNestedInput {
@@ -736,14 +736,14 @@ input MatchWhereInput {
   user2points_gt: Int
   user2points_gte: Int
   winner: UserWhereInput
-  winnerpoints: Int
-  winnerpoints_not: Int
-  winnerpoints_in: [Int!]
-  winnerpoints_not_in: [Int!]
-  winnerpoints_lt: Int
-  winnerpoints_lte: Int
-  winnerpoints_gt: Int
-  winnerpoints_gte: Int
+  winnerPoints: Int
+  winnerPoints_not: Int
+  winnerPoints_in: [Int!]
+  winnerPoints_not_in: [Int!]
+  winnerPoints_lt: Int
+  winnerPoints_lte: Int
+  winnerPoints_gt: Int
+  winnerPoints_gte: Int
   AND: [MatchWhereInput!]
   OR: [MatchWhereInput!]
   NOT: [MatchWhereInput!]
@@ -841,7 +841,7 @@ input TeamCreateInput {
   id: ID
   description: String!
   name: String!
-  points: Int!
+  points: Int
   league: LeagueCreateOneWithoutTeamsInput!
   users: UserCreateManyWithoutTeamsInput
   owner: UserCreateOneWithoutOwnedTeamsInput!
@@ -866,7 +866,7 @@ input TeamCreateWithoutLeagueInput {
   id: ID
   description: String!
   name: String!
-  points: Int!
+  points: Int
   users: UserCreateManyWithoutTeamsInput
   owner: UserCreateOneWithoutOwnedTeamsInput!
 }
@@ -875,7 +875,7 @@ input TeamCreateWithoutOwnerInput {
   id: ID
   description: String!
   name: String!
-  points: Int!
+  points: Int
   league: LeagueCreateOneWithoutTeamsInput!
   users: UserCreateManyWithoutTeamsInput
 }
@@ -884,7 +884,7 @@ input TeamCreateWithoutUsersInput {
   id: ID
   description: String!
   name: String!
-  points: Int!
+  points: Int
   league: LeagueCreateOneWithoutTeamsInput!
   owner: UserCreateOneWithoutOwnedTeamsInput!
 }
@@ -1215,7 +1215,7 @@ input UserCreateInput {
   name: String!
   sub: String!
   picture: String!
-  points: Int!
+  points: Int
   teams: TeamCreateManyWithoutUsersInput
   leagues: LeagueCreateManyWithoutUsersInput
   ownedTeams: TeamCreateManyWithoutOwnerInput
@@ -1253,7 +1253,7 @@ input UserCreateWithoutLeaguesInput {
   name: String!
   sub: String!
   picture: String!
-  points: Int!
+  points: Int
   teams: TeamCreateManyWithoutUsersInput
   ownedTeams: TeamCreateManyWithoutOwnerInput
   ownedLeagues: LeagueCreateManyWithoutOwnerInput
@@ -1265,7 +1265,7 @@ input UserCreateWithoutOwnedLeaguesInput {
   name: String!
   sub: String!
   picture: String!
-  points: Int!
+  points: Int
   teams: TeamCreateManyWithoutUsersInput
   leagues: LeagueCreateManyWithoutUsersInput
   ownedTeams: TeamCreateManyWithoutOwnerInput
@@ -1277,7 +1277,7 @@ input UserCreateWithoutOwnedTeamsInput {
   name: String!
   sub: String!
   picture: String!
-  points: Int!
+  points: Int
   teams: TeamCreateManyWithoutUsersInput
   leagues: LeagueCreateManyWithoutUsersInput
   ownedLeagues: LeagueCreateManyWithoutOwnerInput
@@ -1289,7 +1289,7 @@ input UserCreateWithoutTeamsInput {
   name: String!
   sub: String!
   picture: String!
-  points: Int!
+  points: Int
   leagues: LeagueCreateManyWithoutUsersInput
   ownedTeams: TeamCreateManyWithoutOwnerInput
   ownedLeagues: LeagueCreateManyWithoutOwnerInput

@@ -69,7 +69,7 @@ type ComplexityRoot struct {
 		User2        func(childComplexity int) int
 		User2points  func(childComplexity int) int
 		Winner       func(childComplexity int) int
-		Winnerpoints func(childComplexity int) int
+		WinnerPoints func(childComplexity int) int
 	}
 
 	Mutation struct {
@@ -313,12 +313,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Match.Winner(childComplexity), true
 
-	case "Match.winnerpoints":
-		if e.complexity.Match.Winnerpoints == nil {
+	case "Match.winnerPoints":
+		if e.complexity.Match.WinnerPoints == nil {
 			break
 		}
 
-		return e.complexity.Match.Winnerpoints(childComplexity), true
+		return e.complexity.Match.WinnerPoints(childComplexity), true
 
 	case "Mutation.addUserToTeam":
 		if e.complexity.Mutation.AddUserToTeam == nil {
@@ -837,8 +837,8 @@ enum MatchOrderByInput {
   user1points_DESC
   user2points_ASC
   user2points_DESC
-  winnerpoints_ASC
-  winnerpoints_DESC
+  winnerPoints_ASC
+  winnerPoints_DESC
 }
 
 input LeagueWhereInput {
@@ -1113,14 +1113,14 @@ input MatchWhereInput {
   user2points_gt: Int
   user2points_gte: Int
   winner: UserWhereInput
-  winnerpoints: Int
-  winnerpoints_not: Int
-  winnerpoints_in: [Int!]
-  winnerpoints_not_in: [Int!]
-  winnerpoints_lt: Int
-  winnerpoints_lte: Int
-  winnerpoints_gt: Int
-  winnerpoints_gte: Int
+  winnerPoints: Int
+  winnerPoints_not: Int
+  winnerPoints_in: [Int!]
+  winnerPoints_not_in: [Int!]
+  winnerPoints_lt: Int
+  winnerPoints_lte: Int
+  winnerPoints_gt: Int
+  winnerPoints_gte: Int
   AND: [MatchWhereInput!]
   OR: [MatchWhereInput!]
   NOT: [MatchWhereInput!]
@@ -1193,7 +1193,7 @@ type Match {
   user2: User!
   user2points: Int
   winner: User
-  winnerpoints: Int
+  winnerPoints: Int
 }`},
 )
 
@@ -2126,10 +2126,10 @@ func (ec *executionContext) _Match_isFinished(ctx context.Context, field graphql
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*bool)
+	res := resTmp.(bool)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Match_league(ctx context.Context, field graphql.CollectedField, obj *prisma.Match) (ret graphql.Marshaler) {
@@ -2234,10 +2234,10 @@ func (ec *executionContext) _Match_user1points(ctx context.Context, field graphq
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*int32)
+	res := resTmp.(int32)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalOInt2ᚖint32(ctx, field.Selections, res)
+	return ec.marshalOInt2int32(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Match_user2(ctx context.Context, field graphql.CollectedField, obj *prisma.Match) (ret graphql.Marshaler) {
@@ -2305,10 +2305,10 @@ func (ec *executionContext) _Match_user2points(ctx context.Context, field graphq
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*int32)
+	res := resTmp.(int32)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalOInt2ᚖint32(ctx, field.Selections, res)
+	return ec.marshalOInt2int32(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Match_winner(ctx context.Context, field graphql.CollectedField, obj *prisma.Match) (ret graphql.Marshaler) {
@@ -2345,7 +2345,7 @@ func (ec *executionContext) _Match_winner(ctx context.Context, field graphql.Col
 	return ec.marshalOUser2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUser(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Match_winnerpoints(ctx context.Context, field graphql.CollectedField, obj *prisma.Match) (ret graphql.Marshaler) {
+func (ec *executionContext) _Match_winnerPoints(ctx context.Context, field graphql.CollectedField, obj *prisma.Match) (ret graphql.Marshaler) {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() {
 		if r := recover(); r != nil {
@@ -2364,7 +2364,7 @@ func (ec *executionContext) _Match_winnerpoints(ctx context.Context, field graph
 	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Winnerpoints, nil
+		return obj.WinnerPoints, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2373,10 +2373,10 @@ func (ec *executionContext) _Match_winnerpoints(ctx context.Context, field graph
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*int32)
+	res := resTmp.(int32)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalOInt2ᚖint32(ctx, field.Selections, res)
+	return ec.marshalOInt2int32(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_createLeague(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5876,51 +5876,51 @@ func (ec *executionContext) unmarshalInputMatchWhereInput(ctx context.Context, o
 			if err != nil {
 				return it, err
 			}
-		case "winnerpoints":
+		case "winnerPoints":
 			var err error
-			it.Winnerpoints, err = ec.unmarshalOInt2ᚖint32(ctx, v)
+			it.WinnerPoints, err = ec.unmarshalOInt2ᚖint32(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "winnerpoints_not":
+		case "winnerPoints_not":
 			var err error
-			it.WinnerpointsNot, err = ec.unmarshalOInt2ᚖint32(ctx, v)
+			it.WinnerPointsNot, err = ec.unmarshalOInt2ᚖint32(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "winnerpoints_in":
+		case "winnerPoints_in":
 			var err error
-			it.WinnerpointsIn, err = ec.unmarshalOInt2ᚕint32(ctx, v)
+			it.WinnerPointsIn, err = ec.unmarshalOInt2ᚕint32(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "winnerpoints_not_in":
+		case "winnerPoints_not_in":
 			var err error
-			it.WinnerpointsNotIn, err = ec.unmarshalOInt2ᚕint32(ctx, v)
+			it.WinnerPointsNotIn, err = ec.unmarshalOInt2ᚕint32(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "winnerpoints_lt":
+		case "winnerPoints_lt":
 			var err error
-			it.WinnerpointsLt, err = ec.unmarshalOInt2ᚖint32(ctx, v)
+			it.WinnerPointsLt, err = ec.unmarshalOInt2ᚖint32(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "winnerpoints_lte":
+		case "winnerPoints_lte":
 			var err error
-			it.WinnerpointsLte, err = ec.unmarshalOInt2ᚖint32(ctx, v)
+			it.WinnerPointsLte, err = ec.unmarshalOInt2ᚖint32(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "winnerpoints_gt":
+		case "winnerPoints_gt":
 			var err error
-			it.WinnerpointsGt, err = ec.unmarshalOInt2ᚖint32(ctx, v)
+			it.WinnerPointsGt, err = ec.unmarshalOInt2ᚖint32(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "winnerpoints_gte":
+		case "winnerPoints_gte":
 			var err error
-			it.WinnerpointsGte, err = ec.unmarshalOInt2ᚖint32(ctx, v)
+			it.WinnerPointsGte, err = ec.unmarshalOInt2ᚖint32(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -7180,8 +7180,8 @@ func (ec *executionContext) _Match(ctx context.Context, sel ast.SelectionSet, ob
 				res = ec._Match_winner(ctx, field, obj)
 				return res
 			})
-		case "winnerpoints":
-			out.Values[i] = ec._Match_winnerpoints(ctx, field, obj)
+		case "winnerPoints":
+			out.Values[i] = ec._Match_winnerPoints(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

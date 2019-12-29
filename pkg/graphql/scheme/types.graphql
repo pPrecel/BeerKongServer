@@ -45,5 +45,5 @@ type Match {
   user2: User!
   user2points: Int
   winner: User
-  winnerpoints: Int
+  winnerPoints: Int
 }

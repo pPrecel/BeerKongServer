@@ -4,7 +4,7 @@ type User {
   name: String! @unique
   sub: String! @unique
   picture: String!
-  points: Int!
+  points: Int! @default(value: 0)
   teams: [Team!]! @relation(name: "UserTeam", link: TABLE)
   leagues: [League!]! @relation(name: "UserLeague")
   ownedTeams: [Team!]! @relation(name: "OwnedTeam", onDelete: CASCADE)
@@ -17,7 +17,7 @@ type Team {
   createdAt: DateTime! @createdAt
   description: String!
   name: String! @unique
-  points: Int!
+  points: Int! @default(value: 0)
   league: League! @relation(name: "ContainTeam")
   users: [User!]! @relation(name: "UserTeam")
   owner: User! @relation(name: "OwnedTeam")
@@ -43,14 +43,14 @@ type Match {
   id: ID! @id
   createdAt: DateTime! @createdAt
   plannedAt: DateTime!
-  isRanked: Boolean!
-  isFinished: Boolean
+  isRanked: Boolean! @default(value: true)
+  isFinished: Boolean! @default(value: false)
   league: League! @relation(name: "LeagueMatches")
   user1: User! @relation(name: "User1")
-  user1points: Int
+  user1points: Int! @default(value: 0)
   user2: User! @relation(name: "User2")
-  user2points: Int
+  user2points: Int! @default(value: 0)
   winner: User @relation(name: "UserWonMatches", link: INLINE)
-  winnerpoints: Int
+  winnerPoints: Int! @default(value: 0)
 }
 
