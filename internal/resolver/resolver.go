@@ -61,9 +61,7 @@ func (r *mutationResolver) updateTeamPoints(ctx context.Context, team *prisma.Te
 }
 func (r *mutationResolver) createRankMatch(ctx context.Context, data generated.MatchCreateInput) (*prisma.Match, error) {
 	falseValue := false
-	leagueOwner, err := r.prismaClient.League(prisma.LeagueWhereUniqueInput{
-		Name: data.League.Name,
-	}).Owner().Exec(ctx)
+	leagueOwner, err := r.prismaClient.League(*data.League).Owner().Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -74,15 +72,18 @@ func (r *mutationResolver) createRankMatch(ctx context.Context, data generated.M
 		PlannedAt:  data.PlannedAt,
 		IsRanked:   data.IsRanked,
 		IsFinished: &falseValue,
-		League:     prisma.LeagueCreateOneWithoutMatchesInput{Connect: &prisma.LeagueWhereUniqueInput{Name: data.League.Name}},
+		League:     prisma.LeagueCreateOneWithoutMatchesInput{Connect: data.League},
 		User1:      prisma.UserCreateOneInput{Connect: r.fillUserWhereUniqueInput(data.User1)},
 		User2:      prisma.UserCreateOneInput{Connect: r.fillUserWhereUniqueInput(data.User2)},
 	}).Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
 
 	_, err = r.prismaClient.UpdateUser(prisma.UserUpdateParams{
 		Data: prisma.UserUpdateInput{
 			Matches: &prisma.MatchUpdateManyInput{
-				Connect: []prisma.MatchWhereUniqueInput{prisma.MatchWhereUniqueInput{ID: &match.ID}},
+				Connect: []prisma.MatchWhereUniqueInput{*r.chooseMatchWhereUniqueInput(match)},
 			},
 		},
 		Where: *r.fillUserWhereUniqueInput(data.User1),
@@ -93,7 +94,7 @@ func (r *mutationResolver) createRankMatch(ctx context.Context, data generated.M
 	_, err = r.prismaClient.UpdateUser(prisma.UserUpdateParams{
 		Data: prisma.UserUpdateInput{
 			Matches: &prisma.MatchUpdateManyInput{
-				Connect: []prisma.MatchWhereUniqueInput{prisma.MatchWhereUniqueInput{ID: &match.ID}},
+				Connect: []prisma.MatchWhereUniqueInput{*r.chooseMatchWhereUniqueInput(match)},
 			},
 		},
 		Where: *r.fillUserWhereUniqueInput(data.User2),
@@ -123,97 +124,6 @@ func (r *mutationResolver) isUserInLeague(ctx context.Context, where prisma.Team
 	return league, false
 }
 
-func (r *mutationResolver) EndMatch(ctx context.Context, where prisma.MatchWhereUniqueInput, data generated.MatchEndInput) (*prisma.Match, error) {
-	one := 1
-	owner, err := r.prismaClient.League(prisma.LeagueWhereUniqueInput{ID: where.ID}).Owner().Exec(ctx)
-	if err != nil {
-		return nil, err
-	}
-	if !r.checkAccessWithUser(owner.Sub) {
-		return nil, errors.New(fmt.Sprintf("You don't have permission to finish this operation"))
-	}
-
-	league, err := r.prismaClient.Match(where).League().Exec(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	user1, err := r.prismaClient.Match(where).User1().Exec(ctx)
-	if err != nil {
-		return nil, err
-	}
-	user1, err = r.updateUserPoints(ctx, user1, data.User1points)
-	if err != nil {
-		return nil, err
-	}
-
-	team1, err := r.prismaClient.Teams(&prisma.TeamsParams{
-		Where: &prisma.TeamWhereInput{
-			And: []prisma.TeamWhereInput{
-				prisma.TeamWhereInput{
-					League: &prisma.LeagueWhereInput{Name: &league.Name},
-				},
-				prisma.TeamWhereInput{
-					UsersSome: &prisma.UserWhereInput{ID: &user1.ID},
-				},
-			},
-		},
-		First: intToInt32(&one),
-	}).Exec(ctx)
-	if err != nil {
-		return nil, err
-	}
-	_, err = r.updateTeamPoints(ctx, &team1[0], data.User1points)
-	if err != nil {
-		return nil, err
-	}
-
-	user2, err := r.prismaClient.Match(where).User2().Exec(ctx)
-	if err != nil {
-		return nil, err
-	}
-	r.updateUserPoints(ctx, user2, data.User1points)
-
-	team2, err := r.prismaClient.Teams(&prisma.TeamsParams{
-		Where: &prisma.TeamWhereInput{
-			And: []prisma.TeamWhereInput{
-				prisma.TeamWhereInput{
-					League: &prisma.LeagueWhereInput{Name: &league.Name},
-				},
-				prisma.TeamWhereInput{
-					UsersSome: &prisma.UserWhereInput{ID: &user2.ID},
-				},
-			},
-		},
-		First: intToInt32(&one),
-	}).Exec(ctx)
-	if err != nil {
-		return nil, err
-	}
-	_, err = r.updateTeamPoints(ctx, &team2[0], data.User1points)
-	if err != nil {
-		return nil, err
-	}
-
-	var winner *prisma.User
-	var winnerpoints *int32
-	if data.User1points > data.User2points {
-		winner = user1
-		winnerpoints = intToInt32(&data.User1points)
-	} else {
-		winner = user2
-		winnerpoints = intToInt32(&data.User2points)
-	}
-
-	return r.prismaClient.UpdateMatch(prisma.MatchUpdateParams{
-		Data: prisma.MatchUpdateInput{
-			Winner: &prisma.UserUpdateOneInput{
-				Connect: r.chooseUserWhereUniqueInput(winner),
-			},
-			Winnerpoints: winnerpoints,
-		},
-	}).Exec(ctx)
-}
 func (r *mutationResolver) CreateLeague(ctx context.Context, data generated.LeagueCreateInput) (*prisma.League, error) {
 	if r.user == nil {
 		return nil, errors.New(fmt.Sprintf("You don't have permission to finish this operation"))
@@ -346,6 +256,97 @@ func (r *mutationResolver) CreateMatch(ctx context.Context, data generated.Match
 	}
 
 	return nil, fmt.Errorf("Unexpected error xd")
+}
+func (r *mutationResolver) EndMatch(ctx context.Context, where prisma.MatchWhereUniqueInput, data generated.MatchEndInput) (*prisma.Match, error) {
+	one := 1
+	owner, err := r.prismaClient.League(prisma.LeagueWhereUniqueInput{ID: where.ID}).Owner().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if !r.checkAccessWithUser(owner.Sub) {
+		return nil, errors.New(fmt.Sprintf("You don't have permission to finish this operation"))
+	}
+
+	league, err := r.prismaClient.Match(where).League().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	user1, err := r.prismaClient.Match(where).User1().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	user1, err = r.updateUserPoints(ctx, user1, data.User1points)
+	if err != nil {
+		return nil, err
+	}
+
+	team1, err := r.prismaClient.Teams(&prisma.TeamsParams{
+		Where: &prisma.TeamWhereInput{
+			And: []prisma.TeamWhereInput{
+				prisma.TeamWhereInput{
+					League: &prisma.LeagueWhereInput{Name: &league.Name},
+				},
+				prisma.TeamWhereInput{
+					UsersSome: &prisma.UserWhereInput{ID: &user1.ID},
+				},
+			},
+		},
+		First: intToInt32(&one),
+	}).Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	_, err = r.updateTeamPoints(ctx, &team1[0], data.User1points)
+	if err != nil {
+		return nil, err
+	}
+
+	user2, err := r.prismaClient.Match(where).User2().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	r.updateUserPoints(ctx, user2, data.User1points)
+
+	team2, err := r.prismaClient.Teams(&prisma.TeamsParams{
+		Where: &prisma.TeamWhereInput{
+			And: []prisma.TeamWhereInput{
+				prisma.TeamWhereInput{
+					League: &prisma.LeagueWhereInput{Name: &league.Name},
+				},
+				prisma.TeamWhereInput{
+					UsersSome: &prisma.UserWhereInput{ID: &user2.ID},
+				},
+			},
+		},
+		First: intToInt32(&one),
+	}).Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	_, err = r.updateTeamPoints(ctx, &team2[0], data.User1points)
+	if err != nil {
+		return nil, err
+	}
+
+	var winner *prisma.User
+	var winnerpoints *int32
+	if data.User1points > data.User2points {
+		winner = user1
+		winnerpoints = intToInt32(&data.User1points)
+	} else {
+		winner = user2
+		winnerpoints = intToInt32(&data.User2points)
+	}
+
+	return r.prismaClient.UpdateMatch(prisma.MatchUpdateParams{
+		Data: prisma.MatchUpdateInput{
+			Winner: &prisma.UserUpdateOneInput{
+				Connect: r.chooseUserWhereUniqueInput(winner),
+			},
+			Winnerpoints: winnerpoints,
+		},
+	}).Exec(ctx)
 }
 func (r *mutationResolver) DeleteMatch(ctx context.Context, where prisma.MatchWhereUniqueInput) (*prisma.Match, error) {
 	league, err := r.prismaClient.Match(where).League().Exec(ctx)
