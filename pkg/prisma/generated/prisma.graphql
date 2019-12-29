@@ -825,7 +825,7 @@ type Team {
   createdAt: DateTime!
   description: String!
   name: String!
-  points: Int
+  points: Int!
   league: League!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
   owner: User!
@@ -841,7 +841,7 @@ input TeamCreateInput {
   id: ID
   description: String!
   name: String!
-  points: Int
+  points: Int!
   league: LeagueCreateOneWithoutTeamsInput!
   users: UserCreateManyWithoutTeamsInput
   owner: UserCreateOneWithoutOwnedTeamsInput!
@@ -866,7 +866,7 @@ input TeamCreateWithoutLeagueInput {
   id: ID
   description: String!
   name: String!
-  points: Int
+  points: Int!
   users: UserCreateManyWithoutTeamsInput
   owner: UserCreateOneWithoutOwnedTeamsInput!
 }
@@ -875,7 +875,7 @@ input TeamCreateWithoutOwnerInput {
   id: ID
   description: String!
   name: String!
-  points: Int
+  points: Int!
   league: LeagueCreateOneWithoutTeamsInput!
   users: UserCreateManyWithoutTeamsInput
 }
@@ -884,7 +884,7 @@ input TeamCreateWithoutUsersInput {
   id: ID
   description: String!
   name: String!
-  points: Int
+  points: Int!
   league: LeagueCreateOneWithoutTeamsInput!
   owner: UserCreateOneWithoutOwnedTeamsInput!
 }
@@ -912,7 +912,7 @@ type TeamPreviousValues {
   createdAt: DateTime!
   description: String!
   name: String!
-  points: Int
+  points: Int!
 }
 
 input TeamScalarWhereInput {
@@ -1196,7 +1196,7 @@ type User {
   name: String!
   sub: String!
   picture: String!
-  points: Int
+  points: Int!
   teams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team!]
   leagues(where: LeagueWhereInput, orderBy: LeagueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [League!]
   ownedTeams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team!]
@@ -1215,7 +1215,7 @@ input UserCreateInput {
   name: String!
   sub: String!
   picture: String!
-  points: Int
+  points: Int!
   teams: TeamCreateManyWithoutUsersInput
   leagues: LeagueCreateManyWithoutUsersInput
   ownedTeams: TeamCreateManyWithoutOwnerInput
@@ -1253,7 +1253,7 @@ input UserCreateWithoutLeaguesInput {
   name: String!
   sub: String!
   picture: String!
-  points: Int
+  points: Int!
   teams: TeamCreateManyWithoutUsersInput
   ownedTeams: TeamCreateManyWithoutOwnerInput
   ownedLeagues: LeagueCreateManyWithoutOwnerInput
@@ -1265,7 +1265,7 @@ input UserCreateWithoutOwnedLeaguesInput {
   name: String!
   sub: String!
   picture: String!
-  points: Int
+  points: Int!
   teams: TeamCreateManyWithoutUsersInput
   leagues: LeagueCreateManyWithoutUsersInput
   ownedTeams: TeamCreateManyWithoutOwnerInput
@@ -1277,7 +1277,7 @@ input UserCreateWithoutOwnedTeamsInput {
   name: String!
   sub: String!
   picture: String!
-  points: Int
+  points: Int!
   teams: TeamCreateManyWithoutUsersInput
   leagues: LeagueCreateManyWithoutUsersInput
   ownedLeagues: LeagueCreateManyWithoutOwnerInput
@@ -1289,7 +1289,7 @@ input UserCreateWithoutTeamsInput {
   name: String!
   sub: String!
   picture: String!
-  points: Int
+  points: Int!
   leagues: LeagueCreateManyWithoutUsersInput
   ownedTeams: TeamCreateManyWithoutOwnerInput
   ownedLeagues: LeagueCreateManyWithoutOwnerInput
@@ -1322,7 +1322,7 @@ type UserPreviousValues {
   name: String!
   sub: String!
   picture: String!
-  points: Int
+  points: Int!
 }
 
 input UserScalarWhereInput {

@@ -14,6 +14,7 @@ type Team {
   description: String!
   name: String!
   league: League!
+  points: Int!
   users: [User!]
   owner: User!
 }
@@ -26,8 +27,10 @@ type User {
   picture: String!
   teams: [Team!]
   leagues: [League!]
+  points: Int!
   ownedTeams: [Team!]
   ownedLeagues: [League!]
+  matches: [Match!]!
 }
 
 type Match {

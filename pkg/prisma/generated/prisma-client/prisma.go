@@ -1185,7 +1185,7 @@ type TeamCreateWithoutLeagueInput struct {
 	ID          *string                             `json:"id,omitempty"`
 	Description string                              `json:"description"`
 	Name        string                              `json:"name"`
-	Points      *int32                              `json:"points,omitempty"`
+	Points      int32                               `json:"points"`
 	Users       *UserCreateManyWithoutTeamsInput    `json:"users,omitempty"`
 	Owner       UserCreateOneWithoutOwnedTeamsInput `json:"owner"`
 }
@@ -1200,7 +1200,7 @@ type UserCreateWithoutTeamsInput struct {
 	Name         string                             `json:"name"`
 	Sub          string                             `json:"sub"`
 	Picture      string                             `json:"picture"`
-	Points       *int32                             `json:"points,omitempty"`
+	Points       int32                              `json:"points"`
 	Leagues      *LeagueCreateManyWithoutUsersInput `json:"leagues,omitempty"`
 	OwnedTeams   *TeamCreateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
 	OwnedLeagues *LeagueCreateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
@@ -1231,7 +1231,7 @@ type UserCreateWithoutOwnedLeaguesInput struct {
 	Name       string                             `json:"name"`
 	Sub        string                             `json:"sub"`
 	Picture    string                             `json:"picture"`
-	Points     *int32                             `json:"points,omitempty"`
+	Points     int32                              `json:"points"`
 	Teams      *TeamCreateManyWithoutUsersInput   `json:"teams,omitempty"`
 	Leagues    *LeagueCreateManyWithoutUsersInput `json:"leagues,omitempty"`
 	OwnedTeams *TeamCreateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
@@ -1247,7 +1247,7 @@ type TeamCreateWithoutUsersInput struct {
 	ID          *string                             `json:"id,omitempty"`
 	Description string                              `json:"description"`
 	Name        string                              `json:"name"`
-	Points      *int32                              `json:"points,omitempty"`
+	Points      int32                               `json:"points"`
 	League      LeagueCreateOneWithoutTeamsInput    `json:"league"`
 	Owner       UserCreateOneWithoutOwnedTeamsInput `json:"owner"`
 }
@@ -1276,7 +1276,7 @@ type UserCreateWithoutLeaguesInput struct {
 	Name         string                             `json:"name"`
 	Sub          string                             `json:"sub"`
 	Picture      string                             `json:"picture"`
-	Points       *int32                             `json:"points,omitempty"`
+	Points       int32                              `json:"points"`
 	Teams        *TeamCreateManyWithoutUsersInput   `json:"teams,omitempty"`
 	OwnedTeams   *TeamCreateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
 	OwnedLeagues *LeagueCreateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
@@ -1292,7 +1292,7 @@ type TeamCreateWithoutOwnerInput struct {
 	ID          *string                          `json:"id,omitempty"`
 	Description string                           `json:"description"`
 	Name        string                           `json:"name"`
-	Points      *int32                           `json:"points,omitempty"`
+	Points      int32                            `json:"points"`
 	League      LeagueCreateOneWithoutTeamsInput `json:"league"`
 	Users       *UserCreateManyWithoutTeamsInput `json:"users,omitempty"`
 }
@@ -1339,7 +1339,7 @@ type UserCreateInput struct {
 	Name         string                             `json:"name"`
 	Sub          string                             `json:"sub"`
 	Picture      string                             `json:"picture"`
-	Points       *int32                             `json:"points,omitempty"`
+	Points       int32                              `json:"points"`
 	Teams        *TeamCreateManyWithoutUsersInput   `json:"teams,omitempty"`
 	Leagues      *LeagueCreateManyWithoutUsersInput `json:"leagues,omitempty"`
 	OwnedTeams   *TeamCreateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
@@ -1390,7 +1390,7 @@ type UserCreateWithoutOwnedTeamsInput struct {
 	Name         string                             `json:"name"`
 	Sub          string                             `json:"sub"`
 	Picture      string                             `json:"picture"`
-	Points       *int32                             `json:"points,omitempty"`
+	Points       int32                              `json:"points"`
 	Teams        *TeamCreateManyWithoutUsersInput   `json:"teams,omitempty"`
 	Leagues      *LeagueCreateManyWithoutUsersInput `json:"leagues,omitempty"`
 	OwnedLeagues *LeagueCreateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
@@ -2159,7 +2159,7 @@ type TeamCreateInput struct {
 	ID          *string                             `json:"id,omitempty"`
 	Description string                              `json:"description"`
 	Name        string                              `json:"name"`
-	Points      *int32                              `json:"points,omitempty"`
+	Points      int32                               `json:"points"`
 	League      LeagueCreateOneWithoutTeamsInput    `json:"league"`
 	Users       *UserCreateManyWithoutTeamsInput    `json:"users,omitempty"`
 	Owner       UserCreateOneWithoutOwnedTeamsInput `json:"owner"`
@@ -2478,7 +2478,7 @@ type Team struct {
 	CreatedAt   string `json:"createdAt"`
 	Description string `json:"description"`
 	Name        string `json:"name"`
-	Points      *int32 `json:"points,omitempty"`
+	Points      int32  `json:"points"`
 }
 
 type UserExec struct {
@@ -2669,7 +2669,7 @@ type User struct {
 	Name      string `json:"name"`
 	Sub       string `json:"sub"`
 	Picture   string `json:"picture"`
-	Points    *int32 `json:"points,omitempty"`
+	Points    int32  `json:"points"`
 }
 
 type MatchExec struct {
@@ -3625,7 +3625,7 @@ type TeamPreviousValues struct {
 	CreatedAt   string `json:"createdAt"`
 	Description string `json:"description"`
 	Name        string `json:"name"`
-	Points      *int32 `json:"points,omitempty"`
+	Points      int32  `json:"points"`
 }
 
 type UserSubscriptionPayloadExec struct {
@@ -3726,5 +3726,5 @@ type UserPreviousValues struct {
 	Name      string `json:"name"`
 	Sub       string `json:"sub"`
 	Picture   string `json:"picture"`
-	Points    *int32 `json:"points,omitempty"`
+	Points    int32  `json:"points"`
 }

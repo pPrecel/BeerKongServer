@@ -44,6 +44,8 @@ enum UserOrderByInput {
   sub_DESC
   picture_ASC
   picture_DESC
+  points_ASC
+  points_DESC
 }
 
 enum MatchOrderByInput {
@@ -254,6 +256,14 @@ input UserWhereInput {
   picture_not_starts_with: String
   picture_ends_with: String
   picture_not_ends_with: String
+  points: Int
+  points_not: Int
+  points_in: [Int!]
+  points_not_in: [Int!]
+  points_lt: Int
+  points_lte: Int
+  points_gt: Int
+  points_gte: Int
   teams_every: TeamWhereInput
   teams_some: TeamWhereInput
   teams_none: TeamWhereInput
@@ -266,6 +276,9 @@ input UserWhereInput {
   ownedLeagues_every: LeagueWhereInput
   ownedLeagues_some: LeagueWhereInput
   ownedLeagues_none: LeagueWhereInput
+  matches_every: MatchWhereInput
+  matches_some: MatchWhereInput
+  matches_none: MatchWhereInput
   AND: [UserWhereInput!]
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]

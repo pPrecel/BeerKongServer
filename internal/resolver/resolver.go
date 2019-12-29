@@ -42,7 +42,7 @@ func (r *Resolver) Match() generated.MatchResolver {
 type mutationResolver struct{ *Resolver }
 
 func (r *mutationResolver) updateUserPoints(ctx context.Context, user *prisma.User, pointsToAdd int) (*prisma.User, error) {
-	finalPoints := *user.Points + *intToInt32(&pointsToAdd)
+	finalPoints := user.Points + *intToInt32(&pointsToAdd)
 	return r.prismaClient.UpdateUser(prisma.UserUpdateParams{
 		Data: prisma.UserUpdateInput{
 			Points: &finalPoints,
@@ -51,7 +51,7 @@ func (r *mutationResolver) updateUserPoints(ctx context.Context, user *prisma.Us
 	}).Exec(ctx)
 }
 func (r *mutationResolver) updateTeamPoints(ctx context.Context, team *prisma.Team, pointsToAdd int) (*prisma.Team, error) {
-	finalPoints := *team.Points + *intToInt32(&pointsToAdd)
+	finalPoints := team.Points + *intToInt32(&pointsToAdd)
 	return r.prismaClient.UpdateTeam(prisma.TeamUpdateParams{
 		Data: prisma.TeamUpdateInput{
 			Points: &finalPoints,
@@ -116,7 +116,7 @@ func (r *mutationResolver) isUserInLeague(ctx context.Context, where prisma.Team
 	}
 
 	for _, user := range users {
-		if user.Sub == *data.Sub {
+		if user.ID == *data.ID {
 			return league, true
 		}
 	}
@@ -468,6 +468,9 @@ func (r *teamResolver) Owner(ctx context.Context, obj *prisma.Team) (*prisma.Use
 
 type userResolver struct{ *Resolver }
 
+func (r *userResolver) Matches(ctx context.Context, obj *prisma.User) ([]prisma.Match, error) {
+	return r.prismaClient.User(*r.chooseUserWhereUniqueInput(obj)).Matches(nil).Exec(ctx)
+}
 func (r *userResolver) Teams(ctx context.Context, obj *prisma.User) ([]prisma.Team, error) {
 	return r.prismaClient.User(prisma.UserWhereUniqueInput{
 		ID: &obj.ID,
