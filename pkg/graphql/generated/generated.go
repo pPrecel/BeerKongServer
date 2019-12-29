@@ -59,11 +59,11 @@ type ComplexityRoot struct {
 
 	Match struct {
 		CreatedAt    func(childComplexity int) int
-		Expiration   func(childComplexity int) int
 		ID           func(childComplexity int) int
 		IsFinished   func(childComplexity int) int
 		IsRanked     func(childComplexity int) int
 		League       func(childComplexity int) int
+		PlannedAt    func(childComplexity int) int
 		User1        func(childComplexity int) int
 		User1points  func(childComplexity int) int
 		User2        func(childComplexity int) int
@@ -73,14 +73,16 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CreateLeague func(childComplexity int, data LeagueCreateInput) int
-		CreateMatch  func(childComplexity int, data MatchCreateInput) int
-		CreateTeam   func(childComplexity int, data TeamCreateInput) int
-		CreateUser   func(childComplexity int, data UserCreateInput) int
-		DeleteLeague func(childComplexity int, where prisma.LeagueWhereUniqueInput) int
-		DeleteMatch  func(childComplexity int, where prisma.MatchWhereUniqueInput) int
-		DeleteTeam   func(childComplexity int, where prisma.TeamWhereUniqueInput) int
-		DeleteUser   func(childComplexity int) int
+		AddUserToTeam       func(childComplexity int, where prisma.TeamWhereUniqueInput, data prisma.UserWhereUniqueInput) int
+		CreateLeague        func(childComplexity int, data LeagueCreateInput) int
+		CreateMatch         func(childComplexity int, data MatchCreateInput) int
+		CreateTeam          func(childComplexity int, data TeamCreateInput) int
+		DeleteLeague        func(childComplexity int, where prisma.LeagueWhereUniqueInput) int
+		DeleteMatch         func(childComplexity int, where prisma.MatchWhereUniqueInput) int
+		DeleteTeam          func(childComplexity int, where prisma.TeamWhereUniqueInput) int
+		DeleteUser          func(childComplexity int) int
+		EndMatch            func(childComplexity int, where prisma.MatchWhereUniqueInput, data MatchEndInput) int
+		LoginOrRegisterUser func(childComplexity int, data UserCreateInput) int
 	}
 
 	Query struct {
@@ -135,9 +137,11 @@ type MutationResolver interface {
 	DeleteLeague(ctx context.Context, where prisma.LeagueWhereUniqueInput) (*prisma.League, error)
 	CreateTeam(ctx context.Context, data TeamCreateInput) (*prisma.Team, error)
 	DeleteTeam(ctx context.Context, where prisma.TeamWhereUniqueInput) (*prisma.Team, error)
-	CreateUser(ctx context.Context, data UserCreateInput) (*prisma.User, error)
+	LoginOrRegisterUser(ctx context.Context, data UserCreateInput) (*prisma.User, error)
+	AddUserToTeam(ctx context.Context, where prisma.TeamWhereUniqueInput, data prisma.UserWhereUniqueInput) (*prisma.Team, error)
 	DeleteUser(ctx context.Context) (*prisma.User, error)
 	CreateMatch(ctx context.Context, data MatchCreateInput) (*prisma.Match, error)
+	EndMatch(ctx context.Context, where prisma.MatchWhereUniqueInput, data MatchEndInput) (*prisma.Match, error)
 	DeleteMatch(ctx context.Context, where prisma.MatchWhereUniqueInput) (*prisma.Match, error)
 }
 type QueryResolver interface {
@@ -233,13 +237,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Match.CreatedAt(childComplexity), true
 
-	case "Match.expiration":
-		if e.complexity.Match.Expiration == nil {
-			break
-		}
-
-		return e.complexity.Match.Expiration(childComplexity), true
-
 	case "Match.id":
 		if e.complexity.Match.ID == nil {
 			break
@@ -267,6 +264,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Match.League(childComplexity), true
+
+	case "Match.plannedAt":
+		if e.complexity.Match.PlannedAt == nil {
+			break
+		}
+
+		return e.complexity.Match.PlannedAt(childComplexity), true
 
 	case "Match.user1":
 		if e.complexity.Match.User1 == nil {
@@ -310,6 +314,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Match.Winnerpoints(childComplexity), true
 
+	case "Mutation.addUserToTeam":
+		if e.complexity.Mutation.AddUserToTeam == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_addUserToTeam_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AddUserToTeam(childComplexity, args["where"].(prisma.TeamWhereUniqueInput), args["data"].(prisma.UserWhereUniqueInput)), true
+
 	case "Mutation.createLeague":
 		if e.complexity.Mutation.CreateLeague == nil {
 			break
@@ -345,18 +361,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateTeam(childComplexity, args["data"].(TeamCreateInput)), true
-
-	case "Mutation.createUser":
-		if e.complexity.Mutation.CreateUser == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_createUser_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.CreateUser(childComplexity, args["data"].(UserCreateInput)), true
 
 	case "Mutation.deleteLeague":
 		if e.complexity.Mutation.DeleteLeague == nil {
@@ -400,6 +404,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.DeleteUser(childComplexity), true
+
+	case "Mutation.endMatch":
+		if e.complexity.Mutation.EndMatch == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_endMatch_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.EndMatch(childComplexity, args["where"].(prisma.MatchWhereUniqueInput), args["data"].(MatchEndInput)), true
+
+	case "Mutation.loginOrRegisterUser":
+		if e.complexity.Mutation.LoginOrRegisterUser == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_loginOrRegisterUser_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.LoginOrRegisterUser(childComplexity, args["data"].(UserCreateInput)), true
 
 	case "Query.league":
 		if e.complexity.Query.League == nil {
@@ -676,9 +704,11 @@ var parsedSchema = gqlparser.MustLoadSchema(
   deleteLeague(where: LeagueWhereUniqueInput!): League
   createTeam(data: TeamCreateInput!): Team!
   deleteTeam(where: TeamWhereUniqueInput!): Team
-  createUser(data: UserCreateInput!): User!
+  loginOrRegisterUser(data: UserCreateInput!): User!
+  addUserToTeam(where: TeamWhereUniqueInput!, data: UserWhereUniqueInput!): Team!
   deleteUser: User
   createMatch(data: MatchCreateInput!): Match!
+  endMatch(where: MatchWhereUniqueInput!, data: MatchEndInput!):Match!
   deleteMatch(where: MatchWhereUniqueInput!): Match
 }
 
@@ -703,11 +733,16 @@ input UserCreateInput {
 }
 
 input MatchCreateInput {
-  expiration: DateTime!
+  plannedAt: DateTime!
   isRanked: Boolean!
   league: LeagueWhereUniqueInput!
   user1: UserWhereUniqueInput!
   user2: UserWhereUniqueInput!
+}
+
+input MatchEndInput {
+  user1points: Int!
+  user2points: Int!
 }
 `},
 	&ast.Source{Name: "scheme/query.graphql", Input: `type Query {
@@ -763,8 +798,8 @@ enum MatchOrderByInput {
   id_DESC
   createdAt_ASC
   createdAt_DESC
-  expiration_ASC
-  expiration_DESC
+  plannedAt_ASC
+  plannedAt_DESC
   isRanked_ASC
   isRanked_DESC
   isFinished_ASC
@@ -1006,14 +1041,14 @@ input MatchWhereInput {
   createdAt_lte: DateTime
   createdAt_gt: DateTime
   createdAt_gte: DateTime
-  expiration: DateTime
-  expiration_not: DateTime
-  expiration_in: [DateTime!]
-  expiration_not_in: [DateTime!]
-  expiration_lt: DateTime
-  expiration_lte: DateTime
-  expiration_gt: DateTime
-  expiration_gte: DateTime
+  plannedAt: DateTime
+  plannedAt_not: DateTime
+  plannedAt_in: [DateTime!]
+  plannedAt_not_in: [DateTime!]
+  plannedAt_lt: DateTime
+  plannedAt_lte: DateTime
+  plannedAt_gt: DateTime
+  plannedAt_gte: DateTime
   isRanked: Boolean
   isRanked_not: Boolean
   isFinished: Boolean
@@ -1106,7 +1141,7 @@ type User {
 type Match {
   id: ID!
   createdAt: DateTime!
-  expiration: DateTime!
+  plannedAt: DateTime!
   isRanked: Boolean!
   isFinished: Boolean
   league: League!
@@ -1122,6 +1157,28 @@ type Match {
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_Mutation_addUserToTeam_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 prisma.TeamWhereUniqueInput
+	if tmp, ok := rawArgs["where"]; ok {
+		arg0, err = ec.unmarshalNTeamWhereUniqueInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamWhereUniqueInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg0
+	var arg1 prisma.UserWhereUniqueInput
+	if tmp, ok := rawArgs["data"]; ok {
+		arg1, err = ec.unmarshalNUserWhereUniqueInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserWhereUniqueInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["data"] = arg1
+	return args, nil
+}
 
 func (ec *executionContext) field_Mutation_createLeague_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -1157,20 +1214,6 @@ func (ec *executionContext) field_Mutation_createTeam_args(ctx context.Context, 
 	var arg0 TeamCreateInput
 	if tmp, ok := rawArgs["data"]; ok {
 		arg0, err = ec.unmarshalNTeamCreateInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋgraphqlᚋgeneratedᚐTeamCreateInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["data"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 UserCreateInput
-	if tmp, ok := rawArgs["data"]; ok {
-		arg0, err = ec.unmarshalNUserCreateInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋgraphqlᚋgeneratedᚐUserCreateInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1218,6 +1261,42 @@ func (ec *executionContext) field_Mutation_deleteTeam_args(ctx context.Context, 
 		}
 	}
 	args["where"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_endMatch_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 prisma.MatchWhereUniqueInput
+	if tmp, ok := rawArgs["where"]; ok {
+		arg0, err = ec.unmarshalNMatchWhereUniqueInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐMatchWhereUniqueInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg0
+	var arg1 MatchEndInput
+	if tmp, ok := rawArgs["data"]; ok {
+		arg1, err = ec.unmarshalNMatchEndInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋgraphqlᚋgeneratedᚐMatchEndInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["data"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_loginOrRegisterUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 UserCreateInput
+	if tmp, ok := rawArgs["data"]; ok {
+		arg0, err = ec.unmarshalNUserCreateInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋgraphqlᚋgeneratedᚐUserCreateInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["data"] = arg0
 	return args, nil
 }
 
@@ -1902,7 +1981,7 @@ func (ec *executionContext) _Match_createdAt(ctx context.Context, field graphql.
 	return ec.marshalNDateTime2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Match_expiration(ctx context.Context, field graphql.CollectedField, obj *prisma.Match) (ret graphql.Marshaler) {
+func (ec *executionContext) _Match_plannedAt(ctx context.Context, field graphql.CollectedField, obj *prisma.Match) (ret graphql.Marshaler) {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() {
 		if r := recover(); r != nil {
@@ -1921,7 +2000,7 @@ func (ec *executionContext) _Match_expiration(ctx context.Context, field graphql
 	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Expiration, nil
+		return obj.PlannedAt, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2427,7 +2506,7 @@ func (ec *executionContext) _Mutation_deleteTeam(ctx context.Context, field grap
 	return ec.marshalOTeam2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeam(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_createUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_loginOrRegisterUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() {
 		if r := recover(); r != nil {
@@ -2444,7 +2523,7 @@ func (ec *executionContext) _Mutation_createUser(ctx context.Context, field grap
 	}
 	ctx = graphql.WithResolverContext(ctx, rctx)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_createUser_args(ctx, rawArgs)
+	args, err := ec.field_Mutation_loginOrRegisterUser_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -2453,7 +2532,7 @@ func (ec *executionContext) _Mutation_createUser(ctx context.Context, field grap
 	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateUser(rctx, args["data"].(UserCreateInput))
+		return ec.resolvers.Mutation().LoginOrRegisterUser(rctx, args["data"].(UserCreateInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2469,6 +2548,50 @@ func (ec *executionContext) _Mutation_createUser(ctx context.Context, field grap
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
 	return ec.marshalNUser2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_addUserToTeam(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+		ec.Tracer.EndFieldExecution(ctx)
+	}()
+	rctx := &graphql.ResolverContext{
+		Object:   "Mutation",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_addUserToTeam_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	rctx.Args = args
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AddUserToTeam(rctx, args["where"].(prisma.TeamWhereUniqueInput), args["data"].(prisma.UserWhereUniqueInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*prisma.Team)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+	return ec.marshalNTeam2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeam(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_deleteUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2532,6 +2655,50 @@ func (ec *executionContext) _Mutation_createMatch(ctx context.Context, field gra
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return ec.resolvers.Mutation().CreateMatch(rctx, args["data"].(MatchCreateInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*prisma.Match)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+	return ec.marshalNMatch2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐMatch(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_endMatch(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+		ec.Tracer.EndFieldExecution(ctx)
+	}()
+	rctx := &graphql.ResolverContext{
+		Object:   "Mutation",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_endMatch_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	rctx.Args = args
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().EndMatch(rctx, args["where"].(prisma.MatchWhereUniqueInput), args["data"].(MatchEndInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5165,9 +5332,9 @@ func (ec *executionContext) unmarshalInputMatchCreateInput(ctx context.Context, 
 
 	for k, v := range asMap {
 		switch k {
-		case "expiration":
+		case "plannedAt":
 			var err error
-			it.Expiration, err = ec.unmarshalNDateTime2string(ctx, v)
+			it.PlannedAt, err = ec.unmarshalNDateTime2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5192,6 +5359,30 @@ func (ec *executionContext) unmarshalInputMatchCreateInput(ctx context.Context, 
 		case "user2":
 			var err error
 			it.User2, err = ec.unmarshalNUserWhereUniqueInput2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserWhereUniqueInput(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputMatchEndInput(ctx context.Context, obj interface{}) (MatchEndInput, error) {
+	var it MatchEndInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "user1points":
+			var err error
+			it.User1points, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "user2points":
+			var err error
+			it.User2points, err = ec.unmarshalNInt2int(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5339,51 +5530,51 @@ func (ec *executionContext) unmarshalInputMatchWhereInput(ctx context.Context, o
 			if err != nil {
 				return it, err
 			}
-		case "expiration":
+		case "plannedAt":
 			var err error
-			it.Expiration, err = ec.unmarshalODateTime2ᚖstring(ctx, v)
+			it.PlannedAt, err = ec.unmarshalODateTime2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "expiration_not":
+		case "plannedAt_not":
 			var err error
-			it.ExpirationNot, err = ec.unmarshalODateTime2ᚖstring(ctx, v)
+			it.PlannedAtNot, err = ec.unmarshalODateTime2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "expiration_in":
+		case "plannedAt_in":
 			var err error
-			it.ExpirationIn, err = ec.unmarshalODateTime2ᚕstring(ctx, v)
+			it.PlannedAtIn, err = ec.unmarshalODateTime2ᚕstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "expiration_not_in":
+		case "plannedAt_not_in":
 			var err error
-			it.ExpirationNotIn, err = ec.unmarshalODateTime2ᚕstring(ctx, v)
+			it.PlannedAtNotIn, err = ec.unmarshalODateTime2ᚕstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "expiration_lt":
+		case "plannedAt_lt":
 			var err error
-			it.ExpirationLt, err = ec.unmarshalODateTime2ᚖstring(ctx, v)
+			it.PlannedAtLt, err = ec.unmarshalODateTime2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "expiration_lte":
+		case "plannedAt_lte":
 			var err error
-			it.ExpirationLte, err = ec.unmarshalODateTime2ᚖstring(ctx, v)
+			it.PlannedAtLte, err = ec.unmarshalODateTime2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "expiration_gt":
+		case "plannedAt_gt":
 			var err error
-			it.ExpirationGt, err = ec.unmarshalODateTime2ᚖstring(ctx, v)
+			it.PlannedAtGt, err = ec.unmarshalODateTime2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "expiration_gte":
+		case "plannedAt_gte":
 			var err error
-			it.ExpirationGte, err = ec.unmarshalODateTime2ᚖstring(ctx, v)
+			it.PlannedAtGte, err = ec.unmarshalODateTime2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6700,8 +6891,8 @@ func (ec *executionContext) _Match(ctx context.Context, sel ast.SelectionSet, ob
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "expiration":
-			out.Values[i] = ec._Match_expiration(ctx, field, obj)
+		case "plannedAt":
+			out.Values[i] = ec._Match_plannedAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
@@ -6811,8 +7002,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			}
 		case "deleteTeam":
 			out.Values[i] = ec._Mutation_deleteTeam(ctx, field)
-		case "createUser":
-			out.Values[i] = ec._Mutation_createUser(ctx, field)
+		case "loginOrRegisterUser":
+			out.Values[i] = ec._Mutation_loginOrRegisterUser(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "addUserToTeam":
+			out.Values[i] = ec._Mutation_addUserToTeam(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -6820,6 +7016,11 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_deleteUser(ctx, field)
 		case "createMatch":
 			out.Values[i] = ec._Mutation_createMatch(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "endMatch":
+			out.Values[i] = ec._Mutation_endMatch(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -7425,6 +7626,20 @@ func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.Selec
 	return res
 }
 
+func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {
+	return graphql.UnmarshalInt(v)
+}
+
+func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.SelectionSet, v int) graphql.Marshaler {
+	res := graphql.MarshalInt(v)
+	if res == graphql.Null {
+		if !ec.HasError(graphql.GetResolverContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
+}
+
 func (ec *executionContext) unmarshalNInt2int32(ctx context.Context, v interface{}) (int32, error) {
 	return graphql.UnmarshalInt32(v)
 }
@@ -7563,6 +7778,10 @@ func (ec *executionContext) marshalNMatch2ᚖgithubᚗcomᚋpPrecelᚋBeerKongSe
 
 func (ec *executionContext) unmarshalNMatchCreateInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋgraphqlᚋgeneratedᚐMatchCreateInput(ctx context.Context, v interface{}) (MatchCreateInput, error) {
 	return ec.unmarshalInputMatchCreateInput(ctx, v)
+}
+
+func (ec *executionContext) unmarshalNMatchEndInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋgraphqlᚋgeneratedᚐMatchEndInput(ctx context.Context, v interface{}) (MatchEndInput, error) {
+	return ec.unmarshalInputMatchEndInput(ctx, v)
 }
 
 func (ec *executionContext) unmarshalNMatchWhereInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐMatchWhereInput(ctx context.Context, v interface{}) (prisma.MatchWhereInput, error) {

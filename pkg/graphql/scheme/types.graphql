@@ -33,7 +33,7 @@ type User {
 type Match {
   id: ID!
   createdAt: DateTime!
-  expiration: DateTime!
+  plannedAt: DateTime!
   isRanked: Boolean!
   isFinished: Boolean
   league: League!

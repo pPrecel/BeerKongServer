@@ -3,9 +3,11 @@ type Mutation {
   deleteLeague(where: LeagueWhereUniqueInput!): League
   createTeam(data: TeamCreateInput!): Team!
   deleteTeam(where: TeamWhereUniqueInput!): Team
-  createUser(data: UserCreateInput!): User!
+  loginOrRegisterUser(data: UserCreateInput!): User!
+  addUserToTeam(where: TeamWhereUniqueInput!, data: UserWhereUniqueInput!): Team!
   deleteUser: User
   createMatch(data: MatchCreateInput!): Match!
+  endMatch(where: MatchWhereUniqueInput!, data: MatchEndInput!):Match!
   deleteMatch(where: MatchWhereUniqueInput!): Match
 }
 
@@ -30,9 +32,14 @@ input UserCreateInput {
 }
 
 input MatchCreateInput {
-  expiration: DateTime!
+  plannedAt: DateTime!
   isRanked: Boolean!
   league: LeagueWhereUniqueInput!
   user1: UserWhereUniqueInput!
   user2: UserWhereUniqueInput!
+}
+
+input MatchEndInput {
+  user1points: Int!
+  user2points: Int!
 }

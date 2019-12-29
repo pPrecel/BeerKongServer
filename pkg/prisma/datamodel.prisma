@@ -42,7 +42,7 @@ type UserTeam @relationTable {
 type Match {
   id: ID! @id
   createdAt: DateTime! @createdAt
-  expiration: DateTime!
+  plannedAt: DateTime!
   isRanked: Boolean!
   isFinished: Boolean
   league: League! @relation(name: "LeagueMatches")

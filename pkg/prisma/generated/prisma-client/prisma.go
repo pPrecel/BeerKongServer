@@ -168,7 +168,7 @@ func (client *Client) Match(params MatchWhereUniqueInput) *MatchExec {
 		params,
 		[2]string{"MatchWhereUniqueInput!", "Match"},
 		"match",
-		[]string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
 
 	return &MatchExec{ret}
 }
@@ -202,7 +202,7 @@ func (client *Client) Matches(params *MatchesParams) *MatchExecArray {
 		wparams,
 		[3]string{"MatchWhereInput", "MatchOrderByInput", "Match"},
 		"matches",
-		[]string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
 
 	return &MatchExecArray{ret}
 }
@@ -541,7 +541,7 @@ func (client *Client) CreateMatch(params MatchCreateInput) *MatchExec {
 		params,
 		[2]string{"MatchCreateInput!", "Match"},
 		"createMatch",
-		[]string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
 
 	return &MatchExec{ret}
 }
@@ -559,7 +559,7 @@ func (client *Client) UpdateMatch(params MatchUpdateParams) *MatchExec {
 		},
 		[3]string{"MatchUpdateInput!", "MatchWhereUniqueInput!", "Match"},
 		"updateMatch",
-		[]string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
 
 	return &MatchExec{ret}
 }
@@ -596,7 +596,7 @@ func (client *Client) UpsertMatch(params MatchUpsertParams) *MatchExec {
 		uparams,
 		[4]string{"MatchWhereUniqueInput!", "MatchCreateInput!", "MatchUpdateInput!", "Match"},
 		"upsertMatch",
-		[]string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
 
 	return &MatchExec{ret}
 }
@@ -606,7 +606,7 @@ func (client *Client) DeleteMatch(params MatchWhereUniqueInput) *MatchExec {
 		params,
 		[2]string{"MatchWhereUniqueInput!", "Match"},
 		"deleteMatch",
-		[]string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
 
 	return &MatchExec{ret}
 }
@@ -828,8 +828,8 @@ const (
 	MatchOrderByInputIDDesc           MatchOrderByInput = "id_DESC"
 	MatchOrderByInputCreatedAtAsc     MatchOrderByInput = "createdAt_ASC"
 	MatchOrderByInputCreatedAtDesc    MatchOrderByInput = "createdAt_DESC"
-	MatchOrderByInputExpirationAsc    MatchOrderByInput = "expiration_ASC"
-	MatchOrderByInputExpirationDesc   MatchOrderByInput = "expiration_DESC"
+	MatchOrderByInputPlannedAtAsc     MatchOrderByInput = "plannedAt_ASC"
+	MatchOrderByInputPlannedAtDesc    MatchOrderByInput = "plannedAt_DESC"
 	MatchOrderByInputIsRankedAsc      MatchOrderByInput = "isRanked_ASC"
 	MatchOrderByInputIsRankedDesc     MatchOrderByInput = "isRanked_DESC"
 	MatchOrderByInputIsFinishedAsc    MatchOrderByInput = "isFinished_ASC"
@@ -1106,14 +1106,14 @@ type MatchWhereInput struct {
 	CreatedAtLte      *string           `json:"createdAt_lte,omitempty"`
 	CreatedAtGt       *string           `json:"createdAt_gt,omitempty"`
 	CreatedAtGte      *string           `json:"createdAt_gte,omitempty"`
-	Expiration        *string           `json:"expiration,omitempty"`
-	ExpirationNot     *string           `json:"expiration_not,omitempty"`
-	ExpirationIn      []string          `json:"expiration_in,omitempty"`
-	ExpirationNotIn   []string          `json:"expiration_not_in,omitempty"`
-	ExpirationLt      *string           `json:"expiration_lt,omitempty"`
-	ExpirationLte     *string           `json:"expiration_lte,omitempty"`
-	ExpirationGt      *string           `json:"expiration_gt,omitempty"`
-	ExpirationGte     *string           `json:"expiration_gte,omitempty"`
+	PlannedAt         *string           `json:"plannedAt,omitempty"`
+	PlannedAtNot      *string           `json:"plannedAt_not,omitempty"`
+	PlannedAtIn       []string          `json:"plannedAt_in,omitempty"`
+	PlannedAtNotIn    []string          `json:"plannedAt_not_in,omitempty"`
+	PlannedAtLt       *string           `json:"plannedAt_lt,omitempty"`
+	PlannedAtLte      *string           `json:"plannedAt_lte,omitempty"`
+	PlannedAtGt       *string           `json:"plannedAt_gt,omitempty"`
+	PlannedAtGte      *string           `json:"plannedAt_gte,omitempty"`
 	IsRanked          *bool             `json:"isRanked,omitempty"`
 	IsRankedNot       *bool             `json:"isRanked_not,omitempty"`
 	IsFinished        *bool             `json:"isFinished,omitempty"`
@@ -1318,7 +1318,7 @@ type MatchCreateManyWithoutLeagueInput struct {
 
 type MatchCreateWithoutLeagueInput struct {
 	ID           *string             `json:"id,omitempty"`
-	Expiration   string              `json:"expiration"`
+	PlannedAt    string              `json:"plannedAt"`
 	IsRanked     bool                `json:"isRanked"`
 	IsFinished   *bool               `json:"isFinished,omitempty"`
 	User1        UserCreateOneInput  `json:"user1"`
@@ -1354,7 +1354,7 @@ type MatchCreateManyInput struct {
 
 type MatchCreateInput struct {
 	ID           *string                            `json:"id,omitempty"`
-	Expiration   string                             `json:"expiration"`
+	PlannedAt    string                             `json:"plannedAt"`
 	IsRanked     bool                               `json:"isRanked"`
 	IsFinished   *bool                              `json:"isFinished,omitempty"`
 	League       LeagueCreateOneWithoutMatchesInput `json:"league"`
@@ -1719,7 +1719,7 @@ type MatchUpdateWithWhereUniqueWithoutLeagueInput struct {
 }
 
 type MatchUpdateWithoutLeagueDataInput struct {
-	Expiration   *string                     `json:"expiration,omitempty"`
+	PlannedAt    *string                     `json:"plannedAt,omitempty"`
 	IsRanked     *bool                       `json:"isRanked,omitempty"`
 	IsFinished   *bool                       `json:"isFinished,omitempty"`
 	User1        *UserUpdateOneRequiredInput `json:"user1,omitempty"`
@@ -1767,7 +1767,7 @@ type MatchUpdateWithWhereUniqueNestedInput struct {
 }
 
 type MatchUpdateDataInput struct {
-	Expiration   *string                                     `json:"expiration,omitempty"`
+	PlannedAt    *string                                     `json:"plannedAt,omitempty"`
 	IsRanked     *bool                                       `json:"isRanked,omitempty"`
 	IsFinished   *bool                                       `json:"isFinished,omitempty"`
 	League       *LeagueUpdateOneRequiredWithoutMatchesInput `json:"league,omitempty"`
@@ -1842,14 +1842,14 @@ type MatchScalarWhereInput struct {
 	CreatedAtLte      *string                 `json:"createdAt_lte,omitempty"`
 	CreatedAtGt       *string                 `json:"createdAt_gt,omitempty"`
 	CreatedAtGte      *string                 `json:"createdAt_gte,omitempty"`
-	Expiration        *string                 `json:"expiration,omitempty"`
-	ExpirationNot     *string                 `json:"expiration_not,omitempty"`
-	ExpirationIn      []string                `json:"expiration_in,omitempty"`
-	ExpirationNotIn   []string                `json:"expiration_not_in,omitempty"`
-	ExpirationLt      *string                 `json:"expiration_lt,omitempty"`
-	ExpirationLte     *string                 `json:"expiration_lte,omitempty"`
-	ExpirationGt      *string                 `json:"expiration_gt,omitempty"`
-	ExpirationGte     *string                 `json:"expiration_gte,omitempty"`
+	PlannedAt         *string                 `json:"plannedAt,omitempty"`
+	PlannedAtNot      *string                 `json:"plannedAt_not,omitempty"`
+	PlannedAtIn       []string                `json:"plannedAt_in,omitempty"`
+	PlannedAtNotIn    []string                `json:"plannedAt_not_in,omitempty"`
+	PlannedAtLt       *string                 `json:"plannedAt_lt,omitempty"`
+	PlannedAtLte      *string                 `json:"plannedAt_lte,omitempty"`
+	PlannedAtGt       *string                 `json:"plannedAt_gt,omitempty"`
+	PlannedAtGte      *string                 `json:"plannedAt_gte,omitempty"`
 	IsRanked          *bool                   `json:"isRanked,omitempty"`
 	IsRankedNot       *bool                   `json:"isRanked_not,omitempty"`
 	IsFinished        *bool                   `json:"isFinished,omitempty"`
@@ -1889,7 +1889,7 @@ type MatchUpdateManyWithWhereNestedInput struct {
 }
 
 type MatchUpdateManyDataInput struct {
-	Expiration   *string `json:"expiration,omitempty"`
+	PlannedAt    *string `json:"plannedAt,omitempty"`
 	IsRanked     *bool   `json:"isRanked,omitempty"`
 	IsFinished   *bool   `json:"isFinished,omitempty"`
 	User1points  *int32  `json:"user1points,omitempty"`
@@ -2134,7 +2134,7 @@ type LeagueUpdateManyMutationInput struct {
 }
 
 type MatchUpdateInput struct {
-	Expiration   *string                                     `json:"expiration,omitempty"`
+	PlannedAt    *string                                     `json:"plannedAt,omitempty"`
 	IsRanked     *bool                                       `json:"isRanked,omitempty"`
 	IsFinished   *bool                                       `json:"isFinished,omitempty"`
 	League       *LeagueUpdateOneRequiredWithoutMatchesInput `json:"league,omitempty"`
@@ -2147,7 +2147,7 @@ type MatchUpdateInput struct {
 }
 
 type MatchUpdateManyMutationInput struct {
-	Expiration   *string `json:"expiration,omitempty"`
+	PlannedAt    *string `json:"plannedAt,omitempty"`
 	IsRanked     *bool   `json:"isRanked,omitempty"`
 	IsFinished   *bool   `json:"isFinished,omitempty"`
 	User1points  *int32  `json:"user1points,omitempty"`
@@ -2355,7 +2355,7 @@ func (instance *LeagueExec) Matches(params *MatchesParamsExec) *MatchExecArray {
 		wparams,
 		[3]string{"MatchWhereInput", "MatchOrderByInput", "Match"},
 		"matches",
-		[]string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
 
 	return &MatchExecArray{ret}
 }
@@ -2630,7 +2630,7 @@ func (instance *UserExec) Matches(params *MatchesParamsExec) *MatchExecArray {
 		wparams,
 		[3]string{"MatchWhereInput", "MatchOrderByInput", "Match"},
 		"matches",
-		[]string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
 
 	return &MatchExecArray{ret}
 }
@@ -2746,12 +2746,12 @@ func (instance MatchExecArray) Exec(ctx context.Context) ([]Match, error) {
 	return v, err
 }
 
-var MatchFields = []string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"}
+var MatchFields = []string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"}
 
 type Match struct {
 	ID           string `json:"id"`
 	CreatedAt    string `json:"createdAt"`
-	Expiration   string `json:"expiration"`
+	PlannedAt    string `json:"plannedAt"`
 	IsRanked     bool   `json:"isRanked"`
 	IsFinished   *bool  `json:"isFinished,omitempty"`
 	User1points  *int32 `json:"user1points,omitempty"`
@@ -3024,7 +3024,7 @@ func (instance *MatchEdgeExec) Node() *MatchExec {
 		nil,
 		[2]string{"", "Match"},
 		"node",
-		[]string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
 
 	return &MatchExec{ret}
 }
@@ -3435,7 +3435,7 @@ func (instance *MatchSubscriptionPayloadExec) Node() *MatchExec {
 		nil,
 		[2]string{"", "Match"},
 		"node",
-		[]string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
 
 	return &MatchExec{ret}
 }
@@ -3446,7 +3446,7 @@ func (instance *MatchSubscriptionPayloadExec) PreviousValues() *MatchPreviousVal
 		nil,
 		[2]string{"", "MatchPreviousValues"},
 		"previousValues",
-		[]string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
+		[]string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"})
 
 	return &MatchPreviousValuesExec{ret}
 }
@@ -3515,12 +3515,12 @@ func (instance MatchPreviousValuesExecArray) Exec(ctx context.Context) ([]MatchP
 	return v, err
 }
 
-var MatchPreviousValuesFields = []string{"id", "createdAt", "expiration", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"}
+var MatchPreviousValuesFields = []string{"id", "createdAt", "plannedAt", "isRanked", "isFinished", "user1points", "user2points", "winnerpoints"}
 
 type MatchPreviousValues struct {
 	ID           string `json:"id"`
 	CreatedAt    string `json:"createdAt"`
-	Expiration   string `json:"expiration"`
+	PlannedAt    string `json:"plannedAt"`
 	IsRanked     bool   `json:"isRanked"`
 	IsFinished   *bool  `json:"isFinished,omitempty"`
 	User1points  *int32 `json:"user1points,omitempty"`

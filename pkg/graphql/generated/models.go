@@ -13,11 +13,16 @@ type LeagueCreateInput struct {
 }
 
 type MatchCreateInput struct {
-	Expiration string                         `json:"expiration"`
-	IsRanked   bool                           `json:"isRanked"`
-	League     *prisma.LeagueWhereUniqueInput `json:"league"`
-	User1      *prisma.UserWhereUniqueInput   `json:"user1"`
-	User2      *prisma.UserWhereUniqueInput   `json:"user2"`
+	PlannedAt string                         `json:"plannedAt"`
+	IsRanked  bool                           `json:"isRanked"`
+	League    *prisma.LeagueWhereUniqueInput `json:"league"`
+	User1     *prisma.UserWhereUniqueInput   `json:"user1"`
+	User2     *prisma.UserWhereUniqueInput   `json:"user2"`
+}
+
+type MatchEndInput struct {
+	User1points int `json:"user1points"`
+	User2points int `json:"user2points"`
 }
 
 type TeamCreateInput struct {

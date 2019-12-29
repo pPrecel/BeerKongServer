@@ -51,8 +51,8 @@ enum MatchOrderByInput {
   id_DESC
   createdAt_ASC
   createdAt_DESC
-  expiration_ASC
-  expiration_DESC
+  plannedAt_ASC
+  plannedAt_DESC
   isRanked_ASC
   isRanked_DESC
   isFinished_ASC
@@ -294,14 +294,14 @@ input MatchWhereInput {
   createdAt_lte: DateTime
   createdAt_gt: DateTime
   createdAt_gte: DateTime
-  expiration: DateTime
-  expiration_not: DateTime
-  expiration_in: [DateTime!]
-  expiration_not_in: [DateTime!]
-  expiration_lt: DateTime
-  expiration_lte: DateTime
-  expiration_gt: DateTime
-  expiration_gte: DateTime
+  plannedAt: DateTime
+  plannedAt_not: DateTime
+  plannedAt_in: [DateTime!]
+  plannedAt_not_in: [DateTime!]
+  plannedAt_lt: DateTime
+  plannedAt_lte: DateTime
+  plannedAt_gt: DateTime
+  plannedAt_gte: DateTime
   isRanked: Boolean
   isRanked_not: Boolean
   isFinished: Boolean

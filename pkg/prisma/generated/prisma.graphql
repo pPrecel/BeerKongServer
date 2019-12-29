@@ -402,7 +402,7 @@ scalar Long
 type Match {
   id: ID!
   createdAt: DateTime!
-  expiration: DateTime!
+  plannedAt: DateTime!
   isRanked: Boolean!
   isFinished: Boolean
   league: League!
@@ -422,7 +422,7 @@ type MatchConnection {
 
 input MatchCreateInput {
   id: ID
-  expiration: DateTime!
+  plannedAt: DateTime!
   isRanked: Boolean!
   isFinished: Boolean
   league: LeagueCreateOneWithoutMatchesInput!
@@ -446,7 +446,7 @@ input MatchCreateManyWithoutLeagueInput {
 
 input MatchCreateWithoutLeagueInput {
   id: ID
-  expiration: DateTime!
+  plannedAt: DateTime!
   isRanked: Boolean!
   isFinished: Boolean
   user1: UserCreateOneInput!
@@ -467,8 +467,8 @@ enum MatchOrderByInput {
   id_DESC
   createdAt_ASC
   createdAt_DESC
-  expiration_ASC
-  expiration_DESC
+  plannedAt_ASC
+  plannedAt_DESC
   isRanked_ASC
   isRanked_DESC
   isFinished_ASC
@@ -484,7 +484,7 @@ enum MatchOrderByInput {
 type MatchPreviousValues {
   id: ID!
   createdAt: DateTime!
-  expiration: DateTime!
+  plannedAt: DateTime!
   isRanked: Boolean!
   isFinished: Boolean
   user1points: Int
@@ -515,14 +515,14 @@ input MatchScalarWhereInput {
   createdAt_lte: DateTime
   createdAt_gt: DateTime
   createdAt_gte: DateTime
-  expiration: DateTime
-  expiration_not: DateTime
-  expiration_in: [DateTime!]
-  expiration_not_in: [DateTime!]
-  expiration_lt: DateTime
-  expiration_lte: DateTime
-  expiration_gt: DateTime
-  expiration_gte: DateTime
+  plannedAt: DateTime
+  plannedAt_not: DateTime
+  plannedAt_in: [DateTime!]
+  plannedAt_not_in: [DateTime!]
+  plannedAt_lt: DateTime
+  plannedAt_lte: DateTime
+  plannedAt_gt: DateTime
+  plannedAt_gte: DateTime
   isRanked: Boolean
   isRanked_not: Boolean
   isFinished: Boolean
@@ -575,7 +575,7 @@ input MatchSubscriptionWhereInput {
 }
 
 input MatchUpdateDataInput {
-  expiration: DateTime
+  plannedAt: DateTime
   isRanked: Boolean
   isFinished: Boolean
   league: LeagueUpdateOneRequiredWithoutMatchesInput
@@ -588,7 +588,7 @@ input MatchUpdateDataInput {
 }
 
 input MatchUpdateInput {
-  expiration: DateTime
+  plannedAt: DateTime
   isRanked: Boolean
   isFinished: Boolean
   league: LeagueUpdateOneRequiredWithoutMatchesInput
@@ -601,7 +601,7 @@ input MatchUpdateInput {
 }
 
 input MatchUpdateManyDataInput {
-  expiration: DateTime
+  plannedAt: DateTime
   isRanked: Boolean
   isFinished: Boolean
   user1points: Int
@@ -622,7 +622,7 @@ input MatchUpdateManyInput {
 }
 
 input MatchUpdateManyMutationInput {
-  expiration: DateTime
+  plannedAt: DateTime
   isRanked: Boolean
   isFinished: Boolean
   user1points: Int
@@ -648,7 +648,7 @@ input MatchUpdateManyWithWhereNestedInput {
 }
 
 input MatchUpdateWithoutLeagueDataInput {
-  expiration: DateTime
+  plannedAt: DateTime
   isRanked: Boolean
   isFinished: Boolean
   user1: UserUpdateOneRequiredInput
@@ -704,14 +704,14 @@ input MatchWhereInput {
   createdAt_lte: DateTime
   createdAt_gt: DateTime
   createdAt_gte: DateTime
-  expiration: DateTime
-  expiration_not: DateTime
-  expiration_in: [DateTime!]
-  expiration_not_in: [DateTime!]
-  expiration_lt: DateTime
-  expiration_lte: DateTime
-  expiration_gt: DateTime
-  expiration_gte: DateTime
+  plannedAt: DateTime
+  plannedAt_not: DateTime
+  plannedAt_in: [DateTime!]
+  plannedAt_not_in: [DateTime!]
+  plannedAt_lt: DateTime
+  plannedAt_lte: DateTime
+  plannedAt_gt: DateTime
+  plannedAt_gte: DateTime
   isRanked: Boolean
   isRanked_not: Boolean
   isFinished: Boolean
