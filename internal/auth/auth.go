@@ -38,16 +38,16 @@ type Auth interface {
 }
 
 //HttpClient describe given client used for rest communication
-type HttpClint interface {
+type HttpClient interface {
 	Get(string) (*http.Response, error)
 }
 
 type auth struct {
-	client HttpClint
+	client HttpClient
 }
 
 //New - Create and return new auth struct
-func New(client HttpClint) Auth {
+func New(client HttpClient) Auth {
 	return &auth{client: client}
 }
 
@@ -57,8 +57,8 @@ func (s *auth) GetAccount(tokenId string) (GoogleAccount, error) {
 	if err != nil {
 		return GoogleAccount{}, errors.Wrapf(err, "While Sending request")
 	}
-	if res.StatusCode != http.StatusOK {
 
+	if res.StatusCode != http.StatusOK {
 		return GoogleAccount{}, fmt.Errorf("Google Call fail with Status %s", res.Status)
 	}
 
