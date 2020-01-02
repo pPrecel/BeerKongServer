@@ -10,13 +10,13 @@ func intToInt32(value *int) *int32 {
 	}
 	return converted
 }
-func (r *Resolver) getAdmins() []string {
+func (r *resolver) getAdmins() []string {
 	return []string{
 		"111923199050409291371",
 		"103308660506651951126",
 	}
 }
-func (r *Resolver) checkAccessWithUser(sub string) bool {
+func (r *resolver) checkAccessWithUser(sub string) bool {
 	for _, adminSub := range r.getAdmins() {
 		if sub == adminSub {
 			return true
@@ -33,7 +33,7 @@ func (r *Resolver) checkAccessWithUser(sub string) bool {
 	return true
 }
 
-func (r *Resolver) chooseMatchWhereUniqueInput(match *prisma.Match) * prisma.MatchWhereUniqueInput {
+func (r *resolver) chooseMatchWhereUniqueInput(match *prisma.Match) * prisma.MatchWhereUniqueInput {
 	if match == nil {
 		return nil
 	}
@@ -44,7 +44,7 @@ func (r *Resolver) chooseMatchWhereUniqueInput(match *prisma.Match) * prisma.Mat
 
 	return nil
 }
-func (r *Resolver) chooseTeamWhereUniqueInput(team *prisma.Team) * prisma.TeamWhereUniqueInput {
+func (r *resolver) chooseTeamWhereUniqueInput(team *prisma.Team) * prisma.TeamWhereUniqueInput {
 	if team == nil {
 		return nil
 	}
@@ -58,7 +58,7 @@ func (r *Resolver) chooseTeamWhereUniqueInput(team *prisma.Team) * prisma.TeamWh
 
 	return nil
 }
-func (r *Resolver) chooseLeagueWhereUniqueInput(league *prisma.League) * prisma.LeagueWhereUniqueInput {
+func (r *resolver) chooseLeagueWhereUniqueInput(league *prisma.League) * prisma.LeagueWhereUniqueInput {
 	if league == nil {
 		return nil
 	}
@@ -72,7 +72,7 @@ func (r *Resolver) chooseLeagueWhereUniqueInput(league *prisma.League) * prisma.
 
 	return nil
 }
-func (r *Resolver) chooseUserWhereUniqueInput(user *prisma.User) * prisma.UserWhereUniqueInput {
+func (r *resolver) chooseUserWhereUniqueInput(user *prisma.User) * prisma.UserWhereUniqueInput {
 	if user == nil {
 		return nil
 	}
@@ -90,7 +90,7 @@ func (r *Resolver) chooseUserWhereUniqueInput(user *prisma.User) * prisma.UserWh
 	return nil
 }
 
-func (r *Resolver) isSameMatch(match1 *prisma.Match, match2 *prisma.Match) bool {
+func (r *resolver) isSameMatch(match1 *prisma.Match, match2 *prisma.Match) bool {
 	if match1 == nil || match2 == nil {
 		return false
 	}
@@ -99,7 +99,7 @@ func (r *Resolver) isSameMatch(match1 *prisma.Match, match2 *prisma.Match) bool 
 	}
 	return false
 }
-func (r *Resolver) isSameLeague(league1 *prisma.Team, league2 *prisma.Team) bool {
+func (r *resolver) isSameLeague(league1 *prisma.Team, league2 *prisma.Team) bool {
 	if league1 == nil || league2 == nil {
 		return false
 	}
@@ -108,7 +108,7 @@ func (r *Resolver) isSameLeague(league1 *prisma.Team, league2 *prisma.Team) bool
 	}
 	return false
 }
-func (r *Resolver) isSameTeam(team1 *prisma.Team, team2 *prisma.Team) bool {
+func (r *resolver) isSameTeam(team1 *prisma.Team, team2 *prisma.Team) bool {
 	if team1 == nil || team2 == nil {
 		return false
 	}
@@ -117,7 +117,7 @@ func (r *Resolver) isSameTeam(team1 *prisma.Team, team2 *prisma.Team) bool {
 	}
 	return false
 }
-func (r *Resolver) isSameUser(user1 *prisma.User, user2 *prisma.User) bool {
+func (r *resolver) isSameUser(user1 *prisma.User, user2 *prisma.User) bool {
 	if user1 == nil || user2 == nil {
 		return false
 	}
@@ -133,7 +133,7 @@ func (r *Resolver) isSameUser(user1 *prisma.User, user2 *prisma.User) bool {
 	return false
 }
 
-func (r *Resolver) fillUserWhereUniqueInput(user *prisma.UserWhereUniqueInput) *prisma.UserWhereUniqueInput {
+func (r *resolver) fillUserWhereUniqueInput(user *prisma.UserWhereUniqueInput) *prisma.UserWhereUniqueInput {
 	if user == nil {
 		return nil
 	}

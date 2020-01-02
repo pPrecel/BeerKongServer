@@ -86,14 +86,21 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		League  func(childComplexity int, where prisma.LeagueWhereUniqueInput) int
-		Leagues func(childComplexity int, where *prisma.LeagueWhereInput, orderBy *prisma.LeagueOrderByInput, skip *int, after *string, before *string, first *int, last *int) int
-		Match   func(childComplexity int, where prisma.MatchWhereUniqueInput) int
-		Matches func(childComplexity int, where *prisma.MatchWhereInput, orderBy *prisma.MatchOrderByInput, skip *int, after *string, before *string, first *int, last *int) int
-		Team    func(childComplexity int, where prisma.TeamWhereUniqueInput) int
-		Teams   func(childComplexity int, where *prisma.TeamWhereInput, orderBy *prisma.TeamOrderByInput, skip *int, after *string, before *string, first *int, last *int) int
-		User    func(childComplexity int, where prisma.UserWhereUniqueInput) int
-		Users   func(childComplexity int, where *prisma.UserWhereInput, orderBy *prisma.UserOrderByInput, skip *int, after *string, before *string, first *int, last *int) int
+		League                func(childComplexity int, where prisma.LeagueWhereUniqueInput) int
+		LeagueFinishedMatches func(childComplexity int, where prisma.LeagueWhereUniqueInput) int
+		LeaguePoints          func(childComplexity int, where prisma.LeagueWhereUniqueInput) int
+		Leagues               func(childComplexity int, where *prisma.LeagueWhereInput, orderBy *prisma.LeagueOrderByInput, skip *int, after *string, before *string, first *int, last *int) int
+		Match                 func(childComplexity int, where prisma.MatchWhereUniqueInput) int
+		Matches               func(childComplexity int, where *prisma.MatchWhereInput, orderBy *prisma.MatchOrderByInput, skip *int, after *string, before *string, first *int, last *int) int
+		Team                  func(childComplexity int, where prisma.TeamWhereUniqueInput) int
+		TeamFinishedMatches   func(childComplexity int, where prisma.TeamWhereUniqueInput) int
+		TeamPoints            func(childComplexity int, where prisma.TeamWhereUniqueInput) int
+		Teams                 func(childComplexity int, where *prisma.TeamWhereInput, orderBy *prisma.TeamOrderByInput, skip *int, after *string, before *string, first *int, last *int) int
+		User                  func(childComplexity int, where prisma.UserWhereUniqueInput) int
+		UserFinishedMatches   func(childComplexity int, where prisma.UserWhereUniqueInput) int
+		UserPoints            func(childComplexity int, where prisma.UserWhereUniqueInput) int
+		UserPointsInLeague    func(childComplexity int, where prisma.UserWhereUniqueInput, in prisma.LeagueWhereUniqueInput) int
+		Users                 func(childComplexity int, where *prisma.UserWhereInput, orderBy *prisma.UserOrderByInput, skip *int, after *string, before *string, first *int, last *int) int
 	}
 
 	Team struct {
@@ -103,7 +110,6 @@ type ComplexityRoot struct {
 		League      func(childComplexity int) int
 		Name        func(childComplexity int) int
 		Owner       func(childComplexity int) int
-		Points      func(childComplexity int) int
 		Users       func(childComplexity int) int
 	}
 
@@ -116,7 +122,6 @@ type ComplexityRoot struct {
 		OwnedLeagues func(childComplexity int) int
 		OwnedTeams   func(childComplexity int) int
 		Picture      func(childComplexity int) int
-		Points       func(childComplexity int) int
 		Sub          func(childComplexity int) int
 		Teams        func(childComplexity int) int
 	}
@@ -149,24 +154,29 @@ type MutationResolver interface {
 }
 type QueryResolver interface {
 	League(ctx context.Context, where prisma.LeagueWhereUniqueInput) (*prisma.League, error)
+	LeaguePoints(ctx context.Context, where prisma.LeagueWhereUniqueInput) (*int, error)
+	LeagueFinishedMatches(ctx context.Context, where prisma.LeagueWhereUniqueInput) (*int, error)
 	Leagues(ctx context.Context, where *prisma.LeagueWhereInput, orderBy *prisma.LeagueOrderByInput, skip *int, after *string, before *string, first *int, last *int) ([]*prisma.League, error)
 	Team(ctx context.Context, where prisma.TeamWhereUniqueInput) (*prisma.Team, error)
+	TeamPoints(ctx context.Context, where prisma.TeamWhereUniqueInput) (*int, error)
+	TeamFinishedMatches(ctx context.Context, where prisma.TeamWhereUniqueInput) (*int, error)
 	Teams(ctx context.Context, where *prisma.TeamWhereInput, orderBy *prisma.TeamOrderByInput, skip *int, after *string, before *string, first *int, last *int) ([]*prisma.Team, error)
 	User(ctx context.Context, where prisma.UserWhereUniqueInput) (*prisma.User, error)
+	UserPoints(ctx context.Context, where prisma.UserWhereUniqueInput) (*int, error)
+	UserPointsInLeague(ctx context.Context, where prisma.UserWhereUniqueInput, in prisma.LeagueWhereUniqueInput) (*int, error)
+	UserFinishedMatches(ctx context.Context, where prisma.UserWhereUniqueInput) (*int, error)
 	Users(ctx context.Context, where *prisma.UserWhereInput, orderBy *prisma.UserOrderByInput, skip *int, after *string, before *string, first *int, last *int) ([]*prisma.User, error)
 	Match(ctx context.Context, where prisma.MatchWhereUniqueInput) (*prisma.Match, error)
 	Matches(ctx context.Context, where *prisma.MatchWhereInput, orderBy *prisma.MatchOrderByInput, skip *int, after *string, before *string, first *int, last *int) ([]*prisma.Match, error)
 }
 type TeamResolver interface {
 	League(ctx context.Context, obj *prisma.Team) (*prisma.League, error)
-
 	Users(ctx context.Context, obj *prisma.Team) ([]prisma.User, error)
 	Owner(ctx context.Context, obj *prisma.Team) (*prisma.User, error)
 }
 type UserResolver interface {
 	Teams(ctx context.Context, obj *prisma.User) ([]prisma.Team, error)
 	Leagues(ctx context.Context, obj *prisma.User) ([]prisma.League, error)
-
 	OwnedTeams(ctx context.Context, obj *prisma.User) ([]prisma.Team, error)
 	OwnedLeagues(ctx context.Context, obj *prisma.User) ([]prisma.League, error)
 	Matches(ctx context.Context, obj *prisma.User) ([]prisma.Match, error)
@@ -447,6 +457,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.League(childComplexity, args["where"].(prisma.LeagueWhereUniqueInput)), true
 
+	case "Query.leagueFinishedMatches":
+		if e.complexity.Query.LeagueFinishedMatches == nil {
+			break
+		}
+
+		args, err := ec.field_Query_leagueFinishedMatches_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.LeagueFinishedMatches(childComplexity, args["where"].(prisma.LeagueWhereUniqueInput)), true
+
+	case "Query.leaguePoints":
+		if e.complexity.Query.LeaguePoints == nil {
+			break
+		}
+
+		args, err := ec.field_Query_leaguePoints_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.LeaguePoints(childComplexity, args["where"].(prisma.LeagueWhereUniqueInput)), true
+
 	case "Query.leagues":
 		if e.complexity.Query.Leagues == nil {
 			break
@@ -495,6 +529,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Team(childComplexity, args["where"].(prisma.TeamWhereUniqueInput)), true
 
+	case "Query.teamFinishedMatches":
+		if e.complexity.Query.TeamFinishedMatches == nil {
+			break
+		}
+
+		args, err := ec.field_Query_teamFinishedMatches_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.TeamFinishedMatches(childComplexity, args["where"].(prisma.TeamWhereUniqueInput)), true
+
+	case "Query.teamPoints":
+		if e.complexity.Query.TeamPoints == nil {
+			break
+		}
+
+		args, err := ec.field_Query_teamPoints_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.TeamPoints(childComplexity, args["where"].(prisma.TeamWhereUniqueInput)), true
+
 	case "Query.teams":
 		if e.complexity.Query.Teams == nil {
 			break
@@ -518,6 +576,42 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.User(childComplexity, args["where"].(prisma.UserWhereUniqueInput)), true
+
+	case "Query.userFinishedMatches":
+		if e.complexity.Query.UserFinishedMatches == nil {
+			break
+		}
+
+		args, err := ec.field_Query_userFinishedMatches_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.UserFinishedMatches(childComplexity, args["where"].(prisma.UserWhereUniqueInput)), true
+
+	case "Query.userPoints":
+		if e.complexity.Query.UserPoints == nil {
+			break
+		}
+
+		args, err := ec.field_Query_userPoints_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.UserPoints(childComplexity, args["where"].(prisma.UserWhereUniqueInput)), true
+
+	case "Query.userPointsInLeague":
+		if e.complexity.Query.UserPointsInLeague == nil {
+			break
+		}
+
+		args, err := ec.field_Query_userPointsInLeague_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.UserPointsInLeague(childComplexity, args["where"].(prisma.UserWhereUniqueInput), args["in"].(prisma.LeagueWhereUniqueInput)), true
 
 	case "Query.users":
 		if e.complexity.Query.Users == nil {
@@ -572,13 +666,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Team.Owner(childComplexity), true
-
-	case "Team.points":
-		if e.complexity.Team.Points == nil {
-			break
-		}
-
-		return e.complexity.Team.Points(childComplexity), true
 
 	case "Team.users":
 		if e.complexity.Team.Users == nil {
@@ -642,13 +729,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.User.Picture(childComplexity), true
-
-	case "User.points":
-		if e.complexity.User.Points == nil {
-			break
-		}
-
-		return e.complexity.User.Points(childComplexity), true
 
 	case "User.sub":
 		if e.complexity.User.Sub == nil {
@@ -774,10 +854,17 @@ input MatchEndInput {
 `},
 	&ast.Source{Name: "scheme/query.graphql", Input: `type Query {
   league(where: LeagueWhereUniqueInput!): League
+  leaguePoints(where: LeagueWhereUniqueInput!): Int
+  leagueFinishedMatches(where: LeagueWhereUniqueInput!): Int
   leagues(where: LeagueWhereInput, orderBy: LeagueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [League]!
   team(where: TeamWhereUniqueInput!): Team
+  teamPoints(where: TeamWhereUniqueInput!): Int
+  teamFinishedMatches(where: TeamWhereUniqueInput!): Int
   teams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team]!
   user(where: UserWhereUniqueInput!): User
+  userPoints(where: UserWhereUniqueInput!): Int
+  userPointsInLeague(where: UserWhereUniqueInput!, in: LeagueWhereUniqueInput!): Int
+  userFinishedMatches(where: UserWhereUniqueInput!): Int
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   match(where: MatchWhereUniqueInput!): Match
   matches(where: MatchWhereInput, orderBy: MatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Match]!
@@ -818,8 +905,6 @@ enum UserOrderByInput {
   sub_DESC
   picture_ASC
   picture_DESC
-  points_ASC
-  points_DESC
 }
 
 enum MatchOrderByInput {
@@ -1030,14 +1115,6 @@ input UserWhereInput {
   picture_not_starts_with: String
   picture_ends_with: String
   picture_not_ends_with: String
-  points: Int
-  points_not: Int
-  points_in: [Int!]
-  points_not_in: [Int!]
-  points_lt: Int
-  points_lte: Int
-  points_gt: Int
-  points_gte: Int
   teams_every: TeamWhereInput
   teams_some: TeamWhereInput
   teams_none: TeamWhereInput
@@ -1162,7 +1239,6 @@ type Team {
   description: String!
   name: String!
   league: League!
-  points: Int!
   users: [User!]
   owner: User!
 }
@@ -1175,7 +1251,6 @@ type User {
   picture: String!
   teams: [Team!]
   leagues: [League!]
-  points: Int!
   ownedTeams: [Team!]
   ownedLeagues: [League!]
   matches: [Match!]!
@@ -1357,6 +1432,34 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_leagueFinishedMatches_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 prisma.LeagueWhereUniqueInput
+	if tmp, ok := rawArgs["where"]; ok {
+		arg0, err = ec.unmarshalNLeagueWhereUniqueInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueWhereUniqueInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_leaguePoints_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 prisma.LeagueWhereUniqueInput
+	if tmp, ok := rawArgs["where"]; ok {
+		arg0, err = ec.unmarshalNLeagueWhereUniqueInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueWhereUniqueInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Query_league_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -1509,6 +1612,34 @@ func (ec *executionContext) field_Query_matches_args(ctx context.Context, rawArg
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_teamFinishedMatches_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 prisma.TeamWhereUniqueInput
+	if tmp, ok := rawArgs["where"]; ok {
+		arg0, err = ec.unmarshalNTeamWhereUniqueInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamWhereUniqueInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_teamPoints_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 prisma.TeamWhereUniqueInput
+	if tmp, ok := rawArgs["where"]; ok {
+		arg0, err = ec.unmarshalNTeamWhereUniqueInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamWhereUniqueInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Query_team_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -1582,6 +1713,56 @@ func (ec *executionContext) field_Query_teams_args(ctx context.Context, rawArgs 
 		}
 	}
 	args["last"] = arg6
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_userFinishedMatches_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 prisma.UserWhereUniqueInput
+	if tmp, ok := rawArgs["where"]; ok {
+		arg0, err = ec.unmarshalNUserWhereUniqueInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserWhereUniqueInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_userPointsInLeague_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 prisma.UserWhereUniqueInput
+	if tmp, ok := rawArgs["where"]; ok {
+		arg0, err = ec.unmarshalNUserWhereUniqueInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserWhereUniqueInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg0
+	var arg1 prisma.LeagueWhereUniqueInput
+	if tmp, ok := rawArgs["in"]; ok {
+		arg1, err = ec.unmarshalNLeagueWhereUniqueInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueWhereUniqueInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["in"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_userPoints_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 prisma.UserWhereUniqueInput
+	if tmp, ok := rawArgs["where"]; ok {
+		arg0, err = ec.unmarshalNUserWhereUniqueInput2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserWhereUniqueInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg0
 	return args, nil
 }
 
@@ -2841,6 +3022,88 @@ func (ec *executionContext) _Query_league(ctx context.Context, field graphql.Col
 	return ec.marshalOLeague2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeague(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_leaguePoints(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+		ec.Tracer.EndFieldExecution(ctx)
+	}()
+	rctx := &graphql.ResolverContext{
+		Object:   "Query",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_leaguePoints_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	rctx.Args = args
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().LeaguePoints(rctx, args["where"].(prisma.LeagueWhereUniqueInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_leagueFinishedMatches(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+		ec.Tracer.EndFieldExecution(ctx)
+	}()
+	rctx := &graphql.ResolverContext{
+		Object:   "Query",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_leagueFinishedMatches_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	rctx.Args = args
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().LeagueFinishedMatches(rctx, args["where"].(prisma.LeagueWhereUniqueInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_leagues(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() {
@@ -2926,6 +3189,88 @@ func (ec *executionContext) _Query_team(ctx context.Context, field graphql.Colle
 	return ec.marshalOTeam2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeam(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_teamPoints(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+		ec.Tracer.EndFieldExecution(ctx)
+	}()
+	rctx := &graphql.ResolverContext{
+		Object:   "Query",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_teamPoints_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	rctx.Args = args
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().TeamPoints(rctx, args["where"].(prisma.TeamWhereUniqueInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_teamFinishedMatches(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+		ec.Tracer.EndFieldExecution(ctx)
+	}()
+	rctx := &graphql.ResolverContext{
+		Object:   "Query",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_teamFinishedMatches_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	rctx.Args = args
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().TeamFinishedMatches(rctx, args["where"].(prisma.TeamWhereUniqueInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_teams(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() {
@@ -3009,6 +3354,129 @@ func (ec *executionContext) _Query_user(ctx context.Context, field graphql.Colle
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
 	return ec.marshalOUser2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_userPoints(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+		ec.Tracer.EndFieldExecution(ctx)
+	}()
+	rctx := &graphql.ResolverContext{
+		Object:   "Query",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_userPoints_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	rctx.Args = args
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().UserPoints(rctx, args["where"].(prisma.UserWhereUniqueInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_userPointsInLeague(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+		ec.Tracer.EndFieldExecution(ctx)
+	}()
+	rctx := &graphql.ResolverContext{
+		Object:   "Query",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_userPointsInLeague_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	rctx.Args = args
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().UserPointsInLeague(rctx, args["where"].(prisma.UserWhereUniqueInput), args["in"].(prisma.LeagueWhereUniqueInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_userFinishedMatches(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+		ec.Tracer.EndFieldExecution(ctx)
+	}()
+	rctx := &graphql.ResolverContext{
+		Object:   "Query",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_userFinishedMatches_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	rctx.Args = args
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().UserFinishedMatches(rctx, args["where"].(prisma.UserWhereUniqueInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_users(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -3400,43 +3868,6 @@ func (ec *executionContext) _Team_league(ctx context.Context, field graphql.Coll
 	return ec.marshalNLeague2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeague(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Team_points(ctx context.Context, field graphql.CollectedField, obj *prisma.Team) (ret graphql.Marshaler) {
-	ctx = ec.Tracer.StartFieldExecution(ctx, field)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-		ec.Tracer.EndFieldExecution(ctx)
-	}()
-	rctx := &graphql.ResolverContext{
-		Object:   "Team",
-		Field:    field,
-		Args:     nil,
-		IsMethod: false,
-	}
-	ctx = graphql.WithResolverContext(ctx, rctx)
-	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Points, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !ec.HasError(rctx) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int32)
-	rctx.Result = res
-	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalNInt2int32(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Team_users(ctx context.Context, field graphql.CollectedField, obj *prisma.Team) (ret graphql.Marshaler) {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() {
@@ -3759,43 +4190,6 @@ func (ec *executionContext) _User_leagues(ctx context.Context, field graphql.Col
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
 	return ec.marshalOLeague2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeague(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _User_points(ctx context.Context, field graphql.CollectedField, obj *prisma.User) (ret graphql.Marshaler) {
-	ctx = ec.Tracer.StartFieldExecution(ctx, field)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-		ec.Tracer.EndFieldExecution(ctx)
-	}()
-	rctx := &graphql.ResolverContext{
-		Object:   "User",
-		Field:    field,
-		Args:     nil,
-		IsMethod: false,
-	}
-	ctx = graphql.WithResolverContext(ctx, rctx)
-	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Points, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !ec.HasError(rctx) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int32)
-	rctx.Result = res
-	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalNInt2int32(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _User_ownedTeams(ctx context.Context, field graphql.CollectedField, obj *prisma.User) (ret graphql.Marshaler) {
@@ -6812,54 +7206,6 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			if err != nil {
 				return it, err
 			}
-		case "points":
-			var err error
-			it.Points, err = ec.unmarshalOInt2ᚖint32(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "points_not":
-			var err error
-			it.PointsNot, err = ec.unmarshalOInt2ᚖint32(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "points_in":
-			var err error
-			it.PointsIn, err = ec.unmarshalOInt2ᚕint32(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "points_not_in":
-			var err error
-			it.PointsNotIn, err = ec.unmarshalOInt2ᚕint32(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "points_lt":
-			var err error
-			it.PointsLt, err = ec.unmarshalOInt2ᚖint32(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "points_lte":
-			var err error
-			it.PointsLte, err = ec.unmarshalOInt2ᚖint32(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "points_gt":
-			var err error
-			it.PointsGt, err = ec.unmarshalOInt2ᚖint32(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "points_gte":
-			var err error
-			it.PointsGte, err = ec.unmarshalOInt2ᚖint32(ctx, v)
-			if err != nil {
-				return it, err
-			}
 		case "teams_every":
 			var err error
 			it.TeamsEvery, err = ec.unmarshalOTeamWhereInput2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamWhereInput(ctx, v)
@@ -7283,6 +7629,28 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				res = ec._Query_league(ctx, field)
 				return res
 			})
+		case "leaguePoints":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_leaguePoints(ctx, field)
+				return res
+			})
+		case "leagueFinishedMatches":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_leagueFinishedMatches(ctx, field)
+				return res
+			})
 		case "leagues":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -7308,6 +7676,28 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				res = ec._Query_team(ctx, field)
 				return res
 			})
+		case "teamPoints":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_teamPoints(ctx, field)
+				return res
+			})
+		case "teamFinishedMatches":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_teamFinishedMatches(ctx, field)
+				return res
+			})
 		case "teams":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -7331,6 +7721,39 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_user(ctx, field)
+				return res
+			})
+		case "userPoints":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_userPoints(ctx, field)
+				return res
+			})
+		case "userPointsInLeague":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_userPointsInLeague(ctx, field)
+				return res
+			})
+		case "userFinishedMatches":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_userFinishedMatches(ctx, field)
 				return res
 			})
 		case "users":
@@ -7432,11 +7855,6 @@ func (ec *executionContext) _Team(ctx context.Context, sel ast.SelectionSet, obj
 				}
 				return res
 			})
-		case "points":
-			out.Values[i] = ec._Team_points(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "users":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -7531,11 +7949,6 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 				res = ec._User_leagues(ctx, field, obj)
 				return res
 			})
-		case "points":
-			out.Values[i] = ec._User_points(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "ownedTeams":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {

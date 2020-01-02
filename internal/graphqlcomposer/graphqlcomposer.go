@@ -6,7 +6,7 @@ import (
 )
 
 type Composer interface {
-	Resolver(user *prisma.User) *resolver2.Resolver
+	Resolver(user *prisma.User) resolver2.Resolver
 }
 
 type composer struct {
@@ -17,6 +17,6 @@ func New(client *prisma.Client) Composer {
 	return &composer{client: client}
 }
 
-func (c *composer) Resolver(user *prisma.User) *resolver2.Resolver {
+func (c *composer) Resolver(user *prisma.User) resolver2.Resolver {
 	return resolver2.New(c.client, user)
 }

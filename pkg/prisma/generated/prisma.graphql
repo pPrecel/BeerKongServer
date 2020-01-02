@@ -825,7 +825,6 @@ type Team {
   createdAt: DateTime!
   description: String!
   name: String!
-  points: Int!
   league: League!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
   owner: User!
@@ -841,7 +840,6 @@ input TeamCreateInput {
   id: ID
   description: String!
   name: String!
-  points: Int
   league: LeagueCreateOneWithoutTeamsInput!
   users: UserCreateManyWithoutTeamsInput
   owner: UserCreateOneWithoutOwnedTeamsInput!
@@ -866,7 +864,6 @@ input TeamCreateWithoutLeagueInput {
   id: ID
   description: String!
   name: String!
-  points: Int
   users: UserCreateManyWithoutTeamsInput
   owner: UserCreateOneWithoutOwnedTeamsInput!
 }
@@ -875,7 +872,6 @@ input TeamCreateWithoutOwnerInput {
   id: ID
   description: String!
   name: String!
-  points: Int
   league: LeagueCreateOneWithoutTeamsInput!
   users: UserCreateManyWithoutTeamsInput
 }
@@ -884,7 +880,6 @@ input TeamCreateWithoutUsersInput {
   id: ID
   description: String!
   name: String!
-  points: Int
   league: LeagueCreateOneWithoutTeamsInput!
   owner: UserCreateOneWithoutOwnedTeamsInput!
 }
@@ -903,8 +898,6 @@ enum TeamOrderByInput {
   description_DESC
   name_ASC
   name_DESC
-  points_ASC
-  points_DESC
 }
 
 type TeamPreviousValues {
@@ -912,7 +905,6 @@ type TeamPreviousValues {
   createdAt: DateTime!
   description: String!
   name: String!
-  points: Int!
 }
 
 input TeamScalarWhereInput {
@@ -966,14 +958,6 @@ input TeamScalarWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
-  points: Int
-  points_not: Int
-  points_in: [Int!]
-  points_not_in: [Int!]
-  points_lt: Int
-  points_lte: Int
-  points_gt: Int
-  points_gte: Int
   AND: [TeamScalarWhereInput!]
   OR: [TeamScalarWhereInput!]
   NOT: [TeamScalarWhereInput!]
@@ -1000,7 +984,6 @@ input TeamSubscriptionWhereInput {
 input TeamUpdateInput {
   description: String
   name: String
-  points: Int
   league: LeagueUpdateOneRequiredWithoutTeamsInput
   users: UserUpdateManyWithoutTeamsInput
   owner: UserUpdateOneRequiredWithoutOwnedTeamsInput
@@ -1009,13 +992,11 @@ input TeamUpdateInput {
 input TeamUpdateManyDataInput {
   description: String
   name: String
-  points: Int
 }
 
 input TeamUpdateManyMutationInput {
   description: String
   name: String
-  points: Int
 }
 
 input TeamUpdateManyWithoutLeagueInput {
@@ -1062,7 +1043,6 @@ input TeamUpdateManyWithWhereNestedInput {
 input TeamUpdateWithoutLeagueDataInput {
   description: String
   name: String
-  points: Int
   users: UserUpdateManyWithoutTeamsInput
   owner: UserUpdateOneRequiredWithoutOwnedTeamsInput
 }
@@ -1070,7 +1050,6 @@ input TeamUpdateWithoutLeagueDataInput {
 input TeamUpdateWithoutOwnerDataInput {
   description: String
   name: String
-  points: Int
   league: LeagueUpdateOneRequiredWithoutTeamsInput
   users: UserUpdateManyWithoutTeamsInput
 }
@@ -1078,7 +1057,6 @@ input TeamUpdateWithoutOwnerDataInput {
 input TeamUpdateWithoutUsersDataInput {
   description: String
   name: String
-  points: Int
   league: LeagueUpdateOneRequiredWithoutTeamsInput
   owner: UserUpdateOneRequiredWithoutOwnedTeamsInput
 }
@@ -1167,14 +1145,6 @@ input TeamWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
-  points: Int
-  points_not: Int
-  points_in: [Int!]
-  points_not_in: [Int!]
-  points_lt: Int
-  points_lte: Int
-  points_gt: Int
-  points_gte: Int
   league: LeagueWhereInput
   users_every: UserWhereInput
   users_some: UserWhereInput
@@ -1196,7 +1166,6 @@ type User {
   name: String!
   sub: String!
   picture: String!
-  points: Int!
   teams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team!]
   leagues(where: LeagueWhereInput, orderBy: LeagueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [League!]
   ownedTeams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team!]
@@ -1215,7 +1184,6 @@ input UserCreateInput {
   name: String!
   sub: String!
   picture: String!
-  points: Int
   teams: TeamCreateManyWithoutUsersInput
   leagues: LeagueCreateManyWithoutUsersInput
   ownedTeams: TeamCreateManyWithoutOwnerInput
@@ -1253,7 +1221,6 @@ input UserCreateWithoutLeaguesInput {
   name: String!
   sub: String!
   picture: String!
-  points: Int
   teams: TeamCreateManyWithoutUsersInput
   ownedTeams: TeamCreateManyWithoutOwnerInput
   ownedLeagues: LeagueCreateManyWithoutOwnerInput
@@ -1265,7 +1232,6 @@ input UserCreateWithoutOwnedLeaguesInput {
   name: String!
   sub: String!
   picture: String!
-  points: Int
   teams: TeamCreateManyWithoutUsersInput
   leagues: LeagueCreateManyWithoutUsersInput
   ownedTeams: TeamCreateManyWithoutOwnerInput
@@ -1277,7 +1243,6 @@ input UserCreateWithoutOwnedTeamsInput {
   name: String!
   sub: String!
   picture: String!
-  points: Int
   teams: TeamCreateManyWithoutUsersInput
   leagues: LeagueCreateManyWithoutUsersInput
   ownedLeagues: LeagueCreateManyWithoutOwnerInput
@@ -1289,7 +1254,6 @@ input UserCreateWithoutTeamsInput {
   name: String!
   sub: String!
   picture: String!
-  points: Int
   leagues: LeagueCreateManyWithoutUsersInput
   ownedTeams: TeamCreateManyWithoutOwnerInput
   ownedLeagues: LeagueCreateManyWithoutOwnerInput
@@ -1312,8 +1276,6 @@ enum UserOrderByInput {
   sub_DESC
   picture_ASC
   picture_DESC
-  points_ASC
-  points_DESC
 }
 
 type UserPreviousValues {
@@ -1322,7 +1284,6 @@ type UserPreviousValues {
   name: String!
   sub: String!
   picture: String!
-  points: Int!
 }
 
 input UserScalarWhereInput {
@@ -1390,14 +1351,6 @@ input UserScalarWhereInput {
   picture_not_starts_with: String
   picture_ends_with: String
   picture_not_ends_with: String
-  points: Int
-  points_not: Int
-  points_in: [Int!]
-  points_not_in: [Int!]
-  points_lt: Int
-  points_lte: Int
-  points_gt: Int
-  points_gte: Int
   AND: [UserScalarWhereInput!]
   OR: [UserScalarWhereInput!]
   NOT: [UserScalarWhereInput!]
@@ -1425,7 +1378,6 @@ input UserUpdateDataInput {
   name: String
   sub: String
   picture: String
-  points: Int
   teams: TeamUpdateManyWithoutUsersInput
   leagues: LeagueUpdateManyWithoutUsersInput
   ownedTeams: TeamUpdateManyWithoutOwnerInput
@@ -1437,7 +1389,6 @@ input UserUpdateInput {
   name: String
   sub: String
   picture: String
-  points: Int
   teams: TeamUpdateManyWithoutUsersInput
   leagues: LeagueUpdateManyWithoutUsersInput
   ownedTeams: TeamUpdateManyWithoutOwnerInput
@@ -1449,14 +1400,12 @@ input UserUpdateManyDataInput {
   name: String
   sub: String
   picture: String
-  points: Int
 }
 
 input UserUpdateManyMutationInput {
   name: String
   sub: String
   picture: String
-  points: Int
 }
 
 input UserUpdateManyWithoutLeaguesInput {
@@ -1522,7 +1471,6 @@ input UserUpdateWithoutLeaguesDataInput {
   name: String
   sub: String
   picture: String
-  points: Int
   teams: TeamUpdateManyWithoutUsersInput
   ownedTeams: TeamUpdateManyWithoutOwnerInput
   ownedLeagues: LeagueUpdateManyWithoutOwnerInput
@@ -1533,7 +1481,6 @@ input UserUpdateWithoutOwnedLeaguesDataInput {
   name: String
   sub: String
   picture: String
-  points: Int
   teams: TeamUpdateManyWithoutUsersInput
   leagues: LeagueUpdateManyWithoutUsersInput
   ownedTeams: TeamUpdateManyWithoutOwnerInput
@@ -1544,7 +1491,6 @@ input UserUpdateWithoutOwnedTeamsDataInput {
   name: String
   sub: String
   picture: String
-  points: Int
   teams: TeamUpdateManyWithoutUsersInput
   leagues: LeagueUpdateManyWithoutUsersInput
   ownedLeagues: LeagueUpdateManyWithoutOwnerInput
@@ -1555,7 +1501,6 @@ input UserUpdateWithoutTeamsDataInput {
   name: String
   sub: String
   picture: String
-  points: Int
   leagues: LeagueUpdateManyWithoutUsersInput
   ownedTeams: TeamUpdateManyWithoutOwnerInput
   ownedLeagues: LeagueUpdateManyWithoutOwnerInput
@@ -1664,14 +1609,6 @@ input UserWhereInput {
   picture_not_starts_with: String
   picture_ends_with: String
   picture_not_ends_with: String
-  points: Int
-  points_not: Int
-  points_in: [Int!]
-  points_not_in: [Int!]
-  points_lt: Int
-  points_lte: Int
-  points_gt: Int
-  points_gte: Int
   teams_every: TeamWhereInput
   teams_some: TeamWhereInput
   teams_none: TeamWhereInput

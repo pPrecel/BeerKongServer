@@ -266,7 +266,7 @@ func (client *Client) Team(params TeamWhereUniqueInput) *TeamExec {
 		params,
 		[2]string{"TeamWhereUniqueInput!", "Team"},
 		"team",
-		[]string{"id", "createdAt", "description", "name", "points"})
+		[]string{"id", "createdAt", "description", "name"})
 
 	return &TeamExec{ret}
 }
@@ -300,7 +300,7 @@ func (client *Client) Teams(params *TeamsParams) *TeamExecArray {
 		wparams,
 		[3]string{"TeamWhereInput", "TeamOrderByInput", "Team"},
 		"teams",
-		[]string{"id", "createdAt", "description", "name", "points"})
+		[]string{"id", "createdAt", "description", "name"})
 
 	return &TeamExecArray{ret}
 }
@@ -364,7 +364,7 @@ func (client *Client) User(params UserWhereUniqueInput) *UserExec {
 		params,
 		[2]string{"UserWhereUniqueInput!", "User"},
 		"user",
-		[]string{"id", "createdAt", "name", "sub", "picture", "points"})
+		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserExec{ret}
 }
@@ -398,7 +398,7 @@ func (client *Client) Users(params *UsersParams) *UserExecArray {
 		wparams,
 		[3]string{"UserWhereInput", "UserOrderByInput", "User"},
 		"users",
-		[]string{"id", "createdAt", "name", "sub", "picture", "points"})
+		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserExecArray{ret}
 }
@@ -621,7 +621,7 @@ func (client *Client) CreateTeam(params TeamCreateInput) *TeamExec {
 		params,
 		[2]string{"TeamCreateInput!", "Team"},
 		"createTeam",
-		[]string{"id", "createdAt", "description", "name", "points"})
+		[]string{"id", "createdAt", "description", "name"})
 
 	return &TeamExec{ret}
 }
@@ -639,7 +639,7 @@ func (client *Client) UpdateTeam(params TeamUpdateParams) *TeamExec {
 		},
 		[3]string{"TeamUpdateInput!", "TeamWhereUniqueInput!", "Team"},
 		"updateTeam",
-		[]string{"id", "createdAt", "description", "name", "points"})
+		[]string{"id", "createdAt", "description", "name"})
 
 	return &TeamExec{ret}
 }
@@ -676,7 +676,7 @@ func (client *Client) UpsertTeam(params TeamUpsertParams) *TeamExec {
 		uparams,
 		[4]string{"TeamWhereUniqueInput!", "TeamCreateInput!", "TeamUpdateInput!", "Team"},
 		"upsertTeam",
-		[]string{"id", "createdAt", "description", "name", "points"})
+		[]string{"id", "createdAt", "description", "name"})
 
 	return &TeamExec{ret}
 }
@@ -686,7 +686,7 @@ func (client *Client) DeleteTeam(params TeamWhereUniqueInput) *TeamExec {
 		params,
 		[2]string{"TeamWhereUniqueInput!", "Team"},
 		"deleteTeam",
-		[]string{"id", "createdAt", "description", "name", "points"})
+		[]string{"id", "createdAt", "description", "name"})
 
 	return &TeamExec{ret}
 }
@@ -701,7 +701,7 @@ func (client *Client) CreateUser(params UserCreateInput) *UserExec {
 		params,
 		[2]string{"UserCreateInput!", "User"},
 		"createUser",
-		[]string{"id", "createdAt", "name", "sub", "picture", "points"})
+		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserExec{ret}
 }
@@ -719,7 +719,7 @@ func (client *Client) UpdateUser(params UserUpdateParams) *UserExec {
 		},
 		[3]string{"UserUpdateInput!", "UserWhereUniqueInput!", "User"},
 		"updateUser",
-		[]string{"id", "createdAt", "name", "sub", "picture", "points"})
+		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserExec{ret}
 }
@@ -756,7 +756,7 @@ func (client *Client) UpsertUser(params UserUpsertParams) *UserExec {
 		uparams,
 		[4]string{"UserWhereUniqueInput!", "UserCreateInput!", "UserUpdateInput!", "User"},
 		"upsertUser",
-		[]string{"id", "createdAt", "name", "sub", "picture", "points"})
+		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserExec{ret}
 }
@@ -766,7 +766,7 @@ func (client *Client) DeleteUser(params UserWhereUniqueInput) *UserExec {
 		params,
 		[2]string{"UserWhereUniqueInput!", "User"},
 		"deleteUser",
-		[]string{"id", "createdAt", "name", "sub", "picture", "points"})
+		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserExec{ret}
 }
@@ -787,8 +787,6 @@ const (
 	TeamOrderByInputDescriptionDesc TeamOrderByInput = "description_DESC"
 	TeamOrderByInputNameAsc         TeamOrderByInput = "name_ASC"
 	TeamOrderByInputNameDesc        TeamOrderByInput = "name_DESC"
-	TeamOrderByInputPointsAsc       TeamOrderByInput = "points_ASC"
-	TeamOrderByInputPointsDesc      TeamOrderByInput = "points_DESC"
 )
 
 type UserOrderByInput string
@@ -804,8 +802,6 @@ const (
 	UserOrderByInputSubDesc       UserOrderByInput = "sub_DESC"
 	UserOrderByInputPictureAsc    UserOrderByInput = "picture_ASC"
 	UserOrderByInputPictureDesc   UserOrderByInput = "picture_DESC"
-	UserOrderByInputPointsAsc     UserOrderByInput = "points_ASC"
-	UserOrderByInputPointsDesc    UserOrderByInput = "points_DESC"
 )
 
 type LeagueOrderByInput string
@@ -906,14 +902,6 @@ type TeamWhereInput struct {
 	NameNotStartsWith        *string           `json:"name_not_starts_with,omitempty"`
 	NameEndsWith             *string           `json:"name_ends_with,omitempty"`
 	NameNotEndsWith          *string           `json:"name_not_ends_with,omitempty"`
-	Points                   *int32            `json:"points,omitempty"`
-	PointsNot                *int32            `json:"points_not,omitempty"`
-	PointsIn                 []int32           `json:"points_in,omitempty"`
-	PointsNotIn              []int32           `json:"points_not_in,omitempty"`
-	PointsLt                 *int32            `json:"points_lt,omitempty"`
-	PointsLte                *int32            `json:"points_lte,omitempty"`
-	PointsGt                 *int32            `json:"points_gt,omitempty"`
-	PointsGte                *int32            `json:"points_gte,omitempty"`
 	League                   *LeagueWhereInput `json:"league,omitempty"`
 	UsersEvery               *UserWhereInput   `json:"users_every,omitempty"`
 	UsersSome                *UserWhereInput   `json:"users_some,omitempty"`
@@ -1055,14 +1043,6 @@ type UserWhereInput struct {
 	PictureNotStartsWith *string           `json:"picture_not_starts_with,omitempty"`
 	PictureEndsWith      *string           `json:"picture_ends_with,omitempty"`
 	PictureNotEndsWith   *string           `json:"picture_not_ends_with,omitempty"`
-	Points               *int32            `json:"points,omitempty"`
-	PointsNot            *int32            `json:"points_not,omitempty"`
-	PointsIn             []int32           `json:"points_in,omitempty"`
-	PointsNotIn          []int32           `json:"points_not_in,omitempty"`
-	PointsLt             *int32            `json:"points_lt,omitempty"`
-	PointsLte            *int32            `json:"points_lte,omitempty"`
-	PointsGt             *int32            `json:"points_gt,omitempty"`
-	PointsGte            *int32            `json:"points_gte,omitempty"`
 	TeamsEvery           *TeamWhereInput   `json:"teams_every,omitempty"`
 	TeamsSome            *TeamWhereInput   `json:"teams_some,omitempty"`
 	TeamsNone            *TeamWhereInput   `json:"teams_none,omitempty"`
@@ -1185,7 +1165,6 @@ type TeamCreateWithoutLeagueInput struct {
 	ID          *string                             `json:"id,omitempty"`
 	Description string                              `json:"description"`
 	Name        string                              `json:"name"`
-	Points      *int32                              `json:"points,omitempty"`
 	Users       *UserCreateManyWithoutTeamsInput    `json:"users,omitempty"`
 	Owner       UserCreateOneWithoutOwnedTeamsInput `json:"owner"`
 }
@@ -1200,7 +1179,6 @@ type UserCreateWithoutTeamsInput struct {
 	Name         string                             `json:"name"`
 	Sub          string                             `json:"sub"`
 	Picture      string                             `json:"picture"`
-	Points       *int32                             `json:"points,omitempty"`
 	Leagues      *LeagueCreateManyWithoutUsersInput `json:"leagues,omitempty"`
 	OwnedTeams   *TeamCreateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
 	OwnedLeagues *LeagueCreateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
@@ -1231,7 +1209,6 @@ type UserCreateWithoutOwnedLeaguesInput struct {
 	Name       string                             `json:"name"`
 	Sub        string                             `json:"sub"`
 	Picture    string                             `json:"picture"`
-	Points     *int32                             `json:"points,omitempty"`
 	Teams      *TeamCreateManyWithoutUsersInput   `json:"teams,omitempty"`
 	Leagues    *LeagueCreateManyWithoutUsersInput `json:"leagues,omitempty"`
 	OwnedTeams *TeamCreateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
@@ -1247,7 +1224,6 @@ type TeamCreateWithoutUsersInput struct {
 	ID          *string                             `json:"id,omitempty"`
 	Description string                              `json:"description"`
 	Name        string                              `json:"name"`
-	Points      *int32                              `json:"points,omitempty"`
 	League      LeagueCreateOneWithoutTeamsInput    `json:"league"`
 	Owner       UserCreateOneWithoutOwnedTeamsInput `json:"owner"`
 }
@@ -1276,7 +1252,6 @@ type UserCreateWithoutLeaguesInput struct {
 	Name         string                             `json:"name"`
 	Sub          string                             `json:"sub"`
 	Picture      string                             `json:"picture"`
-	Points       *int32                             `json:"points,omitempty"`
 	Teams        *TeamCreateManyWithoutUsersInput   `json:"teams,omitempty"`
 	OwnedTeams   *TeamCreateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
 	OwnedLeagues *LeagueCreateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
@@ -1292,7 +1267,6 @@ type TeamCreateWithoutOwnerInput struct {
 	ID          *string                          `json:"id,omitempty"`
 	Description string                           `json:"description"`
 	Name        string                           `json:"name"`
-	Points      *int32                           `json:"points,omitempty"`
 	League      LeagueCreateOneWithoutTeamsInput `json:"league"`
 	Users       *UserCreateManyWithoutTeamsInput `json:"users,omitempty"`
 }
@@ -1339,7 +1313,6 @@ type UserCreateInput struct {
 	Name         string                             `json:"name"`
 	Sub          string                             `json:"sub"`
 	Picture      string                             `json:"picture"`
-	Points       *int32                             `json:"points,omitempty"`
 	Teams        *TeamCreateManyWithoutUsersInput   `json:"teams,omitempty"`
 	Leagues      *LeagueCreateManyWithoutUsersInput `json:"leagues,omitempty"`
 	OwnedTeams   *TeamCreateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
@@ -1390,7 +1363,6 @@ type UserCreateWithoutOwnedTeamsInput struct {
 	Name         string                             `json:"name"`
 	Sub          string                             `json:"sub"`
 	Picture      string                             `json:"picture"`
-	Points       *int32                             `json:"points,omitempty"`
 	Teams        *TeamCreateManyWithoutUsersInput   `json:"teams,omitempty"`
 	Leagues      *LeagueCreateManyWithoutUsersInput `json:"leagues,omitempty"`
 	OwnedLeagues *LeagueCreateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
@@ -1426,7 +1398,6 @@ type TeamUpdateWithWhereUniqueWithoutLeagueInput struct {
 type TeamUpdateWithoutLeagueDataInput struct {
 	Description *string                                      `json:"description,omitempty"`
 	Name        *string                                      `json:"name,omitempty"`
-	Points      *int32                                       `json:"points,omitempty"`
 	Users       *UserUpdateManyWithoutTeamsInput             `json:"users,omitempty"`
 	Owner       *UserUpdateOneRequiredWithoutOwnedTeamsInput `json:"owner,omitempty"`
 }
@@ -1452,7 +1423,6 @@ type UserUpdateWithoutTeamsDataInput struct {
 	Name         *string                            `json:"name,omitempty"`
 	Sub          *string                            `json:"sub,omitempty"`
 	Picture      *string                            `json:"picture,omitempty"`
-	Points       *int32                             `json:"points,omitempty"`
 	Leagues      *LeagueUpdateManyWithoutUsersInput `json:"leagues,omitempty"`
 	OwnedTeams   *TeamUpdateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
 	OwnedLeagues *LeagueUpdateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
@@ -1495,7 +1465,6 @@ type UserUpdateWithoutOwnedLeaguesDataInput struct {
 	Name       *string                            `json:"name,omitempty"`
 	Sub        *string                            `json:"sub,omitempty"`
 	Picture    *string                            `json:"picture,omitempty"`
-	Points     *int32                             `json:"points,omitempty"`
 	Teams      *TeamUpdateManyWithoutUsersInput   `json:"teams,omitempty"`
 	Leagues    *LeagueUpdateManyWithoutUsersInput `json:"leagues,omitempty"`
 	OwnedTeams *TeamUpdateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
@@ -1522,7 +1491,6 @@ type TeamUpdateWithWhereUniqueWithoutUsersInput struct {
 type TeamUpdateWithoutUsersDataInput struct {
 	Description *string                                      `json:"description,omitempty"`
 	Name        *string                                      `json:"name,omitempty"`
-	Points      *int32                                       `json:"points,omitempty"`
 	League      *LeagueUpdateOneRequiredWithoutTeamsInput    `json:"league,omitempty"`
 	Owner       *UserUpdateOneRequiredWithoutOwnedTeamsInput `json:"owner,omitempty"`
 }
@@ -1563,7 +1531,6 @@ type UserUpdateWithoutLeaguesDataInput struct {
 	Name         *string                            `json:"name,omitempty"`
 	Sub          *string                            `json:"sub,omitempty"`
 	Picture      *string                            `json:"picture,omitempty"`
-	Points       *int32                             `json:"points,omitempty"`
 	Teams        *TeamUpdateManyWithoutUsersInput   `json:"teams,omitempty"`
 	OwnedTeams   *TeamUpdateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
 	OwnedLeagues *LeagueUpdateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
@@ -1590,7 +1557,6 @@ type TeamUpdateWithWhereUniqueWithoutOwnerInput struct {
 type TeamUpdateWithoutOwnerDataInput struct {
 	Description *string                                   `json:"description,omitempty"`
 	Name        *string                                   `json:"name,omitempty"`
-	Points      *int32                                    `json:"points,omitempty"`
 	League      *LeagueUpdateOneRequiredWithoutTeamsInput `json:"league,omitempty"`
 	Users       *UserUpdateManyWithoutTeamsInput          `json:"users,omitempty"`
 }
@@ -1652,14 +1618,6 @@ type TeamScalarWhereInput struct {
 	NameNotStartsWith        *string                `json:"name_not_starts_with,omitempty"`
 	NameEndsWith             *string                `json:"name_ends_with,omitempty"`
 	NameNotEndsWith          *string                `json:"name_not_ends_with,omitempty"`
-	Points                   *int32                 `json:"points,omitempty"`
-	PointsNot                *int32                 `json:"points_not,omitempty"`
-	PointsIn                 []int32                `json:"points_in,omitempty"`
-	PointsNotIn              []int32                `json:"points_not_in,omitempty"`
-	PointsLt                 *int32                 `json:"points_lt,omitempty"`
-	PointsLte                *int32                 `json:"points_lte,omitempty"`
-	PointsGt                 *int32                 `json:"points_gt,omitempty"`
-	PointsGte                *int32                 `json:"points_gte,omitempty"`
 	And                      []TeamScalarWhereInput `json:"AND,omitempty"`
 	Or                       []TeamScalarWhereInput `json:"OR,omitempty"`
 	Not                      []TeamScalarWhereInput `json:"NOT,omitempty"`
@@ -1673,7 +1631,6 @@ type TeamUpdateManyWithWhereNestedInput struct {
 type TeamUpdateManyDataInput struct {
 	Description *string `json:"description,omitempty"`
 	Name        *string `json:"name,omitempty"`
-	Points      *int32  `json:"points,omitempty"`
 }
 
 type LeagueUpdateManyWithoutOwnerInput struct {
@@ -1741,7 +1698,6 @@ type UserUpdateDataInput struct {
 	Name         *string                            `json:"name,omitempty"`
 	Sub          *string                            `json:"sub,omitempty"`
 	Picture      *string                            `json:"picture,omitempty"`
-	Points       *int32                             `json:"points,omitempty"`
 	Teams        *TeamUpdateManyWithoutUsersInput   `json:"teams,omitempty"`
 	Leagues      *LeagueUpdateManyWithoutUsersInput `json:"leagues,omitempty"`
 	OwnedTeams   *TeamUpdateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
@@ -2046,14 +2002,6 @@ type UserScalarWhereInput struct {
 	PictureNotStartsWith *string                `json:"picture_not_starts_with,omitempty"`
 	PictureEndsWith      *string                `json:"picture_ends_with,omitempty"`
 	PictureNotEndsWith   *string                `json:"picture_not_ends_with,omitempty"`
-	Points               *int32                 `json:"points,omitempty"`
-	PointsNot            *int32                 `json:"points_not,omitempty"`
-	PointsIn             []int32                `json:"points_in,omitempty"`
-	PointsNotIn          []int32                `json:"points_not_in,omitempty"`
-	PointsLt             *int32                 `json:"points_lt,omitempty"`
-	PointsLte            *int32                 `json:"points_lte,omitempty"`
-	PointsGt             *int32                 `json:"points_gt,omitempty"`
-	PointsGte            *int32                 `json:"points_gte,omitempty"`
 	And                  []UserScalarWhereInput `json:"AND,omitempty"`
 	Or                   []UserScalarWhereInput `json:"OR,omitempty"`
 	Not                  []UserScalarWhereInput `json:"NOT,omitempty"`
@@ -2068,7 +2016,6 @@ type UserUpdateManyDataInput struct {
 	Name    *string `json:"name,omitempty"`
 	Sub     *string `json:"sub,omitempty"`
 	Picture *string `json:"picture,omitempty"`
-	Points  *int32  `json:"points,omitempty"`
 }
 
 type LeagueUpsertWithoutTeamsInput struct {
@@ -2087,7 +2034,6 @@ type UserUpdateWithoutOwnedTeamsDataInput struct {
 	Name         *string                            `json:"name,omitempty"`
 	Sub          *string                            `json:"sub,omitempty"`
 	Picture      *string                            `json:"picture,omitempty"`
-	Points       *int32                             `json:"points,omitempty"`
 	Teams        *TeamUpdateManyWithoutUsersInput   `json:"teams,omitempty"`
 	Leagues      *LeagueUpdateManyWithoutUsersInput `json:"leagues,omitempty"`
 	OwnedLeagues *LeagueUpdateManyWithoutOwnerInput `json:"ownedLeagues,omitempty"`
@@ -2159,7 +2105,6 @@ type TeamCreateInput struct {
 	ID          *string                             `json:"id,omitempty"`
 	Description string                              `json:"description"`
 	Name        string                              `json:"name"`
-	Points      *int32                              `json:"points,omitempty"`
 	League      LeagueCreateOneWithoutTeamsInput    `json:"league"`
 	Users       *UserCreateManyWithoutTeamsInput    `json:"users,omitempty"`
 	Owner       UserCreateOneWithoutOwnedTeamsInput `json:"owner"`
@@ -2168,7 +2113,6 @@ type TeamCreateInput struct {
 type TeamUpdateInput struct {
 	Description *string                                      `json:"description,omitempty"`
 	Name        *string                                      `json:"name,omitempty"`
-	Points      *int32                                       `json:"points,omitempty"`
 	League      *LeagueUpdateOneRequiredWithoutTeamsInput    `json:"league,omitempty"`
 	Users       *UserUpdateManyWithoutTeamsInput             `json:"users,omitempty"`
 	Owner       *UserUpdateOneRequiredWithoutOwnedTeamsInput `json:"owner,omitempty"`
@@ -2177,14 +2121,12 @@ type TeamUpdateInput struct {
 type TeamUpdateManyMutationInput struct {
 	Description *string `json:"description,omitempty"`
 	Name        *string `json:"name,omitempty"`
-	Points      *int32  `json:"points,omitempty"`
 }
 
 type UserUpdateInput struct {
 	Name         *string                            `json:"name,omitempty"`
 	Sub          *string                            `json:"sub,omitempty"`
 	Picture      *string                            `json:"picture,omitempty"`
-	Points       *int32                             `json:"points,omitempty"`
 	Teams        *TeamUpdateManyWithoutUsersInput   `json:"teams,omitempty"`
 	Leagues      *LeagueUpdateManyWithoutUsersInput `json:"leagues,omitempty"`
 	OwnedTeams   *TeamUpdateManyWithoutOwnerInput   `json:"ownedTeams,omitempty"`
@@ -2196,7 +2138,6 @@ type UserUpdateManyMutationInput struct {
 	Name    *string `json:"name,omitempty"`
 	Sub     *string `json:"sub,omitempty"`
 	Picture *string `json:"picture,omitempty"`
-	Points  *int32  `json:"points,omitempty"`
 }
 
 type LeagueSubscriptionWhereInput struct {
@@ -2276,7 +2217,7 @@ func (instance *LeagueExec) Teams(params *TeamsParamsExec) *TeamExecArray {
 		wparams,
 		[3]string{"TeamWhereInput", "TeamOrderByInput", "Team"},
 		"teams",
-		[]string{"id", "createdAt", "description", "name", "points"})
+		[]string{"id", "createdAt", "description", "name"})
 
 	return &TeamExecArray{ret}
 }
@@ -2310,7 +2251,7 @@ func (instance *LeagueExec) Users(params *UsersParamsExec) *UserExecArray {
 		wparams,
 		[3]string{"UserWhereInput", "UserOrderByInput", "User"},
 		"users",
-		[]string{"id", "createdAt", "name", "sub", "picture", "points"})
+		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserExecArray{ret}
 }
@@ -2321,7 +2262,7 @@ func (instance *LeagueExec) Owner() *UserExec {
 		nil,
 		[2]string{"", "User"},
 		"owner",
-		[]string{"id", "createdAt", "name", "sub", "picture", "points"})
+		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserExec{ret}
 }
@@ -2429,7 +2370,7 @@ func (instance *TeamExec) Users(params *UsersParamsExec) *UserExecArray {
 		wparams,
 		[3]string{"UserWhereInput", "UserOrderByInput", "User"},
 		"users",
-		[]string{"id", "createdAt", "name", "sub", "picture", "points"})
+		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserExecArray{ret}
 }
@@ -2440,7 +2381,7 @@ func (instance *TeamExec) Owner() *UserExec {
 		nil,
 		[2]string{"", "User"},
 		"owner",
-		[]string{"id", "createdAt", "name", "sub", "picture", "points"})
+		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserExec{ret}
 }
@@ -2471,14 +2412,13 @@ func (instance TeamExecArray) Exec(ctx context.Context) ([]Team, error) {
 	return v, err
 }
 
-var TeamFields = []string{"id", "createdAt", "description", "name", "points"}
+var TeamFields = []string{"id", "createdAt", "description", "name"}
 
 type Team struct {
 	ID          string `json:"id"`
 	CreatedAt   string `json:"createdAt"`
 	Description string `json:"description"`
 	Name        string `json:"name"`
-	Points      int32  `json:"points"`
 }
 
 type UserExec struct {
@@ -2504,7 +2444,7 @@ func (instance *UserExec) Teams(params *TeamsParamsExec) *TeamExecArray {
 		wparams,
 		[3]string{"TeamWhereInput", "TeamOrderByInput", "Team"},
 		"teams",
-		[]string{"id", "createdAt", "description", "name", "points"})
+		[]string{"id", "createdAt", "description", "name"})
 
 	return &TeamExecArray{ret}
 }
@@ -2572,7 +2512,7 @@ func (instance *UserExec) OwnedTeams(params *OwnedTeamsParamsExec) *TeamExecArra
 		wparams,
 		[3]string{"TeamWhereInput", "TeamOrderByInput", "Team"},
 		"ownedTeams",
-		[]string{"id", "createdAt", "description", "name", "points"})
+		[]string{"id", "createdAt", "description", "name"})
 
 	return &TeamExecArray{ret}
 }
@@ -2661,7 +2601,7 @@ func (instance UserExecArray) Exec(ctx context.Context) ([]User, error) {
 	return v, err
 }
 
-var UserFields = []string{"id", "createdAt", "name", "sub", "picture", "points"}
+var UserFields = []string{"id", "createdAt", "name", "sub", "picture"}
 
 type User struct {
 	ID        string `json:"id"`
@@ -2669,7 +2609,6 @@ type User struct {
 	Name      string `json:"name"`
 	Sub       string `json:"sub"`
 	Picture   string `json:"picture"`
-	Points    int32  `json:"points"`
 }
 
 type MatchExec struct {
@@ -2693,7 +2632,7 @@ func (instance *MatchExec) User1() *UserExec {
 		nil,
 		[2]string{"", "User"},
 		"user1",
-		[]string{"id", "createdAt", "name", "sub", "picture", "points"})
+		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserExec{ret}
 }
@@ -2704,7 +2643,7 @@ func (instance *MatchExec) User2() *UserExec {
 		nil,
 		[2]string{"", "User"},
 		"user2",
-		[]string{"id", "createdAt", "name", "sub", "picture", "points"})
+		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserExec{ret}
 }
@@ -2715,7 +2654,7 @@ func (instance *MatchExec) Winner() *UserExec {
 		nil,
 		[2]string{"", "User"},
 		"winner",
-		[]string{"id", "createdAt", "name", "sub", "picture", "points"})
+		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserExec{ret}
 }
@@ -3156,7 +3095,7 @@ func (instance *TeamEdgeExec) Node() *TeamExec {
 		nil,
 		[2]string{"", "Team"},
 		"node",
-		[]string{"id", "createdAt", "description", "name", "points"})
+		[]string{"id", "createdAt", "description", "name"})
 
 	return &TeamExec{ret}
 }
@@ -3288,7 +3227,7 @@ func (instance *UserEdgeExec) Node() *UserExec {
 		nil,
 		[2]string{"", "User"},
 		"node",
-		[]string{"id", "createdAt", "name", "sub", "picture", "points"})
+		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserExec{ret}
 }
@@ -3538,7 +3477,7 @@ func (instance *TeamSubscriptionPayloadExec) Node() *TeamExec {
 		nil,
 		[2]string{"", "Team"},
 		"node",
-		[]string{"id", "createdAt", "description", "name", "points"})
+		[]string{"id", "createdAt", "description", "name"})
 
 	return &TeamExec{ret}
 }
@@ -3549,7 +3488,7 @@ func (instance *TeamSubscriptionPayloadExec) PreviousValues() *TeamPreviousValue
 		nil,
 		[2]string{"", "TeamPreviousValues"},
 		"previousValues",
-		[]string{"id", "createdAt", "description", "name", "points"})
+		[]string{"id", "createdAt", "description", "name"})
 
 	return &TeamPreviousValuesExec{ret}
 }
@@ -3618,14 +3557,13 @@ func (instance TeamPreviousValuesExecArray) Exec(ctx context.Context) ([]TeamPre
 	return v, err
 }
 
-var TeamPreviousValuesFields = []string{"id", "createdAt", "description", "name", "points"}
+var TeamPreviousValuesFields = []string{"id", "createdAt", "description", "name"}
 
 type TeamPreviousValues struct {
 	ID          string `json:"id"`
 	CreatedAt   string `json:"createdAt"`
 	Description string `json:"description"`
 	Name        string `json:"name"`
-	Points      int32  `json:"points"`
 }
 
 type UserSubscriptionPayloadExec struct {
@@ -3638,7 +3576,7 @@ func (instance *UserSubscriptionPayloadExec) Node() *UserExec {
 		nil,
 		[2]string{"", "User"},
 		"node",
-		[]string{"id", "createdAt", "name", "sub", "picture", "points"})
+		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserExec{ret}
 }
@@ -3649,7 +3587,7 @@ func (instance *UserSubscriptionPayloadExec) PreviousValues() *UserPreviousValue
 		nil,
 		[2]string{"", "UserPreviousValues"},
 		"previousValues",
-		[]string{"id", "createdAt", "name", "sub", "picture", "points"})
+		[]string{"id", "createdAt", "name", "sub", "picture"})
 
 	return &UserPreviousValuesExec{ret}
 }
@@ -3718,7 +3656,7 @@ func (instance UserPreviousValuesExecArray) Exec(ctx context.Context) ([]UserPre
 	return v, err
 }
 
-var UserPreviousValuesFields = []string{"id", "createdAt", "name", "sub", "picture", "points"}
+var UserPreviousValuesFields = []string{"id", "createdAt", "name", "sub", "picture"}
 
 type UserPreviousValues struct {
 	ID        string `json:"id"`
@@ -3726,5 +3664,4 @@ type UserPreviousValues struct {
 	Name      string `json:"name"`
 	Sub       string `json:"sub"`
 	Picture   string `json:"picture"`
-	Points    int32  `json:"points"`
 }

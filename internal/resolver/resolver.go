@@ -7,30 +7,39 @@ import (
 
 // THIS CODE IS A STARTING POINT ONLY. IT WILL NOT BE UPDATED WITH SCHEMA CHANGES.
 
-type Resolver struct {
+type Resolver interface {
+	League() generated.LeagueResolver
+	Query() generated.QueryResolver
+	Team() generated.TeamResolver
+	User() generated.UserResolver
+	Mutation() generated.MutationResolver
+	Match() generated.MatchResolver
+}
+
+type resolver struct {
 	prismaClient *prisma.Client
 	user         *prisma.User
 }
 
-func New(prismaClient *prisma.Client, user *prisma.User) *Resolver {
-	return &Resolver{prismaClient: prismaClient, user: user}
+func New(prismaClient *prisma.Client, user *prisma.User) Resolver {
+	return &resolver{prismaClient: prismaClient, user: user}
 }
 
-func (r *Resolver) League() generated.LeagueResolver {
+func (r *resolver) League() generated.LeagueResolver {
 	return &leagueResolver{r}
 }
-func (r *Resolver) Query() generated.QueryResolver {
+func (r *resolver) Query() generated.QueryResolver {
 	return &queryResolver{r}
 }
-func (r *Resolver) Team() generated.TeamResolver {
+func (r *resolver) Team() generated.TeamResolver {
 	return &teamResolver{r}
 }
-func (r *Resolver) User() generated.UserResolver {
+func (r *resolver) User() generated.UserResolver {
 	return &userResolver{r}
 }
-func (r *Resolver) Mutation() generated.MutationResolver {
+func (r *resolver) Mutation() generated.MutationResolver {
 	return &mutationResolver{r}
 }
-func (r *Resolver) Match() generated.MatchResolver {
+func (r *resolver) Match() generated.MatchResolver {
 	return &matchResolver{r}
 }
