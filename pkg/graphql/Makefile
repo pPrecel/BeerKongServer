@@ -1,14 +1,6 @@
 .EXPORT_ALL_VARIABLES:
-.PHONY: generate-graphql delete-graphql update-graphql
+.PHONY: gqlgen-regenerate
 
-delete-graphql:
-	@rm -rf server generate.go gqlgen.yml models_gen.go resolver.go
-
-generate-new-graphql: delete-graphql
-	@go run github.com/99designs/gqlgen init -v
-	@rm -rf server
-	@echo "done"
-
-update-graphql:
-	@rm -rf resolver.go
+gqlgen-regenerate:
+	@echo "Gqlgen regenerate manifest:"
 	@go run github.com/99designs/gqlgen -v

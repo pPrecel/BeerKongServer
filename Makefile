@@ -1,20 +1,31 @@
 PORT ?= 80
+PRISMA_SECRET ?= PrismaSecret
 
 .EXPORT_ALL_VARIABLES:
-.PHONY: generate-graphql update-graphql go-run deploy-prisma generate-prisma
+.PHONY: go-fmt go-run go-test go-get gqlgen-regenerate prisma-deploy prisma-generate
 
-generate-graphql:
-	@make -C pkg/graphql/ generate-new-graphql
+go-fmt:
+	@go fmt ./...
 
-update-graphql:
-	@make -C pkg/graphql/ update-graphql
+go-get:
+	@echo "Go get:"
+	@go get -u ./...
 
-go-run:
+go-test: go-get
+	@echo "Run tests:"
+	@go test ./internal/...
+
+go-run: go-test
+	@echo "Run server:"
 	@export PORT={PORT}
 	@go run cmd/main.go
 
-deploy-prisma:
-	@make -C pkg/prisma/ deploy-prisma
+gqlgen-regenerate:
+	@make -C pkg/graphql/ gqlgen-regenerate
 
-generate-prisma:
-	@make -C pkg/prisma/ generate-prisma
+prisma-deploy:
+	@make -C pkg/prisma/ prisma-deploy
+	@make prisma-generate
+
+prisma-generate:
+	@make -C pkg/prisma/ prisma-generate

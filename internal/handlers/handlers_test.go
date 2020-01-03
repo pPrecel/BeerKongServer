@@ -27,17 +27,17 @@ func TestHandler_PrismaGQL(t *testing.T) {
 		expecterErr types.GomegaMatcher
 	}{
 		"when everything is ok": {
-			tokenUser:   &prisma.User{Name: userName},
-			userWUI:     &prisma.UserWhereUniqueInput{Name: &userName},
-			googleUser:  auth.GoogleAccount{Name: userName, Sub: "21312das12"},
-			tokenId:     "token",
+			tokenUser:  &prisma.User{Name: userName},
+			userWUI:    &prisma.UserWhereUniqueInput{Name: &userName},
+			googleUser: auth.GoogleAccount{Name: userName, Sub: "21312das12"},
+			tokenId:    "token",
 		},
 	} {
 		t.Run(testName, func(t *testing.T) {
 			//given
 			g := gomega.NewWithT(t)
 			composer := composerMock.Composer{}
-			composer.On("Resolver", &prisma.User{Sub:testData.googleUser.Sub}).Return(nil)
+			composer.On("Resolver", &prisma.User{Sub: testData.googleUser.Sub}).Return(nil)
 			auth := authMock.Auth{}
 			auth.On("GetAccount", testData.tokenId).Return(testData.googleUser, testData.tokenIdErr)
 

@@ -206,14 +206,14 @@ func (r *teamResolver) Owner(ctx context.Context, obj *prisma.Team) (*prisma.Use
 type userResolver struct{ *resolver }
 
 func (r *userResolver) PointsInLeague(ctx context.Context, obj *prisma.User, where prisma.LeagueWhereUniqueInput) (int, error) {
-	tr:=true
-	points:=0
+	tr := true
+	points := 0
 	matches1, err := r.prismaClient.Matches(&prisma.MatchesParams{
-		Where:   &prisma.MatchWhereInput{
-			League: &prisma.LeagueWhereInput{ID: where.ID},
-			User1: &prisma.UserWhereInput{ID: &obj.ID},
+		Where: &prisma.MatchWhereInput{
+			League:     &prisma.LeagueWhereInput{ID: where.ID},
+			User1:      &prisma.UserWhereInput{ID: &obj.ID},
 			IsFinished: &tr,
-			IsRanked: &tr,
+			IsRanked:   &tr,
 		},
 	}).Exec(ctx)
 	if err != nil {
@@ -221,11 +221,11 @@ func (r *userResolver) PointsInLeague(ctx context.Context, obj *prisma.User, whe
 	}
 
 	matches2, err := r.prismaClient.Matches(&prisma.MatchesParams{
-		Where:   &prisma.MatchWhereInput{
-			League: &prisma.LeagueWhereInput{ID: where.ID},
-			User2: &prisma.UserWhereInput{ID: &obj.ID},
+		Where: &prisma.MatchWhereInput{
+			League:     &prisma.LeagueWhereInput{ID: where.ID},
+			User2:      &prisma.UserWhereInput{ID: &obj.ID},
 			IsFinished: &tr,
-			IsRanked: &tr,
+			IsRanked:   &tr,
 		},
 	}).Exec(ctx)
 	if err != nil {

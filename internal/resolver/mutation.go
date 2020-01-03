@@ -255,7 +255,7 @@ func (r *mutationResolver) EndMatch(ctx context.Context, where prisma.MatchWhere
 				Connect: r.chooseUserWhereUniqueInput(winner),
 			},
 			WinnerPoints: winnerPoints,
-			IsFinished: &tr,
+			IsFinished:   &tr,
 		},
 		Where: where,
 	}).Exec(ctx)

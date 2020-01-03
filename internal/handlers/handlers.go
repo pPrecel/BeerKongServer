@@ -33,7 +33,7 @@ func (s handler) PrismaGQL(writer http.ResponseWriter, request *http.Request) {
 		res, err := s.auth.GetAccount(token)
 		if err != nil {
 			log.Info("Unrecognised token")
-		}else{
+		} else {
 			user = parsUser(&res)
 		}
 	} else {
@@ -53,6 +53,6 @@ func fmtToken(token string) string {
 
 func parsUser(account *auth.GoogleAccount) *prisma.User {
 	return &prisma.User{
-		Sub:       account.Sub,
+		Sub: account.Sub,
 	}
 }

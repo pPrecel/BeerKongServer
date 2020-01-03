@@ -8,7 +8,7 @@ import (
 )
 
 func TestComposer_Resolver(t *testing.T) {
-	t.Run("when everything is ok", func(t *testing.T){
+	t.Run("when everything is ok", func(t *testing.T) {
 		//given
 		g := gomega.NewWithT(t)
 		prismaClient := prisma.Client{}

@@ -1,8 +1,10 @@
 .EXPORT_ALL_VARIABLES:
-.PHONY: deploy-prisma generate-prisma
+.PHONY: prisma-deploy prisma-generate
 
-deploy-prisma:
+prisma-deploy:
+	@echo "Prisma deploy:"
 	@prisma deploy
 
-generate-prisma:
+prisma-generate:
+	@echo "Prisma generate manifest:"
 	@prisma generate

@@ -26,14 +26,14 @@ func (r *resolver) checkAccessWithUser(sub string) bool {
 	if r.user == nil {
 		return false
 	}
-	if r.isSameUser(r.user, &prisma.User{Sub: sub}){
+	if r.isSameUser(r.user, &prisma.User{Sub: sub}) {
 		return false
 	}
 
 	return true
 }
 
-func (r *resolver) chooseMatchWhereUniqueInput(match *prisma.Match) * prisma.MatchWhereUniqueInput {
+func (r *resolver) chooseMatchWhereUniqueInput(match *prisma.Match) *prisma.MatchWhereUniqueInput {
 	if match == nil {
 		return nil
 	}
@@ -44,7 +44,7 @@ func (r *resolver) chooseMatchWhereUniqueInput(match *prisma.Match) * prisma.Mat
 
 	return nil
 }
-func (r *resolver) chooseTeamWhereUniqueInput(team *prisma.Team) * prisma.TeamWhereUniqueInput {
+func (r *resolver) chooseTeamWhereUniqueInput(team *prisma.Team) *prisma.TeamWhereUniqueInput {
 	if team == nil {
 		return nil
 	}
@@ -58,7 +58,7 @@ func (r *resolver) chooseTeamWhereUniqueInput(team *prisma.Team) * prisma.TeamWh
 
 	return nil
 }
-func (r *resolver) chooseLeagueWhereUniqueInput(league *prisma.League) * prisma.LeagueWhereUniqueInput {
+func (r *resolver) chooseLeagueWhereUniqueInput(league *prisma.League) *prisma.LeagueWhereUniqueInput {
 	if league == nil {
 		return nil
 	}
@@ -72,7 +72,7 @@ func (r *resolver) chooseLeagueWhereUniqueInput(league *prisma.League) * prisma.
 
 	return nil
 }
-func (r *resolver) chooseUserWhereUniqueInput(user *prisma.User) * prisma.UserWhereUniqueInput {
+func (r *resolver) chooseUserWhereUniqueInput(user *prisma.User) *prisma.UserWhereUniqueInput {
 	if user == nil {
 		return nil
 	}
@@ -193,4 +193,3 @@ func buildMatchesParams(where *prisma.MatchWhereInput, orderBy *prisma.MatchOrde
 		Last:    intToInt32(last),
 	}
 }
-

@@ -1935,7 +1935,7 @@ func (ec *executionContext) _League_teams(ctx context.Context, field graphql.Col
 	res := resTmp.([]prisma.Team)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalOTeam2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeam(ctx, field.Selections, res)
+	return ec.marshalOTeam2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _League_users(ctx context.Context, field graphql.CollectedField, obj *prisma.League) (ret graphql.Marshaler) {
@@ -1969,7 +1969,7 @@ func (ec *executionContext) _League_users(ctx context.Context, field graphql.Col
 	res := resTmp.([]prisma.User)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalOUser2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUser(ctx, field.Selections, res)
+	return ec.marshalOUser2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _League_owner(ctx context.Context, field graphql.CollectedField, obj *prisma.League) (ret graphql.Marshaler) {
@@ -3564,7 +3564,7 @@ func (ec *executionContext) _Team_users(ctx context.Context, field graphql.Colle
 	res := resTmp.([]prisma.User)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalOUser2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUser(ctx, field.Selections, res)
+	return ec.marshalOUser2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Team_owner(ctx context.Context, field graphql.CollectedField, obj *prisma.Team) (ret graphql.Marshaler) {
@@ -3894,7 +3894,7 @@ func (ec *executionContext) _User_teams(ctx context.Context, field graphql.Colle
 	res := resTmp.([]prisma.Team)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalOTeam2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeam(ctx, field.Selections, res)
+	return ec.marshalOTeam2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _User_leagues(ctx context.Context, field graphql.CollectedField, obj *prisma.User) (ret graphql.Marshaler) {
@@ -3928,7 +3928,7 @@ func (ec *executionContext) _User_leagues(ctx context.Context, field graphql.Col
 	res := resTmp.([]prisma.League)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalOLeague2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeague(ctx, field.Selections, res)
+	return ec.marshalOLeague2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _User_ownedTeams(ctx context.Context, field graphql.CollectedField, obj *prisma.User) (ret graphql.Marshaler) {
@@ -3962,7 +3962,7 @@ func (ec *executionContext) _User_ownedTeams(ctx context.Context, field graphql.
 	res := resTmp.([]prisma.Team)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalOTeam2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeam(ctx, field.Selections, res)
+	return ec.marshalOTeam2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _User_ownedLeagues(ctx context.Context, field graphql.CollectedField, obj *prisma.User) (ret graphql.Marshaler) {
@@ -3996,7 +3996,7 @@ func (ec *executionContext) _User_ownedLeagues(ctx context.Context, field graphq
 	res := resTmp.([]prisma.League)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalOLeague2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeague(ctx, field.Selections, res)
+	return ec.marshalOLeague2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _User_matches(ctx context.Context, field graphql.CollectedField, obj *prisma.User) (ret graphql.Marshaler) {
@@ -4033,7 +4033,7 @@ func (ec *executionContext) _User_matches(ctx context.Context, field graphql.Col
 	res := resTmp.([]prisma.Match)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalNMatch2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐMatch(ctx, field.Selections, res)
+	return ec.marshalNMatch2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐMatchᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _User_points(ctx context.Context, field graphql.CollectedField, obj *prisma.User) (ret graphql.Marshaler) {
@@ -4259,7 +4259,7 @@ func (ec *executionContext) ___Directive_locations(ctx context.Context, field gr
 	res := resTmp.([]string)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalN__DirectiveLocation2ᚕstring(ctx, field.Selections, res)
+	return ec.marshalN__DirectiveLocation2ᚕstringᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Directive_args(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
@@ -4296,7 +4296,7 @@ func (ec *executionContext) ___Directive_args(ctx context.Context, field graphql
 	res := resTmp.([]introspection.InputValue)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalN__InputValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐInputValue(ctx, field.Selections, res)
+	return ec.marshalN__InputValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐInputValueᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___EnumValue_name(ctx context.Context, field graphql.CollectedField, obj *introspection.EnumValue) (ret graphql.Marshaler) {
@@ -4546,7 +4546,7 @@ func (ec *executionContext) ___Field_args(ctx context.Context, field graphql.Col
 	res := resTmp.([]introspection.InputValue)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalN__InputValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐInputValue(ctx, field.Selections, res)
+	return ec.marshalN__InputValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐInputValueᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Field_type(ctx context.Context, field graphql.CollectedField, obj *introspection.Field) (ret graphql.Marshaler) {
@@ -4833,7 +4833,7 @@ func (ec *executionContext) ___Schema_types(ctx context.Context, field graphql.C
 	res := resTmp.([]introspection.Type)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalN__Type2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐType(ctx, field.Selections, res)
+	return ec.marshalN__Type2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐTypeᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Schema_queryType(ctx context.Context, field graphql.CollectedField, obj *introspection.Schema) (ret graphql.Marshaler) {
@@ -4975,7 +4975,7 @@ func (ec *executionContext) ___Schema_directives(ctx context.Context, field grap
 	res := resTmp.([]introspection.Directive)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalN__Directive2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx, field.Selections, res)
+	return ec.marshalN__Directive2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirectiveᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Type_kind(ctx context.Context, field graphql.CollectedField, obj *introspection.Type) (ret graphql.Marshaler) {
@@ -5121,7 +5121,7 @@ func (ec *executionContext) ___Type_fields(ctx context.Context, field graphql.Co
 	res := resTmp.([]introspection.Field)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalO__Field2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐField(ctx, field.Selections, res)
+	return ec.marshalO__Field2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐFieldᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Type_interfaces(ctx context.Context, field graphql.CollectedField, obj *introspection.Type) (ret graphql.Marshaler) {
@@ -5155,7 +5155,7 @@ func (ec *executionContext) ___Type_interfaces(ctx context.Context, field graphq
 	res := resTmp.([]introspection.Type)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalO__Type2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐType(ctx, field.Selections, res)
+	return ec.marshalO__Type2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐTypeᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Type_possibleTypes(ctx context.Context, field graphql.CollectedField, obj *introspection.Type) (ret graphql.Marshaler) {
@@ -5189,7 +5189,7 @@ func (ec *executionContext) ___Type_possibleTypes(ctx context.Context, field gra
 	res := resTmp.([]introspection.Type)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalO__Type2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐType(ctx, field.Selections, res)
+	return ec.marshalO__Type2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐTypeᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Type_enumValues(ctx context.Context, field graphql.CollectedField, obj *introspection.Type) (ret graphql.Marshaler) {
@@ -5230,7 +5230,7 @@ func (ec *executionContext) ___Type_enumValues(ctx context.Context, field graphq
 	res := resTmp.([]introspection.EnumValue)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValue(ctx, field.Selections, res)
+	return ec.marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValueᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Type_inputFields(ctx context.Context, field graphql.CollectedField, obj *introspection.Type) (ret graphql.Marshaler) {
@@ -5264,7 +5264,7 @@ func (ec *executionContext) ___Type_inputFields(ctx context.Context, field graph
 	res := resTmp.([]introspection.InputValue)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalO__InputValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐInputValue(ctx, field.Selections, res)
+	return ec.marshalO__InputValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐInputValueᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.CollectedField, obj *introspection.Type) (ret graphql.Marshaler) {
@@ -5325,7 +5325,7 @@ func (ec *executionContext) unmarshalInputLeagueCreateInput(ctx context.Context,
 			}
 		case "users":
 			var err error
-			it.Users, err = ec.unmarshalOUserWhereUniqueInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserWhereUniqueInput(ctx, v)
+			it.Users, err = ec.unmarshalOUserWhereUniqueInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserWhereUniqueInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5355,13 +5355,13 @@ func (ec *executionContext) unmarshalInputLeagueWhereInput(ctx context.Context, 
 			}
 		case "id_in":
 			var err error
-			it.IDIn, err = ec.unmarshalOID2ᚕstring(ctx, v)
+			it.IDIn, err = ec.unmarshalOID2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "id_not_in":
 			var err error
-			it.IDNotIn, err = ec.unmarshalOID2ᚕstring(ctx, v)
+			it.IDNotIn, err = ec.unmarshalOID2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5439,13 +5439,13 @@ func (ec *executionContext) unmarshalInputLeagueWhereInput(ctx context.Context, 
 			}
 		case "createdAt_in":
 			var err error
-			it.CreatedAtIn, err = ec.unmarshalODateTime2ᚕstring(ctx, v)
+			it.CreatedAtIn, err = ec.unmarshalODateTime2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "createdAt_not_in":
 			var err error
-			it.CreatedAtNotIn, err = ec.unmarshalODateTime2ᚕstring(ctx, v)
+			it.CreatedAtNotIn, err = ec.unmarshalODateTime2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5487,13 +5487,13 @@ func (ec *executionContext) unmarshalInputLeagueWhereInput(ctx context.Context, 
 			}
 		case "description_in":
 			var err error
-			it.DescriptionIn, err = ec.unmarshalOString2ᚕstring(ctx, v)
+			it.DescriptionIn, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "description_not_in":
 			var err error
-			it.DescriptionNotIn, err = ec.unmarshalOString2ᚕstring(ctx, v)
+			it.DescriptionNotIn, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5571,13 +5571,13 @@ func (ec *executionContext) unmarshalInputLeagueWhereInput(ctx context.Context, 
 			}
 		case "name_in":
 			var err error
-			it.NameIn, err = ec.unmarshalOString2ᚕstring(ctx, v)
+			it.NameIn, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "name_not_in":
 			var err error
-			it.NameNotIn, err = ec.unmarshalOString2ᚕstring(ctx, v)
+			it.NameNotIn, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5685,19 +5685,19 @@ func (ec *executionContext) unmarshalInputLeagueWhereInput(ctx context.Context, 
 			}
 		case "AND":
 			var err error
-			it.And, err = ec.unmarshalOLeagueWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueWhereInput(ctx, v)
+			it.And, err = ec.unmarshalOLeagueWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "OR":
 			var err error
-			it.Or, err = ec.unmarshalOLeagueWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueWhereInput(ctx, v)
+			it.Or, err = ec.unmarshalOLeagueWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "NOT":
 			var err error
-			it.Not, err = ec.unmarshalOLeagueWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueWhereInput(ctx, v)
+			it.Not, err = ec.unmarshalOLeagueWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5817,13 +5817,13 @@ func (ec *executionContext) unmarshalInputMatchWhereInput(ctx context.Context, o
 			}
 		case "id_in":
 			var err error
-			it.IDIn, err = ec.unmarshalOID2ᚕstring(ctx, v)
+			it.IDIn, err = ec.unmarshalOID2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "id_not_in":
 			var err error
-			it.IDNotIn, err = ec.unmarshalOID2ᚕstring(ctx, v)
+			it.IDNotIn, err = ec.unmarshalOID2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5901,13 +5901,13 @@ func (ec *executionContext) unmarshalInputMatchWhereInput(ctx context.Context, o
 			}
 		case "createdAt_in":
 			var err error
-			it.CreatedAtIn, err = ec.unmarshalODateTime2ᚕstring(ctx, v)
+			it.CreatedAtIn, err = ec.unmarshalODateTime2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "createdAt_not_in":
 			var err error
-			it.CreatedAtNotIn, err = ec.unmarshalODateTime2ᚕstring(ctx, v)
+			it.CreatedAtNotIn, err = ec.unmarshalODateTime2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5949,13 +5949,13 @@ func (ec *executionContext) unmarshalInputMatchWhereInput(ctx context.Context, o
 			}
 		case "plannedAt_in":
 			var err error
-			it.PlannedAtIn, err = ec.unmarshalODateTime2ᚕstring(ctx, v)
+			it.PlannedAtIn, err = ec.unmarshalODateTime2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "plannedAt_not_in":
 			var err error
-			it.PlannedAtNotIn, err = ec.unmarshalODateTime2ᚕstring(ctx, v)
+			it.PlannedAtNotIn, err = ec.unmarshalODateTime2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6033,13 +6033,13 @@ func (ec *executionContext) unmarshalInputMatchWhereInput(ctx context.Context, o
 			}
 		case "user1points_in":
 			var err error
-			it.User1pointsIn, err = ec.unmarshalOInt2ᚕint32(ctx, v)
+			it.User1pointsIn, err = ec.unmarshalOInt2ᚕint32ᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "user1points_not_in":
 			var err error
-			it.User1pointsNotIn, err = ec.unmarshalOInt2ᚕint32(ctx, v)
+			it.User1pointsNotIn, err = ec.unmarshalOInt2ᚕint32ᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6087,13 +6087,13 @@ func (ec *executionContext) unmarshalInputMatchWhereInput(ctx context.Context, o
 			}
 		case "user2points_in":
 			var err error
-			it.User2pointsIn, err = ec.unmarshalOInt2ᚕint32(ctx, v)
+			it.User2pointsIn, err = ec.unmarshalOInt2ᚕint32ᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "user2points_not_in":
 			var err error
-			it.User2pointsNotIn, err = ec.unmarshalOInt2ᚕint32(ctx, v)
+			it.User2pointsNotIn, err = ec.unmarshalOInt2ᚕint32ᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6141,13 +6141,13 @@ func (ec *executionContext) unmarshalInputMatchWhereInput(ctx context.Context, o
 			}
 		case "winnerPoints_in":
 			var err error
-			it.WinnerPointsIn, err = ec.unmarshalOInt2ᚕint32(ctx, v)
+			it.WinnerPointsIn, err = ec.unmarshalOInt2ᚕint32ᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "winnerPoints_not_in":
 			var err error
-			it.WinnerPointsNotIn, err = ec.unmarshalOInt2ᚕint32(ctx, v)
+			it.WinnerPointsNotIn, err = ec.unmarshalOInt2ᚕint32ᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6177,19 +6177,19 @@ func (ec *executionContext) unmarshalInputMatchWhereInput(ctx context.Context, o
 			}
 		case "AND":
 			var err error
-			it.And, err = ec.unmarshalOMatchWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐMatchWhereInput(ctx, v)
+			it.And, err = ec.unmarshalOMatchWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐMatchWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "OR":
 			var err error
-			it.Or, err = ec.unmarshalOMatchWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐMatchWhereInput(ctx, v)
+			it.Or, err = ec.unmarshalOMatchWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐMatchWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "NOT":
 			var err error
-			it.Not, err = ec.unmarshalOMatchWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐMatchWhereInput(ctx, v)
+			it.Not, err = ec.unmarshalOMatchWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐMatchWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6273,13 +6273,13 @@ func (ec *executionContext) unmarshalInputTeamWhereInput(ctx context.Context, ob
 			}
 		case "id_in":
 			var err error
-			it.IDIn, err = ec.unmarshalOID2ᚕstring(ctx, v)
+			it.IDIn, err = ec.unmarshalOID2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "id_not_in":
 			var err error
-			it.IDNotIn, err = ec.unmarshalOID2ᚕstring(ctx, v)
+			it.IDNotIn, err = ec.unmarshalOID2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6357,13 +6357,13 @@ func (ec *executionContext) unmarshalInputTeamWhereInput(ctx context.Context, ob
 			}
 		case "createdAt_in":
 			var err error
-			it.CreatedAtIn, err = ec.unmarshalODateTime2ᚕstring(ctx, v)
+			it.CreatedAtIn, err = ec.unmarshalODateTime2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "createdAt_not_in":
 			var err error
-			it.CreatedAtNotIn, err = ec.unmarshalODateTime2ᚕstring(ctx, v)
+			it.CreatedAtNotIn, err = ec.unmarshalODateTime2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6405,13 +6405,13 @@ func (ec *executionContext) unmarshalInputTeamWhereInput(ctx context.Context, ob
 			}
 		case "description_in":
 			var err error
-			it.DescriptionIn, err = ec.unmarshalOString2ᚕstring(ctx, v)
+			it.DescriptionIn, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "description_not_in":
 			var err error
-			it.DescriptionNotIn, err = ec.unmarshalOString2ᚕstring(ctx, v)
+			it.DescriptionNotIn, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6489,13 +6489,13 @@ func (ec *executionContext) unmarshalInputTeamWhereInput(ctx context.Context, ob
 			}
 		case "name_in":
 			var err error
-			it.NameIn, err = ec.unmarshalOString2ᚕstring(ctx, v)
+			it.NameIn, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "name_not_in":
 			var err error
-			it.NameNotIn, err = ec.unmarshalOString2ᚕstring(ctx, v)
+			it.NameNotIn, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6591,19 +6591,19 @@ func (ec *executionContext) unmarshalInputTeamWhereInput(ctx context.Context, ob
 			}
 		case "AND":
 			var err error
-			it.And, err = ec.unmarshalOTeamWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamWhereInput(ctx, v)
+			it.And, err = ec.unmarshalOTeamWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "OR":
 			var err error
-			it.Or, err = ec.unmarshalOTeamWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamWhereInput(ctx, v)
+			it.Or, err = ec.unmarshalOTeamWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "NOT":
 			var err error
-			it.Not, err = ec.unmarshalOTeamWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamWhereInput(ctx, v)
+			it.Not, err = ec.unmarshalOTeamWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6693,13 +6693,13 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			}
 		case "id_in":
 			var err error
-			it.IDIn, err = ec.unmarshalOID2ᚕstring(ctx, v)
+			it.IDIn, err = ec.unmarshalOID2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "id_not_in":
 			var err error
-			it.IDNotIn, err = ec.unmarshalOID2ᚕstring(ctx, v)
+			it.IDNotIn, err = ec.unmarshalOID2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6777,13 +6777,13 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			}
 		case "createdAt_in":
 			var err error
-			it.CreatedAtIn, err = ec.unmarshalODateTime2ᚕstring(ctx, v)
+			it.CreatedAtIn, err = ec.unmarshalODateTime2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "createdAt_not_in":
 			var err error
-			it.CreatedAtNotIn, err = ec.unmarshalODateTime2ᚕstring(ctx, v)
+			it.CreatedAtNotIn, err = ec.unmarshalODateTime2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6825,13 +6825,13 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			}
 		case "name_in":
 			var err error
-			it.NameIn, err = ec.unmarshalOString2ᚕstring(ctx, v)
+			it.NameIn, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "name_not_in":
 			var err error
-			it.NameNotIn, err = ec.unmarshalOString2ᚕstring(ctx, v)
+			it.NameNotIn, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6909,13 +6909,13 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			}
 		case "sub_in":
 			var err error
-			it.SubIn, err = ec.unmarshalOString2ᚕstring(ctx, v)
+			it.SubIn, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "sub_not_in":
 			var err error
-			it.SubNotIn, err = ec.unmarshalOString2ᚕstring(ctx, v)
+			it.SubNotIn, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6993,13 +6993,13 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			}
 		case "picture_in":
 			var err error
-			it.PictureIn, err = ec.unmarshalOString2ᚕstring(ctx, v)
+			it.PictureIn, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "picture_not_in":
 			var err error
-			it.PictureNotIn, err = ec.unmarshalOString2ᚕstring(ctx, v)
+			it.PictureNotIn, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -7155,19 +7155,19 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			}
 		case "AND":
 			var err error
-			it.And, err = ec.unmarshalOUserWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserWhereInput(ctx, v)
+			it.And, err = ec.unmarshalOUserWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "OR":
 			var err error
-			it.Or, err = ec.unmarshalOUserWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserWhereInput(ctx, v)
+			it.Or, err = ec.unmarshalOUserWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 		case "NOT":
 			var err error
-			it.Not, err = ec.unmarshalOUserWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserWhereInput(ctx, v)
+			it.Not, err = ec.unmarshalOUserWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -8264,7 +8264,7 @@ func (ec *executionContext) marshalNMatch2githubᚗcomᚋpPrecelᚋBeerKongServe
 	return ec._Match(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNMatch2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐMatch(ctx context.Context, sel ast.SelectionSet, v []prisma.Match) graphql.Marshaler {
+func (ec *executionContext) marshalNMatch2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐMatchᚄ(ctx context.Context, sel ast.SelectionSet, v []prisma.Match) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -8516,7 +8516,7 @@ func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlge
 	return ec.___Directive(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalN__Directive2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v []introspection.Directive) graphql.Marshaler {
+func (ec *executionContext) marshalN__Directive2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirectiveᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.Directive) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -8567,7 +8567,7 @@ func (ec *executionContext) marshalN__DirectiveLocation2string(ctx context.Conte
 	return res
 }
 
-func (ec *executionContext) unmarshalN__DirectiveLocation2ᚕstring(ctx context.Context, v interface{}) ([]string, error) {
+func (ec *executionContext) unmarshalN__DirectiveLocation2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
 	var vSlice []interface{}
 	if v != nil {
 		if tmp1, ok := v.([]interface{}); ok {
@@ -8587,7 +8587,7 @@ func (ec *executionContext) unmarshalN__DirectiveLocation2ᚕstring(ctx context.
 	return res, nil
 }
 
-func (ec *executionContext) marshalN__DirectiveLocation2ᚕstring(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
+func (ec *executionContext) marshalN__DirectiveLocation2ᚕstringᚄ(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -8636,7 +8636,7 @@ func (ec *executionContext) marshalN__InputValue2githubᚗcomᚋ99designsᚋgqlg
 	return ec.___InputValue(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalN__InputValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐInputValue(ctx context.Context, sel ast.SelectionSet, v []introspection.InputValue) graphql.Marshaler {
+func (ec *executionContext) marshalN__InputValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐInputValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.InputValue) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -8677,7 +8677,7 @@ func (ec *executionContext) marshalN__Type2githubᚗcomᚋ99designsᚋgqlgenᚋg
 	return ec.___Type(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalN__Type2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐType(ctx context.Context, sel ast.SelectionSet, v []introspection.Type) graphql.Marshaler {
+func (ec *executionContext) marshalN__Type2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐTypeᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.Type) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -8769,7 +8769,7 @@ func (ec *executionContext) marshalODateTime2string(ctx context.Context, sel ast
 	return graphql.MarshalString(v)
 }
 
-func (ec *executionContext) unmarshalODateTime2ᚕstring(ctx context.Context, v interface{}) ([]string, error) {
+func (ec *executionContext) unmarshalODateTime2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
 	var vSlice []interface{}
 	if v != nil {
 		if tmp1, ok := v.([]interface{}); ok {
@@ -8789,7 +8789,7 @@ func (ec *executionContext) unmarshalODateTime2ᚕstring(ctx context.Context, v 
 	return res, nil
 }
 
-func (ec *executionContext) marshalODateTime2ᚕstring(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
+func (ec *executionContext) marshalODateTime2ᚕstringᚄ(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -8824,7 +8824,7 @@ func (ec *executionContext) marshalOID2string(ctx context.Context, sel ast.Selec
 	return graphql.MarshalID(v)
 }
 
-func (ec *executionContext) unmarshalOID2ᚕstring(ctx context.Context, v interface{}) ([]string, error) {
+func (ec *executionContext) unmarshalOID2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
 	var vSlice []interface{}
 	if v != nil {
 		if tmp1, ok := v.([]interface{}); ok {
@@ -8844,7 +8844,7 @@ func (ec *executionContext) unmarshalOID2ᚕstring(ctx context.Context, v interf
 	return res, nil
 }
 
-func (ec *executionContext) marshalOID2ᚕstring(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
+func (ec *executionContext) marshalOID2ᚕstringᚄ(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -8887,7 +8887,7 @@ func (ec *executionContext) marshalOInt2int32(ctx context.Context, sel ast.Selec
 	return graphql.MarshalInt32(v)
 }
 
-func (ec *executionContext) unmarshalOInt2ᚕint32(ctx context.Context, v interface{}) ([]int32, error) {
+func (ec *executionContext) unmarshalOInt2ᚕint32ᚄ(ctx context.Context, v interface{}) ([]int32, error) {
 	var vSlice []interface{}
 	if v != nil {
 		if tmp1, ok := v.([]interface{}); ok {
@@ -8907,7 +8907,7 @@ func (ec *executionContext) unmarshalOInt2ᚕint32(ctx context.Context, v interf
 	return res, nil
 }
 
-func (ec *executionContext) marshalOInt2ᚕint32(ctx context.Context, sel ast.SelectionSet, v []int32) graphql.Marshaler {
+func (ec *executionContext) marshalOInt2ᚕint32ᚄ(ctx context.Context, sel ast.SelectionSet, v []int32) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -8953,7 +8953,7 @@ func (ec *executionContext) marshalOLeague2githubᚗcomᚋpPrecelᚋBeerKongServ
 	return ec._League(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalOLeague2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeague(ctx context.Context, sel ast.SelectionSet, v []prisma.League) graphql.Marshaler {
+func (ec *executionContext) marshalOLeague2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueᚄ(ctx context.Context, sel ast.SelectionSet, v []prisma.League) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -9028,7 +9028,7 @@ func (ec *executionContext) unmarshalOLeagueWhereInput2githubᚗcomᚋpPrecelᚋ
 	return ec.unmarshalInputLeagueWhereInput(ctx, v)
 }
 
-func (ec *executionContext) unmarshalOLeagueWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueWhereInput(ctx context.Context, v interface{}) ([]prisma.LeagueWhereInput, error) {
+func (ec *executionContext) unmarshalOLeagueWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueWhereInputᚄ(ctx context.Context, v interface{}) ([]prisma.LeagueWhereInput, error) {
 	var vSlice []interface{}
 	if v != nil {
 		if tmp1, ok := v.([]interface{}); ok {
@@ -9095,7 +9095,7 @@ func (ec *executionContext) unmarshalOMatchWhereInput2githubᚗcomᚋpPrecelᚋB
 	return ec.unmarshalInputMatchWhereInput(ctx, v)
 }
 
-func (ec *executionContext) unmarshalOMatchWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐMatchWhereInput(ctx context.Context, v interface{}) ([]prisma.MatchWhereInput, error) {
+func (ec *executionContext) unmarshalOMatchWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐMatchWhereInputᚄ(ctx context.Context, v interface{}) ([]prisma.MatchWhereInput, error) {
 	var vSlice []interface{}
 	if v != nil {
 		if tmp1, ok := v.([]interface{}); ok {
@@ -9131,7 +9131,7 @@ func (ec *executionContext) marshalOString2string(ctx context.Context, sel ast.S
 	return graphql.MarshalString(v)
 }
 
-func (ec *executionContext) unmarshalOString2ᚕstring(ctx context.Context, v interface{}) ([]string, error) {
+func (ec *executionContext) unmarshalOString2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
 	var vSlice []interface{}
 	if v != nil {
 		if tmp1, ok := v.([]interface{}); ok {
@@ -9151,7 +9151,7 @@ func (ec *executionContext) unmarshalOString2ᚕstring(ctx context.Context, v in
 	return res, nil
 }
 
-func (ec *executionContext) marshalOString2ᚕstring(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
+func (ec *executionContext) marshalOString2ᚕstringᚄ(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -9182,7 +9182,7 @@ func (ec *executionContext) marshalOTeam2githubᚗcomᚋpPrecelᚋBeerKongServer
 	return ec._Team(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalOTeam2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeam(ctx context.Context, sel ast.SelectionSet, v []prisma.Team) graphql.Marshaler {
+func (ec *executionContext) marshalOTeam2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamᚄ(ctx context.Context, sel ast.SelectionSet, v []prisma.Team) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -9257,7 +9257,7 @@ func (ec *executionContext) unmarshalOTeamWhereInput2githubᚗcomᚋpPrecelᚋBe
 	return ec.unmarshalInputTeamWhereInput(ctx, v)
 }
 
-func (ec *executionContext) unmarshalOTeamWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamWhereInput(ctx context.Context, v interface{}) ([]prisma.TeamWhereInput, error) {
+func (ec *executionContext) unmarshalOTeamWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamWhereInputᚄ(ctx context.Context, v interface{}) ([]prisma.TeamWhereInput, error) {
 	var vSlice []interface{}
 	if v != nil {
 		if tmp1, ok := v.([]interface{}); ok {
@@ -9289,7 +9289,7 @@ func (ec *executionContext) marshalOUser2githubᚗcomᚋpPrecelᚋBeerKongServer
 	return ec._User(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalOUser2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUser(ctx context.Context, sel ast.SelectionSet, v []prisma.User) graphql.Marshaler {
+func (ec *executionContext) marshalOUser2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserᚄ(ctx context.Context, sel ast.SelectionSet, v []prisma.User) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -9364,7 +9364,7 @@ func (ec *executionContext) unmarshalOUserWhereInput2githubᚗcomᚋpPrecelᚋBe
 	return ec.unmarshalInputUserWhereInput(ctx, v)
 }
 
-func (ec *executionContext) unmarshalOUserWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserWhereInput(ctx context.Context, v interface{}) ([]prisma.UserWhereInput, error) {
+func (ec *executionContext) unmarshalOUserWhereInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserWhereInputᚄ(ctx context.Context, v interface{}) ([]prisma.UserWhereInput, error) {
 	var vSlice []interface{}
 	if v != nil {
 		if tmp1, ok := v.([]interface{}); ok {
@@ -9392,7 +9392,7 @@ func (ec *executionContext) unmarshalOUserWhereInput2ᚖgithubᚗcomᚋpPrecel�
 	return &res, err
 }
 
-func (ec *executionContext) unmarshalOUserWhereUniqueInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserWhereUniqueInput(ctx context.Context, v interface{}) ([]prisma.UserWhereUniqueInput, error) {
+func (ec *executionContext) unmarshalOUserWhereUniqueInput2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserWhereUniqueInputᚄ(ctx context.Context, v interface{}) ([]prisma.UserWhereUniqueInput, error) {
 	var vSlice []interface{}
 	if v != nil {
 		if tmp1, ok := v.([]interface{}); ok {
@@ -9412,7 +9412,7 @@ func (ec *executionContext) unmarshalOUserWhereUniqueInput2ᚕgithubᚗcomᚋpPr
 	return res, nil
 }
 
-func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValue(ctx context.Context, sel ast.SelectionSet, v []introspection.EnumValue) graphql.Marshaler {
+func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.EnumValue) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -9452,7 +9452,7 @@ func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgq
 	return ret
 }
 
-func (ec *executionContext) marshalO__Field2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐField(ctx context.Context, sel ast.SelectionSet, v []introspection.Field) graphql.Marshaler {
+func (ec *executionContext) marshalO__Field2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐFieldᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.Field) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -9492,7 +9492,7 @@ func (ec *executionContext) marshalO__Field2ᚕgithubᚗcomᚋ99designsᚋgqlgen
 	return ret
 }
 
-func (ec *executionContext) marshalO__InputValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐInputValue(ctx context.Context, sel ast.SelectionSet, v []introspection.InputValue) graphql.Marshaler {
+func (ec *executionContext) marshalO__InputValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐInputValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.InputValue) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -9547,7 +9547,7 @@ func (ec *executionContext) marshalO__Type2githubᚗcomᚋ99designsᚋgqlgenᚋg
 	return ec.___Type(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalO__Type2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐType(ctx context.Context, sel ast.SelectionSet, v []introspection.Type) graphql.Marshaler {
+func (ec *executionContext) marshalO__Type2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐTypeᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.Type) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
