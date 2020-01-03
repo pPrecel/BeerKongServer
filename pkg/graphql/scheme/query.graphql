@@ -1,16 +1,9 @@
 type Query {
   league(where: LeagueWhereUniqueInput!): League
-  leaguePoints(where: LeagueWhereUniqueInput!): Int
-  leagueFinishedMatches(where: LeagueWhereUniqueInput!): Int
   leagues(where: LeagueWhereInput, orderBy: LeagueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [League]!
   team(where: TeamWhereUniqueInput!): Team
-  teamPoints(where: TeamWhereUniqueInput!): Int
-  teamFinishedMatches(where: TeamWhereUniqueInput!): Int
   teams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team]!
   user(where: UserWhereUniqueInput!): User
-  userPoints(where: UserWhereUniqueInput!): Int
-  userPointsInLeague(where: UserWhereUniqueInput!, in: LeagueWhereUniqueInput!): Int
-  userFinishedMatches(where: UserWhereUniqueInput!): Int
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   match(where: MatchWhereUniqueInput!): Match
   matches(where: MatchWhereInput, orderBy: MatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Match]!

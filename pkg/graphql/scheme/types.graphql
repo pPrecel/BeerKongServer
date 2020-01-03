@@ -6,6 +6,8 @@ type League {
   teams: [Team!]
   users: [User!]
   owner: User!
+  points: Int!
+  finishedMatches: Int!
 }
 
 type Team {
@@ -16,6 +18,8 @@ type Team {
   league: League!
   users: [User!]
   owner: User!
+  points: Int!
+  finishedMatches: Int!
 }
 
 type User {
@@ -29,6 +33,9 @@ type User {
   ownedTeams: [Team!]
   ownedLeagues: [League!]
   matches: [Match!]!
+  points: Int!
+  pointsInLeague(where: LeagueWhereUniqueInput!): Int!
+  finishedMatches: Int!
 }
 
 type Match {
