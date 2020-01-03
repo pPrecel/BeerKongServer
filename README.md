@@ -31,8 +31,9 @@ You can simply deploy the prisma scheme on the your own prisma server.
 
 To do that you need to:
 
-1. Edit `/pkg/prisma/prisma.yaml` to customize the prisma pattern to your use case
-2. Deploy prisma:
+1. Learn about deploying the prisma on the heroku from [this movie](https://www.youtube.com/watch?v=b2ofz3XxR14&feature=emb_title)
+2. Edit `/pkg/prisma/prisma.yaml` to customize the prisma pattern to your use case
+3. Deploy prisma:
    ```bash
    make prisma-deploy
    ```
