@@ -3,8 +3,8 @@ type League {
   createdAt: DateTime!
   description: String!
   name: String!
-  teams: [Team!]
-  users: [User!]
+  teams: [Team!]!
+  users: [User!]!
   owner: User!
   points: Int!
   finishedMatches: Int!
@@ -16,7 +16,7 @@ type Team {
   description: String!
   name: String!
   league: League!
-  users: [User!]
+  users: [User!]!
   owner: User!
   points: Int!
   finishedMatches: Int!
@@ -28,10 +28,10 @@ type User {
   name: String!
   sub: String!
   picture: String!
-  teams: [Team!]
-  leagues: [League!]
-  ownedTeams: [Team!]
-  ownedLeagues: [League!]
+  teams: [Team!]!
+  leagues: [League!]!
+  ownedTeams: [Team!]!
+  ownedLeagues: [League!]!
   matches: [Match!]!
   points: Int!
   pointsInLeague(where: LeagueWhereUniqueInput!): Int!

@@ -1191,8 +1191,8 @@ input MatchWhereUniqueInput {
   createdAt: DateTime!
   description: String!
   name: String!
-  teams: [Team!]
-  users: [User!]
+  teams: [Team!]!
+  users: [User!]!
   owner: User!
   points: Int!
   finishedMatches: Int!
@@ -1204,7 +1204,7 @@ type Team {
   description: String!
   name: String!
   league: League!
-  users: [User!]
+  users: [User!]!
   owner: User!
   points: Int!
   finishedMatches: Int!
@@ -1216,10 +1216,10 @@ type User {
   name: String!
   sub: String!
   picture: String!
-  teams: [Team!]
-  leagues: [League!]
-  ownedTeams: [Team!]
-  ownedLeagues: [League!]
+  teams: [Team!]!
+  leagues: [League!]!
+  ownedTeams: [Team!]!
+  ownedLeagues: [League!]!
   matches: [Match!]!
   points: Int!
   pointsInLeague(where: LeagueWhereUniqueInput!): Int!
@@ -1930,12 +1930,15 @@ func (ec *executionContext) _League_teams(ctx context.Context, field graphql.Col
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.([]prisma.Team)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalOTeam2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamᚄ(ctx, field.Selections, res)
+	return ec.marshalNTeam2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _League_users(ctx context.Context, field graphql.CollectedField, obj *prisma.League) (ret graphql.Marshaler) {
@@ -1964,12 +1967,15 @@ func (ec *executionContext) _League_users(ctx context.Context, field graphql.Col
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.([]prisma.User)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalOUser2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserᚄ(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _League_owner(ctx context.Context, field graphql.CollectedField, obj *prisma.League) (ret graphql.Marshaler) {
@@ -3559,12 +3565,15 @@ func (ec *executionContext) _Team_users(ctx context.Context, field graphql.Colle
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.([]prisma.User)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalOUser2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserᚄ(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Team_owner(ctx context.Context, field graphql.CollectedField, obj *prisma.Team) (ret graphql.Marshaler) {
@@ -3889,12 +3898,15 @@ func (ec *executionContext) _User_teams(ctx context.Context, field graphql.Colle
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.([]prisma.Team)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalOTeam2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamᚄ(ctx, field.Selections, res)
+	return ec.marshalNTeam2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _User_leagues(ctx context.Context, field graphql.CollectedField, obj *prisma.User) (ret graphql.Marshaler) {
@@ -3923,12 +3935,15 @@ func (ec *executionContext) _User_leagues(ctx context.Context, field graphql.Col
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.([]prisma.League)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalOLeague2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueᚄ(ctx, field.Selections, res)
+	return ec.marshalNLeague2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _User_ownedTeams(ctx context.Context, field graphql.CollectedField, obj *prisma.User) (ret graphql.Marshaler) {
@@ -3957,12 +3972,15 @@ func (ec *executionContext) _User_ownedTeams(ctx context.Context, field graphql.
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.([]prisma.Team)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalOTeam2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamᚄ(ctx, field.Selections, res)
+	return ec.marshalNTeam2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _User_ownedLeagues(ctx context.Context, field graphql.CollectedField, obj *prisma.User) (ret graphql.Marshaler) {
@@ -3991,12 +4009,15 @@ func (ec *executionContext) _User_ownedLeagues(ctx context.Context, field graphq
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.([]prisma.League)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalOLeague2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueᚄ(ctx, field.Selections, res)
+	return ec.marshalNLeague2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _User_matches(ctx context.Context, field graphql.CollectedField, obj *prisma.User) (ret graphql.Marshaler) {
@@ -7255,6 +7276,9 @@ func (ec *executionContext) _League(ctx context.Context, sel ast.SelectionSet, o
 					}
 				}()
 				res = ec._League_teams(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			})
 		case "users":
@@ -7266,6 +7290,9 @@ func (ec *executionContext) _League(ctx context.Context, sel ast.SelectionSet, o
 					}
 				}()
 				res = ec._League_users(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			})
 		case "owner":
@@ -7672,6 +7699,9 @@ func (ec *executionContext) _Team(ctx context.Context, sel ast.SelectionSet, obj
 					}
 				}()
 				res = ec._Team_users(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			})
 		case "owner":
@@ -7772,6 +7802,9 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 					}
 				}()
 				res = ec._User_teams(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			})
 		case "leagues":
@@ -7783,6 +7816,9 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 					}
 				}()
 				res = ec._User_leagues(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			})
 		case "ownedTeams":
@@ -7794,6 +7830,9 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 					}
 				}()
 				res = ec._User_ownedTeams(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			})
 		case "ownedLeagues":
@@ -7805,6 +7844,9 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 					}
 				}()
 				res = ec._User_ownedLeagues(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			})
 		case "matches":
@@ -8193,6 +8235,43 @@ func (ec *executionContext) marshalNLeague2githubᚗcomᚋpPrecelᚋBeerKongServ
 	return ec._League(ctx, sel, &v)
 }
 
+func (ec *executionContext) marshalNLeague2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueᚄ(ctx context.Context, sel ast.SelectionSet, v []prisma.League) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		rctx := &graphql.ResolverContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithResolverContext(ctx, rctx)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNLeague2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeague(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
 func (ec *executionContext) marshalNLeague2ᚕᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeague(ctx context.Context, sel ast.SelectionSet, v []*prisma.League) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -8382,6 +8461,43 @@ func (ec *executionContext) marshalNTeam2githubᚗcomᚋpPrecelᚋBeerKongServer
 	return ec._Team(ctx, sel, &v)
 }
 
+func (ec *executionContext) marshalNTeam2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamᚄ(ctx context.Context, sel ast.SelectionSet, v []prisma.Team) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		rctx := &graphql.ResolverContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithResolverContext(ctx, rctx)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNTeam2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeam(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
 func (ec *executionContext) marshalNTeam2ᚕᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeam(ctx context.Context, sel ast.SelectionSet, v []*prisma.Team) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -8443,6 +8559,43 @@ func (ec *executionContext) unmarshalNTeamWhereUniqueInput2githubᚗcomᚋpPrece
 
 func (ec *executionContext) marshalNUser2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUser(ctx context.Context, sel ast.SelectionSet, v prisma.User) graphql.Marshaler {
 	return ec._User(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNUser2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserᚄ(ctx context.Context, sel ast.SelectionSet, v []prisma.User) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		rctx := &graphql.ResolverContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithResolverContext(ctx, rctx)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNUser2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUser(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
 }
 
 func (ec *executionContext) marshalNUser2ᚕᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUser(ctx context.Context, sel ast.SelectionSet, v []*prisma.User) graphql.Marshaler {
@@ -8953,46 +9106,6 @@ func (ec *executionContext) marshalOLeague2githubᚗcomᚋpPrecelᚋBeerKongServ
 	return ec._League(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalOLeague2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeagueᚄ(ctx context.Context, sel ast.SelectionSet, v []prisma.League) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		rctx := &graphql.ResolverContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithResolverContext(ctx, rctx)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNLeague2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeague(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-	return ret
-}
-
 func (ec *executionContext) marshalOLeague2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐLeague(ctx context.Context, sel ast.SelectionSet, v *prisma.League) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -9182,46 +9295,6 @@ func (ec *executionContext) marshalOTeam2githubᚗcomᚋpPrecelᚋBeerKongServer
 	return ec._Team(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalOTeam2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeamᚄ(ctx context.Context, sel ast.SelectionSet, v []prisma.Team) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		rctx := &graphql.ResolverContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithResolverContext(ctx, rctx)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNTeam2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeam(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-	return ret
-}
-
 func (ec *executionContext) marshalOTeam2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐTeam(ctx context.Context, sel ast.SelectionSet, v *prisma.Team) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -9287,46 +9360,6 @@ func (ec *executionContext) unmarshalOTeamWhereInput2ᚖgithubᚗcomᚋpPrecel�
 
 func (ec *executionContext) marshalOUser2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUser(ctx context.Context, sel ast.SelectionSet, v prisma.User) graphql.Marshaler {
 	return ec._User(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalOUser2ᚕgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUserᚄ(ctx context.Context, sel ast.SelectionSet, v []prisma.User) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		rctx := &graphql.ResolverContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithResolverContext(ctx, rctx)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNUser2githubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUser(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-	return ret
 }
 
 func (ec *executionContext) marshalOUser2ᚖgithubᚗcomᚋpPrecelᚋBeerKongServerᚋpkgᚋprismaᚋgeneratedᚋprismaᚑclientᚐUser(ctx context.Context, sel ast.SelectionSet, v *prisma.User) graphql.Marshaler {
