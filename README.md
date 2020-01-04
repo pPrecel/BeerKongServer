@@ -19,6 +19,7 @@ Only Linux and macOS are the supported distributions for developing and testing 
    cd $GOPATH/src/github.com
    mkdir pPrecel && cd pPrecel
    git clone https://github.com/pPrecel/BeerKongServer.git
+   cd BeerKongServer
    ```
 2. Run server:
    ```bash
