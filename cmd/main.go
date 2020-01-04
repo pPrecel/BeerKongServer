@@ -17,8 +17,8 @@ import (
 
 type Config struct {
 	Port           string `envconfig:"default=80"`
-	PrismaEndpoint string `envconfig:"default=http://localhost"`
-	PrismaSecret   string `envconfig:"default=password"`
+	PrismaEndpoint string `envconfig:"default=http://localhost:4466/beer-kong-prisma/beer-kong"`
+	PrismaSecret   string `envconfig:"default=PrismaSecret"`
 }
 
 func main() {

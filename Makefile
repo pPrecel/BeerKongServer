@@ -2,7 +2,7 @@ PORT ?= 80
 PRISMA_SECRET ?= PrismaSecret
 
 .EXPORT_ALL_VARIABLES:
-.PHONY: go-fmt go-run go-test go-get gqlgen-regenerate prisma-deploy prisma-generate
+.PHONY: go-fmt go-run go-test go-get gqlgen-regenerate prisma-deploy prisma-generate prisma-local
 
 go-fmt:
 	@go fmt ./...
@@ -29,3 +29,6 @@ prisma-deploy:
 
 prisma-generate:
 	@make -C pkg/prisma/ prisma-generate
+
+prisma-local:
+	@make -C pkg/prisma/ prisma-local
