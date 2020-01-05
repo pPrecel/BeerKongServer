@@ -108,7 +108,7 @@ func (r *mutationResolver) CreateTeam(ctx context.Context, data generated.TeamCr
 	if r.user == nil {
 		return nil, errors.New(fmt.Sprintf("You don't have permission to finish this operation"))
 	}
-	return r.prismaClient.CreateTeam(prisma.TeamCreateInput{
+	team, err := r.prismaClient.CreateTeam(prisma.TeamCreateInput{
 		Description: data.Description,
 		Name:        data.Name,
 		League: prisma.LeagueCreateOneWithoutTeamsInput{
@@ -119,12 +119,17 @@ func (r *mutationResolver) CreateTeam(ctx context.Context, data generated.TeamCr
 				Sub: &r.user.Sub,
 			},
 		},
-		Users: &prisma.UserCreateManyWithoutTeamsInput{
-			Connect: []prisma.UserWhereUniqueInput{
-				*r.chooseUserWhereUniqueInput(r.user),
-			},
-		},
 	}).Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = r.AddUserToTeam(ctx, prisma.TeamWhereUniqueInput{ID: &team.ID}, prisma.UserWhereUniqueInput{Sub: &r.user.Sub})
+	if err != nil {
+		return nil, err
+	}
+
+	return nil, err
 }
 func (r *mutationResolver) RemoveUserFromTeam(ctx context.Context, data generated.TeamCreateInput) (*prisma.Team, error) {
 	return nil, nil
