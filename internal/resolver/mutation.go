@@ -69,7 +69,7 @@ func (r *mutationResolver) isUserInLeague(ctx context.Context, where prisma.Team
 	}
 
 	for _, user := range users {
-		if user.ID == *data.ID {
+		if user.Sub == *data.Sub {
 			return league, true
 		}
 	}
@@ -129,7 +129,7 @@ func (r *mutationResolver) CreateTeam(ctx context.Context, data generated.TeamCr
 		return nil, err
 	}
 
-	return nil, err
+	return team, err
 }
 func (r *mutationResolver) RemoveUserFromTeam(ctx context.Context, data generated.TeamCreateInput) (*prisma.Team, error) {
 	return nil, nil
