@@ -69,7 +69,10 @@ func (r *mutationResolver) isUserInLeague(ctx context.Context, where prisma.Team
 	}
 
 	for _, user := range users {
-		if user.Sub == *data.Sub {
+		if data.Sub != nil || user.Sub == *data.Sub {
+			return league, true
+		}
+		if data.ID != nil || user.ID == *data.ID {
 			return league, true
 		}
 	}
